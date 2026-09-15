@@ -23,6 +23,7 @@ function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
   const [images, setImages] = useState<Record<string, string>>({});
@@ -32,15 +33,26 @@ function App() {
   const mouseY = useMotionValue<number>(0);
 
   useEffect(() => {
-    mouseX.set(window.innerWidth / 2);
-    mouseY.set(window.innerHeight / 2);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    if (window.innerWidth >= 768) {
+      mouseX.set(window.innerWidth / 2);
+      mouseY.set(window.innerHeight / 2);
+    }
 
     const handleMouseMove = (e: MouseEvent) => {
+      if (window.innerWidth < 768) return; // Prevent heavy calculations on mobile
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
     };
+    
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, [mouseX, mouseY]);
 
   const handleImageUpload = (slideId: string, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,9 +98,19 @@ function App() {
   return (
     <div ref={containerRef} className="w-screen h-screen bg-background bg-grain text-foreground overflow-hidden font-sans relative flex flex-col cursor-crosshair">
       {/* Background Geométrico Limpo (Atrás do Texto) */}
-      <GeometricDecorations slideIndex={currentSlide} mouseX={mouseX} mouseY={mouseY} />
+      <GeometricDecorations slideIndex={currentSlide} mouseX={mouseX} mouseY={mouseY} isMobile={isMobile} />
       
-      {/* Cursor Customizado (Escondido no Mobile) */}
+      {/* Botões de Navegação Exclusivos para Mobile */}
+      <div className="md:hidden">
+        <button onClick={() => paginate(-1)} disabled={currentSlide === 0} className="fixed left-2 top-1/2 -translate-y-1/2 p-3 bg-foreground/5 backdrop-blur-sm rounded-full text-foreground/50 z-[100] border border-foreground/10 disabled:opacity-0 transition-opacity">
+          <ChevronLeft size={24} />
+        </button>
+        <button onClick={() => paginate(1)} disabled={currentSlide === slides.length - 1} className="fixed right-2 top-1/2 -translate-y-1/2 p-3 bg-foreground/5 backdrop-blur-sm rounded-full text-foreground/50 z-[100] border border-foreground/10 disabled:opacity-0 transition-opacity">
+          <ChevronRight size={24} />
+        </button>
+      </div>
+
+      {/* Cursor Customizado (Escondido no Mobile via CSS na renderização) */}
       <div className="hidden md:block">
         <CustomCursor mouseX={mouseX} mouseY={mouseY} />
       </div>
@@ -210,7 +232,7 @@ function App() {
 }
 
 // ---- BACKGROUND GEOMÉTRICO MINIMALISTA ----
-function GeometricDecorations({ slideIndex, mouseX, mouseY }: { slideIndex: number, mouseX: MotionValue<number>, mouseY: MotionValue<number> }) {
+function GeometricDecorations({ slideIndex, mouseX, mouseY, isMobile }: { slideIndex: number, mouseX: MotionValue<number>, mouseY: MotionValue<number>, isMobile: boolean }) {
   const springConfig = { damping: 50, stiffness: 200 };
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
@@ -223,6 +245,17 @@ function GeometricDecorations({ slideIndex, mouseX, mouseY }: { slideIndex: numb
   
   const parallaxX2 = useTransform(smoothX, [0, width], [40, -40]);
 
+  // Modo Otimizado para Mobile (Fixo, sem framer-motion pesados)
+  if (isMobile) {
+    return (
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-multiply opacity-30">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[80vw] font-display font-black tracking-tighter text-foreground/[0.03] select-none">
+          {String(slideIndex + 1).padStart(2, '0')}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-multiply opacity-60">
       
@@ -230,7 +263,7 @@ function GeometricDecorations({ slideIndex, mouseX, mouseY }: { slideIndex: numb
       <AnimatePresence mode="wait">
         <motion.div 
           key={slideIndex}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[80vw] md:text-[45vw] font-display font-black tracking-tighter text-foreground/[0.03] md:text-foreground/[0.03] select-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[45vw] font-display font-black tracking-tighter text-foreground/[0.03] select-none"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.05 }}
@@ -261,7 +294,7 @@ function GeometricDecorations({ slideIndex, mouseX, mouseY }: { slideIndex: numb
       {/* Vertical Axis Line (Minimalist Orange Accent) */}
       <motion.div 
         style={{ x: parallaxX1 }}
-        className="absolute top-0 bottom-0 right-[25%] w-[1px] bg-foreground/10 flex flex-col items-center justify-center hidden md:flex"
+        className="absolute top-0 bottom-0 right-[25%] w-[1px] bg-foreground/10 flex flex-col items-center justify-center"
       >
          <div className="w-2 h-2 bg-brand-orange rounded-full mt-[20vh] shadow-[0_0_10px_#FF4400]"></div>
       </motion.div>
@@ -545,7 +578,7 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
   const nodes = slide.nodes || [];
   
   return (
-    <div className="w-full h-full flex flex-col justify-center bg-transparent text-foreground relative p-6 md:p-12 pt-24 md:pt-32 overflow-hidden z-10">
+    <div className="w-full h-full flex flex-col md:justify-center bg-transparent text-foreground relative p-6 md:p-12 pt-32 md:pt-32 overflow-hidden z-10">
       <div className="absolute top-20 md:top-32 w-full text-center z-20 drop-shadow-sm px-4">
          <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[8rem] font-display font-black tracking-tighter leading-none lowercase outline-none">
           {slide.title}<span className="text-brand-orange">.</span>
@@ -557,33 +590,28 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
         )}
       </div>
 
-      <div className="relative w-full mt-32 md:mt-32 h-64 md:h-96 flex items-center max-w-7xl mx-auto overflow-x-auto hide-scrollbar drop-shadow-sm z-20">
-        {/* Horizontal Line */}
+      {/* Desktop Timeline (Horizontal) */}
+      <div className="hidden md:flex relative w-full mt-32 h-96 items-center max-w-7xl mx-auto overflow-x-auto hide-scrollbar drop-shadow-sm z-20">
         <div className="absolute left-0 right-0 h-[2px] bg-foreground"></div>
-        
-        {/* The Nodes */}
-        <div className="w-full flex justify-between px-6 md:px-24 z-10 relative gap-8 md:gap-12 min-w-max md:min-w-0">
+        <div className="w-full flex justify-between px-24 z-10 relative gap-12">
            {nodes.map((node, i) => {
              const isTop = i % 2 === 0;
              return (
-               <div key={i} className="relative flex flex-col items-center w-40 md:w-64 flex-shrink-0">
-                  {/* Node Point */}
-                  <div className="w-4 h-4 md:w-5 md:h-5 bg-brand-orange absolute top-1/2 -translate-y-1/2 transform rotate-45 border-2 border-background"></div>
-                  
-                  {/* Content */}
-                  <div className={`absolute w-full flex flex-col items-center text-center ${isTop ? 'bottom-6 md:bottom-8' : 'top-6 md:top-8'}`}>
+               <div key={i} className="relative flex flex-col items-center w-64 flex-shrink-0">
+                  <div className="w-5 h-5 bg-brand-orange absolute top-1/2 -translate-y-1/2 transform rotate-45 border-2 border-background"></div>
+                  <div className={`absolute w-full flex flex-col items-center text-center ${isTop ? 'bottom-8' : 'top-8'}`}>
                      {isTop && (
                        <>
-                         <span contentEditable suppressContentEditableWarning className="text-[10px] md:text-xs font-bold text-white bg-foreground px-2 py-1 uppercase tracking-widest mb-2 md:mb-4 outline-none">{node.title}</span>
-                         <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-lg md:text-2xl lowercase outline-none text-brand-orange">{node.subtitle}</h4>
-                         <p contentEditable suppressContentEditableWarning className="font-sans font-light text-xs md:text-sm mt-1 md:mt-2 outline-none font-medium line-clamp-3">{node.text}</p>
+                         <span contentEditable suppressContentEditableWarning className="text-xs font-bold text-white bg-foreground px-2 py-1 uppercase tracking-widest mb-4 outline-none">{node.title}</span>
+                         <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-2xl lowercase outline-none text-brand-orange">{node.subtitle}</h4>
+                         <p contentEditable suppressContentEditableWarning className="font-sans font-light text-sm mt-2 outline-none font-medium line-clamp-3">{node.text}</p>
                        </>
                      )}
                      {!isTop && (
                        <>
-                         <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-lg md:text-2xl lowercase outline-none text-brand-orange">{node.subtitle}</h4>
-                         <p contentEditable suppressContentEditableWarning className="font-sans font-light text-xs md:text-sm mt-1 md:mt-2 mb-2 md:mb-4 outline-none font-medium line-clamp-3">{node.text}</p>
-                         <span contentEditable suppressContentEditableWarning className="text-[10px] md:text-xs font-bold text-white bg-foreground px-2 py-1 uppercase tracking-widest outline-none">{node.title}</span>
+                         <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-2xl lowercase outline-none text-brand-orange">{node.subtitle}</h4>
+                         <p contentEditable suppressContentEditableWarning className="font-sans font-light text-sm mt-2 mb-4 outline-none font-medium line-clamp-3">{node.text}</p>
+                         <span contentEditable suppressContentEditableWarning className="text-xs font-bold text-white bg-foreground px-2 py-1 uppercase tracking-widest outline-none">{node.title}</span>
                        </>
                      )}
                   </div>
@@ -591,6 +619,23 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
              )
            })}
         </div>
+      </div>
+
+      {/* Mobile Timeline (Vertical) */}
+      <div className="md:hidden relative w-full mt-12 h-full flex flex-col items-start overflow-y-auto hide-scrollbar z-20 px-4 pb-24">
+         <div className="absolute left-[23px] top-4 bottom-12 w-[2px] bg-foreground/20"></div>
+         <div className="w-full flex flex-col justify-start z-10 relative gap-10 py-4">
+            {nodes.map((node, i) => (
+              <div key={i} className="relative flex items-start w-full">
+                 <div className="w-4 h-4 bg-brand-orange absolute left-[15px] top-2 transform rotate-45 border-2 border-background shadow-sm"></div>
+                 <div className="ml-12 flex flex-col items-start text-left w-full pr-4">
+                    <span contentEditable suppressContentEditableWarning className="text-[10px] font-bold text-white bg-foreground px-2 py-1 uppercase tracking-widest mb-2 outline-none">{node.title}</span>
+                    <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-xl lowercase outline-none text-brand-orange leading-none mb-1">{node.subtitle}</h4>
+                    <p contentEditable suppressContentEditableWarning className="font-sans font-light text-sm outline-none font-medium text-gray-700">{node.text}</p>
+                 </div>
+              </div>
+            ))}
+         </div>
       </div>
     </div>
   )
