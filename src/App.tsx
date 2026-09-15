@@ -93,17 +93,33 @@ function App() {
         <CustomCursor mouseX={mouseX} mouseY={mouseY} />
       </div>
 
-      <header className="absolute top-0 w-full p-4 md:p-12 flex justify-between items-center z-50 mix-blend-difference text-white pointer-events-none">
-        <div className="font-display font-black text-xl md:text-2xl tracking-tighter lowercase">
-          argonautas<span className="text-brand-orange">.</span>
+      <header className="absolute top-0 w-full p-6 md:p-12 flex justify-between items-start z-50 mix-blend-difference text-white pointer-events-none">
+        <div className="flex flex-col gap-2 md:gap-4 items-start pointer-events-auto">
+          <div className="font-display font-black text-xl md:text-2xl tracking-tighter lowercase">
+            argonautas<span className="text-brand-orange">.</span>
+          </div>
+          {(slides[currentSlide].chapter || slides[currentSlide].section) && (
+            <div className="flex flex-col text-[10px] md:text-xs font-sans uppercase tracking-widest text-gray-300 opacity-80">
+              <span key={`cap-${currentSlide}`} contentEditable suppressContentEditableWarning className="font-black outline-none">{slides[currentSlide].chapter}</span>
+              <span key={`sec-${currentSlide}`} contentEditable suppressContentEditableWarning className="font-light outline-none">{slides[currentSlide].section}</span>
+            </div>
+          )}
         </div>
-        <div className="flex gap-4 md:gap-6 items-center pointer-events-auto">
-          <button onClick={toggleFullscreen} className="hover:opacity-60 transition-opacity hidden md:block" title="Tela Cheia">
-            <Maximize size={24} strokeWidth={1.5} />
-          </button>
-          <button onClick={() => setMenuOpen(true)} className="hover:opacity-60 transition-opacity" title="Menu">
-            <Menu size={28} strokeWidth={1.5} />
-          </button>
+
+        <div className="flex flex-col items-end gap-2 md:gap-4 pointer-events-auto">
+          <div className="flex gap-4 md:gap-6 items-center">
+            <button onClick={toggleFullscreen} className="hover:opacity-60 transition-opacity hidden md:block" title="Tela Cheia">
+              <Maximize size={24} strokeWidth={1.5} />
+            </button>
+            <button onClick={() => setMenuOpen(true)} className="hover:opacity-60 transition-opacity" title="Menu">
+              <Menu size={28} strokeWidth={1.5} />
+            </button>
+          </div>
+          {slides[currentSlide].presenter && (
+            <span key={`pres-${currentSlide}`} contentEditable suppressContentEditableWarning className="text-[10px] md:text-xs font-bold font-sans uppercase tracking-widest text-gray-300 opacity-80 outline-none border-b border-dashed border-gray-400/50 pb-1 mt-1">
+              {slides[currentSlide].presenter}
+            </span>
+          )}
         </div>
       </header>
 
@@ -157,7 +173,6 @@ function App() {
             transition={{ type: "spring", stiffness: 300, damping: 30, opacity: { duration: 0.2 } }}
             className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none"
           >
-            <SlideContextHeader slide={slides[currentSlide]} />
             <div className="w-full h-full pointer-events-auto relative">
               <SlideContent 
                 slide={slides[currentSlide]} 
@@ -275,21 +290,6 @@ function CustomCursor({ mouseX, mouseY }: { mouseX: MotionValue<number>, mouseY:
   );
 }
 
-function SlideContextHeader({ slide }: { slide: SlideData }) {
-  if (!slide.chapter && !slide.section && !slide.presenter) return null;
-  
-  return (
-    <div className="absolute top-16 md:top-28 left-1/2 -translate-x-1/2 w-full max-w-7xl px-4 md:px-24 flex flex-col md:flex-row justify-between items-center md:items-start z-30 text-[9px] md:text-sm font-sans uppercase tracking-widest text-gray-500 pointer-events-none gap-2 text-center md:text-left">
-      <div className="flex flex-col gap-1 pointer-events-auto items-center md:items-start">
-        <span contentEditable suppressContentEditableWarning className="font-display font-black outline-none">{slide.chapter}</span>
-        <span contentEditable suppressContentEditableWarning className="font-light outline-none">{slide.section}</span>
-      </div>
-      <div className="pointer-events-auto text-center md:text-right">
-        <span contentEditable suppressContentEditableWarning className="font-bold outline-none border-b border-dashed border-gray-400 pb-1">{slide.presenter}</span>
-      </div>
-    </div>
-  );
-}
 
 function ImageUploader({ slide, image, onUpload }: { slide: SlideData, image?: string, onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
   return (
@@ -509,7 +509,7 @@ function ConceptMapLayout({ slide }: { slide: SlideData }) {
               </div>
               <div className="flex flex-col items-center opacity-80">
                 <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-brand-orange"></div>
-                <div className="w-[2px] h-8 md:h-24 bg-foreground"></div>
+                <div className="w-[2px] h-6 md:h-12 bg-foreground"></div>
               </div>
             </div>
           ))}
@@ -525,7 +525,7 @@ function ConceptMapLayout({ slide }: { slide: SlideData }) {
           {bottomNodes.map((node, i) => (
             <div key={i} className="flex flex-col items-center w-[140px] md:w-[280px] text-center">
               <div className="flex flex-col items-center mb-2 md:mb-4 opacity-80">
-                <div className="w-[2px] h-8 md:h-24 bg-foreground"></div>
+                <div className="w-[2px] h-6 md:h-12 bg-foreground"></div>
                 <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-brand-orange"></div>
               </div>
               <div className="space-y-2 md:space-y-4">
