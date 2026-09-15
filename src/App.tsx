@@ -100,16 +100,6 @@ function App() {
       {/* Background Geométrico Limpo (Atrás do Texto) */}
       <GeometricDecorations slideIndex={currentSlide} mouseX={mouseX} mouseY={mouseY} isMobile={isMobile} />
       
-      {/* Botões de Navegação Exclusivos para Mobile */}
-      <div className="md:hidden">
-        <button onClick={() => paginate(-1)} disabled={currentSlide === 0} className="fixed left-2 top-1/2 -translate-y-1/2 p-3 bg-foreground/5 backdrop-blur-sm rounded-full text-foreground/50 z-[100] border border-foreground/10 disabled:opacity-0 transition-opacity">
-          <ChevronLeft size={24} />
-        </button>
-        <button onClick={() => paginate(1)} disabled={currentSlide === slides.length - 1} className="fixed right-2 top-1/2 -translate-y-1/2 p-3 bg-foreground/5 backdrop-blur-sm rounded-full text-foreground/50 z-[100] border border-foreground/10 disabled:opacity-0 transition-opacity">
-          <ChevronRight size={24} />
-        </button>
-      </div>
-
       {/* Cursor Customizado (Escondido no Mobile via CSS na renderização) */}
       <div className="hidden md:block">
         <CustomCursor mouseX={mouseX} mouseY={mouseY} />
@@ -206,11 +196,31 @@ function App() {
         </AnimatePresence>
       </main>
 
-      <footer className="absolute bottom-0 w-full p-4 md:p-12 flex justify-between items-end z-40 pointer-events-none mix-blend-difference text-white">
+      {/* MOBILE FLOATING NAVIGATION PILL */}
+      <div className="md:hidden fixed bottom-6 right-6 flex items-center bg-foreground text-background rounded-full shadow-2xl z-[100] border border-background/20 pointer-events-auto">
+        <button 
+          onClick={() => paginate(-1)} 
+          disabled={currentSlide === 0} 
+          className="p-4 active:bg-foreground/80 disabled:opacity-30 transition-colors rounded-l-full"
+        >
+          <ChevronLeft size={24} />
+        </button>
+        <div className="w-[1px] h-8 bg-background/20"></div>
+        <button 
+          onClick={() => paginate(1)} 
+          disabled={currentSlide === slides.length - 1} 
+          className="p-4 active:bg-foreground/80 disabled:opacity-30 transition-colors text-brand-orange rounded-r-full"
+        >
+          <ChevronRight size={24} />
+        </button>
+      </div>
+
+      {/* DESKTOP FOOTER & COUNTER */}
+      <footer className="absolute bottom-6 md:bottom-0 w-full p-6 md:p-12 flex justify-between items-end z-40 pointer-events-none mix-blend-difference text-white">
         <div className="text-xs md:text-sm font-medium tracking-widest uppercase opacity-70">
           {String(currentSlide + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
         </div>
-        <div className="flex gap-2 md:gap-4 pointer-events-auto">
+        <div className="hidden md:flex gap-2 md:gap-4 pointer-events-auto">
           <button
             onClick={() => paginate(-1)}
             disabled={currentSlide === 0}
