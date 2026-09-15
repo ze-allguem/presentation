@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, MotionValue } from 'framer-motion';
 import { Menu, Maximize, ChevronRight, ChevronLeft, X, Image as ImageIcon, Quote } from 'lucide-react';
 import { slides } from './data';
-import type { SlideData, ConceptNode } from './data';
+import type { SlideData } from './data';
 
 const slideVariants = {
   enter: (direction: number) => ({
@@ -22,17 +22,20 @@ const slideVariants = {
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
   const [images, setImages] = useState<Record<string, string>>({});
 
   // Interatividade Avançada de Mouse
-  const mouseX = useMotionValue(typeof window !== 'undefined' ? window.innerWidth / 2 : 0);
-  const mouseY = useMotionValue(typeof window !== 'undefined' ? window.innerHeight / 2 : 0);
+  const mouseX = useMotionValue<number>(0);
+  const mouseY = useMotionValue<number>(0);
 
   useEffect(() => {
+    // Definir posição inicial segura
+    mouseX.set(window.innerWidth / 2);
+    mouseY.set(window.innerHeight / 2);
+
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
@@ -80,12 +83,6 @@ function App() {
       document.exitFullscreen();
     }
   };
-
-  useEffect(() => {
-    const handleFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
 
   return (
     <div ref={containerRef} className="w-screen h-screen bg-background bg-grain text-foreground overflow-hidden font-sans relative flex flex-col cursor-crosshair">
@@ -211,16 +208,19 @@ function App() {
 }
 
 // ---- BACKGROUND GEOMÉTRICO INTERATIVO ----
-function GeometricDecorations({ mouseX, mouseY }: { mouseX: any, mouseY: any }) {
+function GeometricDecorations({ mouseX, mouseY }: { mouseX: MotionValue<number>, mouseY: MotionValue<number> }) {
   const springConfig = { damping: 50, stiffness: 200 };
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
   
-  const parallaxX1 = useTransform(smoothX, [0, typeof window !== 'undefined' ? window.innerWidth : 1920], [-50, 50]);
-  const parallaxY1 = useTransform(smoothY, [0, typeof window !== 'undefined' ? window.innerHeight : 1080], [-50, 50]);
+  const width = typeof window !== 'undefined' ? window.innerWidth : 1920;
+  const height = typeof window !== 'undefined' ? window.innerHeight : 1080;
+
+  const parallaxX1 = useTransform(smoothX, [0, width], [-50, 50]);
+  const parallaxY1 = useTransform(smoothY, [0, height], [-50, 50]);
   
-  const parallaxX2 = useTransform(smoothX, [0, typeof window !== 'undefined' ? window.innerWidth : 1920], [80, -80]);
-  const parallaxY2 = useTransform(smoothY, [0, typeof window !== 'undefined' ? window.innerHeight : 1080], [80, -80]);
+  const parallaxX2 = useTransform(smoothX, [0, width], [80, -80]);
+  const parallaxY2 = useTransform(smoothY, [0, height], [80, -80]);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-multiply opacity-90">
@@ -287,7 +287,7 @@ function GeometricDecorations({ mouseX, mouseY }: { mouseX: any, mouseY: any }) 
 }
 
 // ---- CUSTOM CURSOR ----
-function CustomCursor({ mouseX, mouseY }: { mouseX: any, mouseY: any }) {
+function CustomCursor({ mouseX, mouseY }: { mouseX: MotionValue<number>, mouseY: MotionValue<number> }) {
   const springConfig = { damping: 25, stiffness: 200, mass: 0.5 };
   const cursorX = useSpring(mouseX, springConfig);
   const cursorY = useSpring(mouseY, springConfig);
@@ -295,7 +295,7 @@ function CustomCursor({ mouseX, mouseY }: { mouseX: any, mouseY: any }) {
   return (
     <>
       <motion.div
-        className="fixed top-0 left-0 w-12 h-12 rounded-full border-2 border-brand-orange/60 z-[60] pointer-events-none"
+        className="fixed top-0 left-0 w-12 h-12 rounded-full border-2 border-brand-orange z-[60] pointer-events-none shadow-[0_0_15px_#FF4400]"
         style={{ x: cursorX, y: cursorY, translateX: '-50%', translateY: '-50%' }}
       />
       <motion.div
