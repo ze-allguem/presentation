@@ -86,25 +86,11 @@ function App() {
 
   return (
     <div ref={containerRef} className="w-screen h-screen bg-background bg-grain text-foreground overflow-hidden font-sans relative flex flex-col cursor-crosshair">
-      {/* Background Geométrico Animado (Atrás do Texto) */}
-      <GeometricDecorations mouseX={mouseX} mouseY={mouseY} />
+      {/* Background Geométrico Limpo (Atrás do Texto) */}
+      <GeometricDecorations slideIndex={currentSlide} mouseX={mouseX} mouseY={mouseY} />
       
       {/* Cursor Customizado */}
       <CustomCursor mouseX={mouseX} mouseY={mouseY} />
-
-      {/* Número Gigante com Efeito de Cor Reversa (mix-blend-difference) - Sobre o Texto */}
-      <AnimatePresence mode="wait">
-        <motion.div 
-          key={currentSlide}
-          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[45vw] font-display font-black tracking-tighter text-white mix-blend-difference pointer-events-none z-40 select-none"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          {String(currentSlide + 1).padStart(2, '0')}
-        </motion.div>
-      </AnimatePresence>
 
       <header className="absolute top-0 w-full p-6 md:p-12 flex justify-between items-center z-50 mix-blend-difference text-white pointer-events-none">
         <div className="font-display font-black text-2xl tracking-tighter lowercase">
@@ -207,8 +193,8 @@ function App() {
   );
 }
 
-// ---- BACKGROUND GEOMÉTRICO INTERATIVO ----
-function GeometricDecorations({ mouseX, mouseY }: { mouseX: MotionValue<number>, mouseY: MotionValue<number> }) {
+// ---- BACKGROUND GEOMÉTRICO MINIMALISTA ----
+function GeometricDecorations({ slideIndex, mouseX, mouseY }: { slideIndex: number, mouseX: MotionValue<number>, mouseY: MotionValue<number> }) {
   const springConfig = { damping: 50, stiffness: 200 };
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
@@ -216,72 +202,55 @@ function GeometricDecorations({ mouseX, mouseY }: { mouseX: MotionValue<number>,
   const width = typeof window !== 'undefined' ? window.innerWidth : 1920;
   const height = typeof window !== 'undefined' ? window.innerHeight : 1080;
 
-  const parallaxX1 = useTransform(smoothX, [0, width], [-50, 50]);
-  const parallaxY1 = useTransform(smoothY, [0, height], [-50, 50]);
+  const parallaxX1 = useTransform(smoothX, [0, width], [-30, 30]);
+  const parallaxY1 = useTransform(smoothY, [0, height], [-30, 30]);
   
-  const parallaxX2 = useTransform(smoothX, [0, width], [80, -80]);
-  const parallaxY2 = useTransform(smoothY, [0, height], [80, -80]);
+  const parallaxX2 = useTransform(smoothX, [0, width], [40, -40]);
+  const parallaxY2 = useTransform(smoothY, [0, height], [40, -40]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-multiply opacity-90">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-multiply opacity-60">
       
-      {/* SHAPES LARANJAS SÓLIDOS (Para dar vida) */}
-      <motion.div 
-        style={{ x: parallaxX1, y: parallaxY2 }}
-        className="absolute top-[10%] right-[5%] w-[35vh] h-[35vh] md:w-[25vw] md:h-[25vw] rounded-full bg-brand-orange mix-blend-normal opacity-90"
-      />
-      <motion.div 
-        style={{ x: parallaxX2, y: parallaxY1 }}
-        className="absolute bottom-[15%] left-[5%] w-[40vw] h-[8vh] bg-brand-orange mix-blend-normal opacity-90 rotate-[-15deg]"
-      />
+      {/* Huge Number Watermark (Very Subtle) */}
+      <AnimatePresence mode="wait">
+        <motion.div 
+          key={slideIndex}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[45vw] font-display font-black tracking-tighter text-foreground/[0.03] select-none"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 1.05 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        >
+          {String(slideIndex + 1).padStart(2, '0')}
+        </motion.div>
+      </AnimatePresence>
 
-      {/* Orbits / Dotted Circles */}
+      {/* Orbits / Dotted Circles (Low Opacity) */}
       <motion.div
         style={{ x: parallaxX1, y: parallaxY1 }}
-        className="absolute top-[-10vh] left-[-10vw] w-[80vh] h-[80vh] rounded-full border-[1px] border-dashed border-foreground/30"
+        className="absolute top-[-10vh] left-[-10vw] w-[80vh] h-[80vh] rounded-full border-[1px] border-dashed border-foreground/10"
         animate={{ rotate: 360 }}
-        transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
-      />
-      <motion.div
-        style={{ x: parallaxX2, y: parallaxY2 }}
-        className="absolute bottom-[-20vh] right-[-10vw] w-[60vh] h-[60vh] rounded-full border-[2px] border-dotted border-brand-orange/60"
-        animate={{ rotate: -360 }}
         transition={{ duration: 150, repeat: Infinity, ease: "linear" }}
       />
-
-      {/* Dot Matrix Grid */}
+      
+      {/* Dot Matrix Grid (Low Opacity) */}
       <motion.div 
         style={{ x: parallaxX2, y: parallaxY1 }}
-        className="absolute top-[20%] left-[10%] grid grid-cols-6 gap-3 opacity-80"
+        className="absolute top-[20%] left-[10%] grid grid-cols-6 gap-3 opacity-20"
       >
         {[...Array(36)].map((_, i) => (
-          <div key={i} className="w-1.5 h-1.5 bg-foreground rounded-full"></div>
+          <div key={i} className="w-1 h-1 bg-foreground rounded-full"></div>
         ))}
       </motion.div>
 
-      {/* Vertical Axis Line */}
+      {/* Vertical Axis Line (Minimalist Orange Accent) */}
       <motion.div 
         style={{ x: parallaxX1 }}
-        className="absolute top-0 bottom-0 right-[25%] w-[1px] bg-foreground/20 flex flex-col items-center justify-center"
+        className="absolute top-0 bottom-0 right-[25%] w-[1px] bg-foreground/10 flex flex-col items-center justify-center"
       >
-         <div className="w-4 h-4 bg-brand-orange rounded-full mt-[20vh] border-2 border-background shadow-lg"></div>
-         <div className="w-2 h-2 bg-foreground rounded-full mt-[40vh]"></div>
+         <div className="w-2 h-2 bg-brand-orange rounded-full mt-[20vh] shadow-[0_0_10px_#FF4400]"></div>
       </motion.div>
 
-      {/* SVG Rotating Fractal / Geometric Shape */}
-      <motion.svg 
-        style={{ x: parallaxX1, y: parallaxY2 }}
-        className="absolute bottom-[10%] right-[15%] w-64 h-64 opacity-30 pointer-events-none"
-        viewBox="0 0 100 100"
-        animate={{ rotate: -360 }}
-        transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
-      >
-        <circle cx="50" cy="50" r="45" fill="none" stroke="#FF4400" strokeWidth="0.5" strokeDasharray="2 4" />
-        <polygon points="50,5 95,50 50,95 5,50" fill="none" stroke="#111111" strokeWidth="0.5" />
-        <polygon points="50,15 85,50 50,85 15,50" fill="none" stroke="#FF4400" strokeWidth="0.5" />
-        <line x1="5" y1="50" x2="95" y2="50" stroke="#111111" strokeWidth="0.5" />
-        <line x1="50" y1="5" x2="50" y2="95" stroke="#111111" strokeWidth="0.5" />
-      </motion.svg>
     </div>
   );
 }
@@ -310,13 +279,13 @@ function SlideContextHeader({ slide }: { slide: SlideData }) {
   if (!slide.chapter && !slide.section && !slide.presenter) return null;
   
   return (
-    <div className="absolute top-8 left-1/2 -translate-x-1/2 w-full max-w-7xl px-12 md:px-24 flex justify-between items-start z-40 text-xs md:text-sm font-sans uppercase tracking-widest mix-blend-difference text-white opacity-80 pointer-events-none">
+    <div className="absolute top-24 md:top-28 left-1/2 -translate-x-1/2 w-full max-w-7xl px-12 md:px-24 flex justify-between items-start z-30 text-xs md:text-sm font-sans uppercase tracking-widest text-gray-500 pointer-events-none">
       <div className="flex flex-col gap-1 pointer-events-auto">
         <span contentEditable suppressContentEditableWarning className="font-display font-black outline-none">{slide.chapter}</span>
         <span contentEditable suppressContentEditableWarning className="font-light outline-none">{slide.section}</span>
       </div>
       <div className="pointer-events-auto text-right">
-        <span contentEditable suppressContentEditableWarning className="font-bold outline-none border-b border-dashed border-white/30 pb-1">{slide.presenter}</span>
+        <span contentEditable suppressContentEditableWarning className="font-bold outline-none border-b border-dashed border-gray-400 pb-1">{slide.presenter}</span>
       </div>
     </div>
   );
