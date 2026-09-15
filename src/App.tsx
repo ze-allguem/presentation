@@ -108,11 +108,6 @@ function App() {
     <div ref={containerRef} className="w-dvw h-dvh bg-background bg-grain text-foreground overflow-hidden font-sans relative flex flex-col cursor-crosshair">
       {/* Background Geométrico Limpo (Atrás do Texto) */}
       <GeometricDecorations slideIndex={currentSlide} mouseX={mouseX} mouseY={mouseY} isMobile={isMobile} />
-      
-      {/* Cursor Customizado (Escondido no Mobile via CSS na renderização) */}
-      <div className="hidden md:block">
-        <CustomCursor mouseX={mouseX} mouseY={mouseY} />
-      </div>
 
       <header className="absolute top-0 w-full p-6 md:p-12 flex justify-between items-start z-50 mix-blend-difference text-white pointer-events-none">
         <div className="flex flex-col gap-2 md:gap-4 items-start pointer-events-auto">
@@ -322,25 +317,7 @@ function GeometricDecorations({ slideIndex, mouseX, mouseY, isMobile }: { slideI
   );
 }
 
-// ---- CUSTOM CURSOR ----
-function CustomCursor({ mouseX, mouseY }: { mouseX: MotionValue<number>, mouseY: MotionValue<number> }) {
-  const springConfig = { damping: 25, stiffness: 200, mass: 0.5 };
-  const cursorX = useSpring(mouseX, springConfig);
-  const cursorY = useSpring(mouseY, springConfig);
 
-  return (
-    <>
-      <motion.div
-        className="fixed top-0 left-0 w-12 h-12 rounded-full border-2 border-brand-orange z-[60] pointer-events-none shadow-[0_0_15px_#FF4400]"
-        style={{ x: cursorX, y: cursorY, translateX: '-50%', translateY: '-50%' }}
-      />
-      <motion.div
-        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-brand-orange z-[60] pointer-events-none shadow-[0_0_10px_#FF4400]"
-        style={{ x: mouseX, y: mouseY, translateX: '-50%', translateY: '-50%' }}
-      />
-    </>
-  );
-}
 
 
 function ImageUploader({ slide, image, onUpload }: { slide: SlideData, image?: string, onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
@@ -462,7 +439,7 @@ function SplitBlockLayout({ slide, image, onUpload }: { slide: SlideData, image?
 function SplitImageLayout({ slide, image, onUpload }: { slide: SlideData, image?: string, onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
   return (
     <div className="w-full h-full flex flex-col md:flex-row p-6 md:p-24 pt-24 md:pt-32 gap-8 md:gap-24 overflow-y-auto hide-scrollbar bg-transparent relative z-10">
-      <div className="flex-1 flex justify-center items-center min-h-[30vh] md:min-h-0 md:h-full w-full z-20 shadow-2xl">
+      <div className="flex-1 flex justify-center items-center min-h-[30vh] md:min-h-0 md:h-full z-20 shadow-2xl">
         <ImageUploader slide={slide} image={image} onUpload={onUpload} />
       </div>
       <div className="flex-1 flex flex-col h-full overflow-y-visible md:overflow-y-auto hide-scrollbar pb-12 md:py-32 z-20">
@@ -496,7 +473,7 @@ function SplitImageLayout({ slide, image, onUpload }: { slide: SlideData, image?
 function AnalysisLayout({ slide }: { slide: SlideData }) {
   return (
     <div className="w-full h-full flex flex-col md:flex-row p-6 md:p-24 gap-8 md:gap-24 items-start md:items-center bg-transparent relative z-10 overflow-y-auto hide-scrollbar">
-      <div className="flex-1 space-y-4 md:space-y-8 flex flex-col justify-center border-b md:border-b-0 md:border-r border-foreground/10 pb-8 md:pb-0 md:pr-24 drop-shadow-sm z-20 w-full mt-24 md:mt-0">
+      <div className="flex-1 space-y-4 md:space-y-8 flex flex-col justify-center border-b md:border-b-0 md:border-r border-foreground/10 pb-8 md:pb-0 md:pr-24 drop-shadow-sm z-20 mt-24 md:mt-0">
         <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[7rem] font-display font-black tracking-tighter leading-none lowercase outline-none break-words">
           {slide.title}<span className="text-brand-orange">.</span>
         </h2>
