@@ -206,7 +206,6 @@ function GeometricDecorations({ slideIndex, mouseX, mouseY }: { slideIndex: numb
   const parallaxY1 = useTransform(smoothY, [0, height], [-30, 30]);
   
   const parallaxX2 = useTransform(smoothX, [0, width], [40, -40]);
-  const parallaxY2 = useTransform(smoothY, [0, height], [40, -40]);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-multiply opacity-60">
