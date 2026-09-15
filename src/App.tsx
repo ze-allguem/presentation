@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, MotionValue } from 'framer-motion';
-import { Menu, Maximize, ChevronRight, ChevronLeft, X, Image as ImageIcon, Quote } from 'lucide-react';
+import { Menu, Maximize, Minimize, ChevronRight, ChevronLeft, X, Image as ImageIcon, Quote } from 'lucide-react';
 import { slides } from './data';
 import type { SlideData } from './data';
 
@@ -24,6 +24,7 @@ function App() {
   const [direction, setDirection] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
   const [images, setImages] = useState<Record<string, string>>({});
@@ -85,6 +86,14 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentSlide]);
 
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       containerRef.current?.requestFullscreen().catch(err => {
@@ -96,7 +105,7 @@ function App() {
   };
 
   return (
-    <div ref={containerRef} className="w-screen h-screen bg-background bg-grain text-foreground overflow-hidden font-sans relative flex flex-col cursor-crosshair">
+    <div ref={containerRef} className="w-dvw h-dvh bg-background bg-grain text-foreground overflow-hidden font-sans relative flex flex-col cursor-crosshair">
       {/* Background Geométrico Limpo (Atrás do Texto) */}
       <GeometricDecorations slideIndex={currentSlide} mouseX={mouseX} mouseY={mouseY} isMobile={isMobile} />
       
@@ -120,8 +129,8 @@ function App() {
 
         <div className="flex flex-col items-end gap-2 md:gap-4 pointer-events-auto">
           <div className="flex gap-4 md:gap-6 items-center">
-            <button onClick={toggleFullscreen} className="hover:opacity-60 transition-opacity hidden md:block" title="Tela Cheia">
-              <Maximize size={24} strokeWidth={1.5} />
+            <button onClick={toggleFullscreen} className="hover:opacity-60 transition-opacity" title={isFullscreen ? "Sair da Tela Cheia" : "Tela Cheia"}>
+              {isFullscreen ? <Minimize size={24} strokeWidth={1.5} /> : <Maximize size={24} strokeWidth={1.5} />}
             </button>
             <button onClick={() => setMenuOpen(true)} className="hover:opacity-60 transition-opacity" title="Menu">
               <Menu size={28} strokeWidth={1.5} />
