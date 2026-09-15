@@ -32,7 +32,6 @@ function App() {
   const mouseY = useMotionValue<number>(0);
 
   useEffect(() => {
-    // Definir posição inicial segura
     mouseX.set(window.innerWidth / 2);
     mouseY.set(window.innerHeight / 2);
 
@@ -89,15 +88,17 @@ function App() {
       {/* Background Geométrico Limpo (Atrás do Texto) */}
       <GeometricDecorations slideIndex={currentSlide} mouseX={mouseX} mouseY={mouseY} />
       
-      {/* Cursor Customizado */}
-      <CustomCursor mouseX={mouseX} mouseY={mouseY} />
+      {/* Cursor Customizado (Escondido no Mobile) */}
+      <div className="hidden md:block">
+        <CustomCursor mouseX={mouseX} mouseY={mouseY} />
+      </div>
 
-      <header className="absolute top-0 w-full p-6 md:p-12 flex justify-between items-center z-50 mix-blend-difference text-white pointer-events-none">
-        <div className="font-display font-black text-2xl tracking-tighter lowercase">
+      <header className="absolute top-0 w-full p-4 md:p-12 flex justify-between items-center z-50 mix-blend-difference text-white pointer-events-none">
+        <div className="font-display font-black text-xl md:text-2xl tracking-tighter lowercase">
           argonautas<span className="text-brand-orange">.</span>
         </div>
-        <div className="flex gap-6 items-center pointer-events-auto">
-          <button onClick={toggleFullscreen} className="hover:opacity-60 transition-opacity" title="Tela Cheia">
+        <div className="flex gap-4 md:gap-6 items-center pointer-events-auto">
+          <button onClick={toggleFullscreen} className="hover:opacity-60 transition-opacity hidden md:block" title="Tela Cheia">
             <Maximize size={24} strokeWidth={1.5} />
           </button>
           <button onClick={() => setMenuOpen(true)} className="hover:opacity-60 transition-opacity" title="Menu">
@@ -114,7 +115,7 @@ function App() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-background bg-grain z-50 flex flex-col p-6 md:p-12 text-foreground"
           >
-            <div className="flex justify-between items-center mb-12">
+            <div className="flex justify-between items-center mb-6 md:mb-12">
               <div className="font-display font-black text-2xl tracking-tighter lowercase">
                 índice<span className="text-brand-orange">.</span>
               </div>
@@ -123,11 +124,11 @@ function App() {
               </button>
             </div>
             <div className="flex-1 overflow-y-auto hide-scrollbar z-50 relative pointer-events-auto">
-              <ul className="flex flex-col gap-6 max-w-5xl mx-auto mt-12 pb-24">
+              <ul className="flex flex-col gap-4 md:gap-6 max-w-5xl mx-auto mt-6 md:mt-12 pb-24">
                 {slides.map((slide, idx) => (
                   <li key={slide.id}>
                     <button
-                      className={`text-left text-3xl md:text-5xl font-display font-black tracking-tighter lowercase transition-colors hover:text-brand-orange ${currentSlide === idx ? 'text-foreground' : 'text-gray-400'}`}
+                      className={`text-left text-2xl md:text-5xl font-display font-black tracking-tighter lowercase transition-colors hover:text-brand-orange ${currentSlide === idx ? 'text-foreground' : 'text-gray-400'}`}
                       onClick={() => {
                         setDirection(idx > currentSlide ? 1 : -1);
                         setCurrentSlide(idx);
@@ -168,24 +169,24 @@ function App() {
         </AnimatePresence>
       </main>
 
-      <footer className="absolute bottom-0 w-full p-6 md:p-12 flex justify-between items-end z-40 pointer-events-none mix-blend-difference text-white">
-        <div className="text-sm font-medium tracking-widest uppercase opacity-70">
+      <footer className="absolute bottom-0 w-full p-4 md:p-12 flex justify-between items-end z-40 pointer-events-none mix-blend-difference text-white">
+        <div className="text-xs md:text-sm font-medium tracking-widest uppercase opacity-70">
           {String(currentSlide + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
         </div>
-        <div className="flex gap-4 pointer-events-auto">
+        <div className="flex gap-2 md:gap-4 pointer-events-auto">
           <button
             onClick={() => paginate(-1)}
             disabled={currentSlide === 0}
-            className="p-4 border border-white/30 rounded-full hover:bg-white/10 disabled:opacity-30 transition-all cursor-pointer z-50"
+            className="p-3 md:p-4 border border-white/30 rounded-full hover:bg-white/10 disabled:opacity-30 transition-all cursor-pointer z-50"
           >
-            <ChevronLeft size={24} strokeWidth={1} />
+            <ChevronLeft size={20} strokeWidth={1} />
           </button>
           <button
             onClick={() => paginate(1)}
             disabled={currentSlide === slides.length - 1}
-            className="p-4 border border-white/30 rounded-full hover:bg-white/10 disabled:opacity-30 transition-all cursor-pointer z-50"
+            className="p-3 md:p-4 border border-white/30 rounded-full hover:bg-white/10 disabled:opacity-30 transition-all cursor-pointer z-50"
           >
-            <ChevronRight size={24} strokeWidth={1} />
+            <ChevronRight size={20} strokeWidth={1} />
           </button>
         </div>
       </footer>
@@ -214,7 +215,7 @@ function GeometricDecorations({ slideIndex, mouseX, mouseY }: { slideIndex: numb
       <AnimatePresence mode="wait">
         <motion.div 
           key={slideIndex}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[45vw] font-display font-black tracking-tighter text-foreground/[0.03] select-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[80vw] md:text-[45vw] font-display font-black tracking-tighter text-foreground/[0.03] md:text-foreground/[0.03] select-none"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.05 }}
@@ -245,7 +246,7 @@ function GeometricDecorations({ slideIndex, mouseX, mouseY }: { slideIndex: numb
       {/* Vertical Axis Line (Minimalist Orange Accent) */}
       <motion.div 
         style={{ x: parallaxX1 }}
-        className="absolute top-0 bottom-0 right-[25%] w-[1px] bg-foreground/10 flex flex-col items-center justify-center"
+        className="absolute top-0 bottom-0 right-[25%] w-[1px] bg-foreground/10 flex flex-col items-center justify-center hidden md:flex"
       >
          <div className="w-2 h-2 bg-brand-orange rounded-full mt-[20vh] shadow-[0_0_10px_#FF4400]"></div>
       </motion.div>
@@ -278,12 +279,12 @@ function SlideContextHeader({ slide }: { slide: SlideData }) {
   if (!slide.chapter && !slide.section && !slide.presenter) return null;
   
   return (
-    <div className="absolute top-24 md:top-28 left-1/2 -translate-x-1/2 w-full max-w-7xl px-12 md:px-24 flex justify-between items-start z-30 text-xs md:text-sm font-sans uppercase tracking-widest text-gray-500 pointer-events-none">
-      <div className="flex flex-col gap-1 pointer-events-auto">
+    <div className="absolute top-16 md:top-28 left-1/2 -translate-x-1/2 w-full max-w-7xl px-4 md:px-24 flex flex-col md:flex-row justify-between items-center md:items-start z-30 text-[9px] md:text-sm font-sans uppercase tracking-widest text-gray-500 pointer-events-none gap-2 text-center md:text-left">
+      <div className="flex flex-col gap-1 pointer-events-auto items-center md:items-start">
         <span contentEditable suppressContentEditableWarning className="font-display font-black outline-none">{slide.chapter}</span>
         <span contentEditable suppressContentEditableWarning className="font-light outline-none">{slide.section}</span>
       </div>
-      <div className="pointer-events-auto text-right">
+      <div className="pointer-events-auto text-center md:text-right">
         <span contentEditable suppressContentEditableWarning className="font-bold outline-none border-b border-dashed border-gray-400 pb-1">{slide.presenter}</span>
       </div>
     </div>
@@ -292,16 +293,16 @@ function SlideContextHeader({ slide }: { slide: SlideData }) {
 
 function ImageUploader({ slide, image, onUpload }: { slide: SlideData, image?: string, onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
   return (
-    <label className="w-full aspect-[3/4] md:h-full md:aspect-auto max-h-[70vh] bg-gray-200 border border-gray-300 flex flex-col items-center justify-center text-gray-400 group relative overflow-hidden cursor-pointer hover:bg-gray-300 transition-colors">
+    <label className="w-full h-full min-h-[30vh] bg-gray-200 border border-gray-300 flex flex-col items-center justify-center text-gray-400 group relative overflow-hidden cursor-pointer hover:bg-gray-300 transition-colors">
       <input type="file" accept="image/*" className="hidden" onChange={onUpload} />
       {image ? (
         <img src={image} alt="Uploaded" className="w-full h-full object-cover" />
       ) : (
         <>
           <ImageIcon size={48} className="mb-4 opacity-50 group-hover:scale-110 transition-transform duration-700" strokeWidth={1} />
-          <span className="text-sm font-medium tracking-widest uppercase text-center px-4">Clique para Inserir</span>
+          <span className="text-xs md:text-sm font-medium tracking-widest uppercase text-center px-4">Clique para Inserir</span>
           {slide.imagePlaceholder && (
-            <span className="absolute bottom-12 left-1/2 -translate-x-1/2 text-xs font-medium italic text-gray-500 whitespace-nowrap">
+            <span className="absolute bottom-6 md:bottom-12 left-1/2 -translate-x-1/2 text-[10px] md:text-xs font-medium italic text-gray-500 whitespace-nowrap">
               Ref: {slide.imagePlaceholder}
             </span>
           )}
@@ -335,18 +336,18 @@ function SlideContent({ slide, image, onImageUpload }: { slide: SlideData, image
 
 function CoverLayout({ slide }: { slide: SlideData }) {
   return (
-    <div className="max-w-6xl w-full text-center flex flex-col items-center justify-center space-y-12 p-12 mt-12 h-full overflow-y-auto hide-scrollbar py-32 bg-transparent relative z-10">
-      <div className="my-auto relative z-20">
-        <h1 contentEditable suppressContentEditableWarning className="text-7xl md:text-[10rem] leading-none font-display font-black tracking-tighter text-foreground lowercase outline-none drop-shadow-sm">
+    <div className="max-w-6xl w-full text-center flex flex-col items-center justify-center space-y-8 md:space-y-12 p-6 md:p-12 mt-12 h-full overflow-y-auto hide-scrollbar py-24 md:py-32 bg-transparent relative z-10">
+      <div className="my-auto relative z-20 w-full">
+        <h1 contentEditable suppressContentEditableWarning className="text-5xl md:text-[10rem] leading-none font-display font-black tracking-tighter text-foreground lowercase outline-none drop-shadow-sm break-words">
           {slide.title}<span className="text-brand-orange">.</span>
         </h1>
         {slide.subtitle && (
-          <p contentEditable suppressContentEditableWarning className="text-xl md:text-2xl font-light text-gray-700 max-w-2xl uppercase tracking-widest whitespace-pre-line outline-none mt-8 mx-auto drop-shadow-sm">
+          <p contentEditable suppressContentEditableWarning className="text-base md:text-2xl font-light text-gray-700 max-w-2xl uppercase tracking-widest whitespace-pre-line outline-none mt-6 md:mt-8 mx-auto drop-shadow-sm px-4">
             {slide.subtitle}
           </p>
         )}
-        <div className="h-[2px] w-24 bg-brand-orange mx-auto my-12"></div>
-        <div className="space-y-4 max-w-2xl mx-auto text-xl md:text-3xl font-light text-gray-800 drop-shadow-sm">
+        <div className="h-[2px] w-16 md:w-24 bg-brand-orange mx-auto my-8 md:my-12"></div>
+        <div className="space-y-4 max-w-2xl mx-auto text-lg md:text-3xl font-light text-gray-800 drop-shadow-sm px-4">
           {slide.content.map((text, i) => (
             <p key={i} contentEditable suppressContentEditableWarning className="outline-none">
               {text}
@@ -360,14 +361,14 @@ function CoverLayout({ slide }: { slide: SlideData }) {
 
 function ImpactQuoteLayout({ slide }: { slide: SlideData }) {
   return (
-    <div className="w-full h-full bg-[#0a0a0a] text-white flex flex-col items-center justify-center p-12 md:p-24 text-center overflow-y-auto hide-scrollbar py-32 relative z-20">
-      <div className="my-auto flex flex-col items-center z-20">
-        <Quote size={80} fill="#FF4400" className="mb-12 opacity-100 md:w-32 md:h-32 text-brand-orange drop-shadow-[0_0_15px_rgba(255,68,0,0.5)]" />
-        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-7xl max-w-6xl font-display font-black tracking-tighter leading-tight lowercase z-10 outline-none">
+    <div className="w-full h-full bg-[#0a0a0a] text-white flex flex-col items-center justify-center p-6 md:p-24 text-center overflow-y-auto hide-scrollbar py-24 md:py-32 relative z-20">
+      <div className="my-auto flex flex-col items-center z-20 px-4">
+        <Quote className="mb-8 md:mb-12 opacity-100 w-16 h-16 md:w-32 md:h-32 text-brand-orange drop-shadow-[0_0_15px_rgba(255,68,0,0.5)]" fill="#FF4400" />
+        <h2 contentEditable suppressContentEditableWarning className="text-3xl md:text-7xl max-w-6xl font-display font-black tracking-tighter leading-tight lowercase z-10 outline-none">
           {slide.quote || slide.title}<span className="text-brand-orange">.</span>
         </h2>
-        <div className="w-[2px] h-24 md:h-48 bg-brand-orange my-12 shadow-[0_0_10px_#FF4400]"></div>
-        <div contentEditable suppressContentEditableWarning className="font-sans font-light tracking-widest uppercase text-sm md:text-base text-gray-400 outline-none">
+        <div className="w-[2px] h-16 md:h-48 bg-brand-orange my-8 md:my-12 shadow-[0_0_10px_#FF4400]"></div>
+        <div contentEditable suppressContentEditableWarning className="font-sans font-light tracking-widest uppercase text-[10px] md:text-base text-gray-400 outline-none">
           {slide.subtitle || 'Bronislaw Malinowski'}
         </div>
       </div>
@@ -377,24 +378,24 @@ function ImpactQuoteLayout({ slide }: { slide: SlideData }) {
 
 function SplitBlockLayout({ slide, image, onUpload }: { slide: SlideData, image?: string, onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
   return (
-    <div className="w-full h-full flex flex-col md:flex-row relative z-10">
-      <div className="w-full md:w-[35%] bg-transparent text-foreground flex flex-col justify-center p-12 md:p-24 z-20 relative">
-        <h2 contentEditable suppressContentEditableWarning className="text-6xl md:text-[6.5rem] font-display font-black tracking-tighter leading-none lowercase outline-none pt-12 md:pt-0 drop-shadow-sm">
+    <div className="w-full h-full flex flex-col md:flex-row relative z-10 overflow-y-auto md:overflow-hidden hide-scrollbar">
+      <div className="w-full md:w-[35%] min-h-[40vh] md:min-h-0 bg-transparent text-foreground flex flex-col justify-center p-8 md:p-24 z-20 relative pt-32 md:pt-24">
+        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[6.5rem] font-display font-black tracking-tighter leading-none lowercase outline-none drop-shadow-sm break-words">
           {slide.title}<span className="text-brand-orange">.</span>
         </h2>
         {slide.subtitle && (
-          <h3 contentEditable suppressContentEditableWarning className="mt-12 text-sm md:text-lg font-bold tracking-widest uppercase text-gray-800 outline-none drop-shadow-sm">
+          <h3 contentEditable suppressContentEditableWarning className="mt-6 md:mt-12 text-xs md:text-lg font-bold tracking-widest uppercase text-gray-800 outline-none drop-shadow-sm">
             {slide.subtitle}
           </h3>
         )}
       </div>
       
-      <div className="w-full md:w-[30%] bg-gray-200 flex flex-col border-x border-foreground/5 relative h-64 md:h-auto z-20 shadow-xl">
+      <div className="w-full md:w-[30%] min-h-[30vh] md:min-h-0 bg-gray-200 flex flex-col border-y md:border-x border-foreground/5 relative z-20 shadow-xl">
         <ImageUploader slide={slide} image={image} onUpload={onUpload} />
       </div>
       
-      <div className="w-full md:w-[35%] bg-[#0f0f0f] text-white flex flex-col h-full overflow-y-auto hide-scrollbar p-12 md:p-24 py-32 z-20">
-        <div className="space-y-8 text-2xl md:text-4xl font-light leading-relaxed opacity-90 my-auto">
+      <div className="w-full md:w-[35%] bg-[#0f0f0f] text-white flex flex-col h-auto md:h-full overflow-y-visible md:overflow-y-auto hide-scrollbar p-8 md:p-24 py-16 md:py-32 z-20">
+        <div className="space-y-6 md:space-y-8 text-xl md:text-4xl font-light leading-relaxed opacity-90 my-auto">
           {slide.content.map((text, i) => (
             <p key={i} contentEditable suppressContentEditableWarning className="outline-none">
               {text}
@@ -408,21 +409,21 @@ function SplitBlockLayout({ slide, image, onUpload }: { slide: SlideData, image?
 
 function SplitImageLayout({ slide, image, onUpload }: { slide: SlideData, image?: string, onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
   return (
-    <div className="w-full h-full flex flex-col md:flex-row p-12 md:p-24 pt-24 md:pt-32 gap-12 md:gap-24 overflow-y-auto hide-scrollbar bg-transparent relative z-10">
-      <div className="flex-1 flex justify-center items-center h-64 md:h-full w-full z-20 shadow-2xl">
+    <div className="w-full h-full flex flex-col md:flex-row p-6 md:p-24 pt-24 md:pt-32 gap-8 md:gap-24 overflow-y-auto hide-scrollbar bg-transparent relative z-10">
+      <div className="flex-1 flex justify-center items-center min-h-[30vh] md:min-h-0 md:h-full w-full z-20 shadow-2xl">
         <ImageUploader slide={slide} image={image} onUpload={onUpload} />
       </div>
-      <div className="flex-1 flex flex-col h-full overflow-y-auto hide-scrollbar py-12 md:py-32 z-20">
+      <div className="flex-1 flex flex-col h-full overflow-y-visible md:overflow-y-auto hide-scrollbar pb-12 md:py-32 z-20">
         <div className="my-auto drop-shadow-sm">
-          <h2 contentEditable suppressContentEditableWarning className="text-6xl md:text-[7rem] font-display font-black tracking-tighter leading-none lowercase outline-none">
+          <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[7rem] font-display font-black tracking-tighter leading-none lowercase outline-none break-words">
             {slide.title}<span className="text-brand-orange">.</span>
           </h2>
           {slide.subtitle && (
-            <h3 contentEditable suppressContentEditableWarning className="mt-8 text-sm md:text-lg font-bold tracking-widest uppercase text-gray-800 outline-none">
+            <h3 contentEditable suppressContentEditableWarning className="mt-4 md:mt-8 text-xs md:text-lg font-bold tracking-widest uppercase text-gray-800 outline-none">
               {slide.subtitle}
             </h3>
           )}
-          <div className="mt-12 space-y-8 text-2xl md:text-4xl font-light text-gray-800 leading-relaxed">
+          <div className="mt-8 md:mt-12 space-y-6 md:space-y-8 text-lg md:text-4xl font-light text-gray-800 leading-relaxed">
             {slide.content.map((text, i) => (
               <p key={i} contentEditable suppressContentEditableWarning className="outline-none">
                 {text}
@@ -430,7 +431,7 @@ function SplitImageLayout({ slide, image, onUpload }: { slide: SlideData, image?
             ))}
           </div>
           {slide.quote && (
-            <blockquote contentEditable suppressContentEditableWarning className="border-l-4 border-brand-orange pl-6 py-2 mt-12 text-3xl md:text-5xl font-display font-black text-foreground leading-snug outline-none lowercase">
+            <blockquote contentEditable suppressContentEditableWarning className="border-l-4 border-brand-orange pl-4 md:pl-6 py-2 mt-8 md:mt-12 text-2xl md:text-5xl font-display font-black text-foreground leading-snug outline-none lowercase">
               "{slide.quote}"
             </blockquote>
           )}
@@ -442,19 +443,19 @@ function SplitImageLayout({ slide, image, onUpload }: { slide: SlideData, image?
 
 function AnalysisLayout({ slide }: { slide: SlideData }) {
   return (
-    <div className="w-full h-full flex flex-col md:flex-row p-12 md:p-24 gap-12 md:gap-24 items-center bg-transparent relative z-10">
-      <div className="flex-1 space-y-8 flex flex-col justify-center border-b md:border-b-0 md:border-r border-foreground/10 pb-12 md:pb-0 md:pr-24 drop-shadow-sm z-20">
-        <h2 contentEditable suppressContentEditableWarning className="text-6xl md:text-[7rem] font-display font-black tracking-tighter leading-none lowercase outline-none">
+    <div className="w-full h-full flex flex-col md:flex-row p-6 md:p-24 gap-8 md:gap-24 items-start md:items-center bg-transparent relative z-10 overflow-y-auto hide-scrollbar">
+      <div className="flex-1 space-y-4 md:space-y-8 flex flex-col justify-center border-b md:border-b-0 md:border-r border-foreground/10 pb-8 md:pb-0 md:pr-24 drop-shadow-sm z-20 w-full mt-24 md:mt-0">
+        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[7rem] font-display font-black tracking-tighter leading-none lowercase outline-none break-words">
           {slide.title}<span className="text-brand-orange">.</span>
         </h2>
         {slide.subtitle && (
-          <h3 contentEditable suppressContentEditableWarning className="text-sm md:text-lg font-bold tracking-widest uppercase text-gray-800 outline-none">
+          <h3 contentEditable suppressContentEditableWarning className="text-xs md:text-lg font-bold tracking-widest uppercase text-gray-800 outline-none">
             {slide.subtitle}
           </h3>
         )}
       </div>
-      <div className="flex-1 flex flex-col h-full overflow-y-auto hide-scrollbar py-32 drop-shadow-sm z-20">
-        <div className="space-y-8 text-2xl md:text-4xl font-light text-gray-800 leading-relaxed my-auto">
+      <div className="flex-1 flex flex-col h-auto md:h-full overflow-y-visible md:overflow-y-auto hide-scrollbar pb-12 md:py-32 drop-shadow-sm z-20">
+        <div className="space-y-6 md:space-y-8 text-lg md:text-4xl font-light text-gray-800 leading-relaxed my-auto">
           {slide.content.map((text, i) => (
             <p key={i} contentEditable suppressContentEditableWarning className="outline-none">
               {text}
@@ -468,12 +469,12 @@ function AnalysisLayout({ slide }: { slide: SlideData }) {
 
 function StandardLayout({ slide }: { slide: SlideData }) {
   return (
-    <div className="w-full h-full flex flex-col overflow-y-auto hide-scrollbar p-12 md:p-24 py-32 bg-transparent relative z-10">
+    <div className="w-full h-full flex flex-col overflow-y-auto hide-scrollbar p-6 md:p-24 py-24 md:py-32 bg-transparent relative z-10">
       <div className="max-w-6xl mx-auto my-auto w-full drop-shadow-sm z-20">
-        <h2 contentEditable suppressContentEditableWarning className="text-6xl md:text-[8rem] font-display font-black tracking-tighter leading-none lowercase outline-none mb-12">
+        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[8rem] font-display font-black tracking-tighter leading-none lowercase outline-none mb-8 md:mb-12 break-words mt-8 md:mt-0">
           {slide.title}<span className="text-brand-orange">.</span>
         </h2>
-        <div className="space-y-8 text-2xl md:text-4xl font-light text-gray-800 leading-relaxed">
+        <div className="space-y-6 md:space-y-8 text-lg md:text-4xl font-light text-gray-800 leading-relaxed">
           {slide.content.map((text, i) => (
             <p key={i} contentEditable suppressContentEditableWarning className="outline-none">
               {text}
@@ -481,7 +482,7 @@ function StandardLayout({ slide }: { slide: SlideData }) {
           ))}
         </div>
         {slide.quote && (
-          <blockquote contentEditable suppressContentEditableWarning className="border-l-4 border-brand-orange pl-8 py-4 mt-12 text-4xl md:text-6xl font-display font-black text-foreground leading-snug outline-none lowercase">
+          <blockquote contentEditable suppressContentEditableWarning className="border-l-4 border-brand-orange pl-4 md:pl-8 py-2 md:py-4 mt-8 md:mt-12 text-2xl md:text-6xl font-display font-black text-foreground leading-snug outline-none lowercase">
             "{slide.quote}"
           </blockquote>
         )}
@@ -495,42 +496,42 @@ function ConceptMapLayout({ slide }: { slide: SlideData }) {
   const bottomNodes = slide.nodes?.filter(n => n.position === 'bottom') || [];
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-12 md:p-24 bg-transparent text-foreground overflow-y-auto hide-scrollbar py-32 relative z-10">
-      <div className="my-auto flex flex-col items-center w-full drop-shadow-sm z-20">
+    <div className="w-full h-full flex flex-col items-center justify-center p-6 md:p-24 bg-transparent text-foreground overflow-y-auto hide-scrollbar py-24 md:py-32 relative z-10">
+      <div className="my-auto flex flex-col items-center w-full drop-shadow-sm z-20 mt-12 md:mt-0">
         {/* Top Nodes */}
-        <div className="flex w-full justify-center gap-6 md:gap-24 mb-8 items-end flex-wrap">
+        <div className="flex w-full justify-center gap-4 md:gap-24 mb-6 md:mb-8 items-end flex-wrap">
           {topNodes.map((node, i) => (
-            <div key={i} className="flex flex-col items-center max-w-[280px] text-center">
-              <div className="mb-4 space-y-4">
-                <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-xl md:text-2xl uppercase tracking-widest outline-none">{node.title}</h4>
-                {node.subtitle && <h5 contentEditable suppressContentEditableWarning className="text-sm font-bold uppercase tracking-widest text-brand-orange outline-none">{node.subtitle}</h5>}
-                <p contentEditable suppressContentEditableWarning className="font-sans font-light text-sm md:text-lg outline-none text-gray-800 leading-relaxed">{node.text}</p>
+            <div key={i} className="flex flex-col items-center w-[140px] md:w-[280px] text-center">
+              <div className="mb-2 md:mb-4 space-y-2 md:space-y-4">
+                <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-base md:text-2xl uppercase tracking-widest outline-none">{node.title}</h4>
+                {node.subtitle && <h5 contentEditable suppressContentEditableWarning className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-brand-orange outline-none">{node.subtitle}</h5>}
+                <p contentEditable suppressContentEditableWarning className="font-sans font-light text-xs md:text-lg outline-none text-gray-800 leading-relaxed hidden md:block">{node.text}</p>
               </div>
               <div className="flex flex-col items-center opacity-80">
-                <div className="w-3 h-3 rounded-full bg-brand-orange"></div>
-                <div className="w-[2px] h-12 md:h-24 bg-foreground"></div>
+                <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-brand-orange"></div>
+                <div className="w-[2px] h-8 md:h-24 bg-foreground"></div>
               </div>
             </div>
           ))}
         </div>
 
         {/* Central Word */}
-        <h2 contentEditable suppressContentEditableWarning className="text-7xl md:text-[11rem] font-display font-black tracking-tighter lowercase leading-none outline-none z-10 bg-background/70 backdrop-blur-sm px-8 py-4 rounded-[4rem]">
+        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[11rem] font-display font-black tracking-tighter lowercase leading-none outline-none z-10 bg-background/80 backdrop-blur-md px-6 py-3 md:px-8 md:py-4 rounded-3xl md:rounded-[4rem] break-words text-center">
           {slide.title}<span className="text-brand-orange">.</span>
         </h2>
 
         {/* Bottom Nodes */}
-        <div className="flex w-full justify-center gap-6 md:gap-24 mt-8 items-start flex-wrap">
+        <div className="flex w-full justify-center gap-4 md:gap-24 mt-6 md:mt-8 items-start flex-wrap">
           {bottomNodes.map((node, i) => (
-            <div key={i} className="flex flex-col items-center max-w-[280px] text-center">
-              <div className="flex flex-col items-center mb-4 opacity-80">
-                <div className="w-[2px] h-12 md:h-24 bg-foreground"></div>
-                <div className="w-3 h-3 rounded-full bg-brand-orange"></div>
+            <div key={i} className="flex flex-col items-center w-[140px] md:w-[280px] text-center">
+              <div className="flex flex-col items-center mb-2 md:mb-4 opacity-80">
+                <div className="w-[2px] h-8 md:h-24 bg-foreground"></div>
+                <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-brand-orange"></div>
               </div>
-              <div className="space-y-4">
-                <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-xl md:text-2xl uppercase tracking-widest outline-none">{node.title}</h4>
-                {node.subtitle && <h5 contentEditable suppressContentEditableWarning className="text-sm font-bold uppercase tracking-widest text-brand-orange outline-none">{node.subtitle}</h5>}
-                <p contentEditable suppressContentEditableWarning className="font-sans font-light text-sm md:text-lg outline-none text-gray-800 leading-relaxed">{node.text}</p>
+              <div className="space-y-2 md:space-y-4">
+                <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-base md:text-2xl uppercase tracking-widest outline-none">{node.title}</h4>
+                {node.subtitle && <h5 contentEditable suppressContentEditableWarning className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-brand-orange outline-none">{node.subtitle}</h5>}
+                <p contentEditable suppressContentEditableWarning className="font-sans font-light text-xs md:text-lg outline-none text-gray-800 leading-relaxed hidden md:block">{node.text}</p>
               </div>
             </div>
           ))}
@@ -544,45 +545,45 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
   const nodes = slide.nodes || [];
   
   return (
-    <div className="w-full h-full flex flex-col justify-center bg-transparent text-foreground relative p-12 pt-32 overflow-hidden z-10">
-      <div className="absolute top-24 md:top-32 w-full text-center z-20 drop-shadow-sm">
-         <h2 contentEditable suppressContentEditableWarning className="text-6xl md:text-[8rem] font-display font-black tracking-tighter leading-none lowercase outline-none">
+    <div className="w-full h-full flex flex-col justify-center bg-transparent text-foreground relative p-6 md:p-12 pt-24 md:pt-32 overflow-hidden z-10">
+      <div className="absolute top-20 md:top-32 w-full text-center z-20 drop-shadow-sm px-4">
+         <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[8rem] font-display font-black tracking-tighter leading-none lowercase outline-none">
           {slide.title}<span className="text-brand-orange">.</span>
         </h2>
         {slide.subtitle && (
-          <h3 contentEditable suppressContentEditableWarning className="mt-8 text-sm md:text-lg font-bold tracking-widest uppercase text-gray-800 outline-none">
+          <h3 contentEditable suppressContentEditableWarning className="mt-4 md:mt-8 text-xs md:text-lg font-bold tracking-widest uppercase text-gray-800 outline-none">
             {slide.subtitle}
           </h3>
         )}
       </div>
 
-      <div className="relative w-full mt-32 h-96 flex items-center max-w-7xl mx-auto overflow-x-auto hide-scrollbar drop-shadow-sm z-20">
+      <div className="relative w-full mt-32 md:mt-32 h-64 md:h-96 flex items-center max-w-7xl mx-auto overflow-x-auto hide-scrollbar drop-shadow-sm z-20">
         {/* Horizontal Line */}
-        <div className="absolute left-0 right-0 h-1 bg-foreground"></div>
+        <div className="absolute left-0 right-0 h-[2px] bg-foreground"></div>
         
         {/* The Nodes */}
-        <div className="w-full flex justify-between px-12 md:px-24 z-10 relative gap-12">
+        <div className="w-full flex justify-between px-6 md:px-24 z-10 relative gap-8 md:gap-12 min-w-max md:min-w-0">
            {nodes.map((node, i) => {
              const isTop = i % 2 === 0;
              return (
-               <div key={i} className="relative flex flex-col items-center w-64 flex-shrink-0">
+               <div key={i} className="relative flex flex-col items-center w-40 md:w-64 flex-shrink-0">
                   {/* Node Point */}
-                  <div className="w-5 h-5 bg-brand-orange absolute top-1/2 -translate-y-1/2 transform rotate-45 border-2 border-background"></div>
+                  <div className="w-4 h-4 md:w-5 md:h-5 bg-brand-orange absolute top-1/2 -translate-y-1/2 transform rotate-45 border-2 border-background"></div>
                   
                   {/* Content */}
-                  <div className={`absolute w-full flex flex-col items-center text-center ${isTop ? 'bottom-8' : 'top-8'}`}>
+                  <div className={`absolute w-full flex flex-col items-center text-center ${isTop ? 'bottom-6 md:bottom-8' : 'top-6 md:top-8'}`}>
                      {isTop && (
                        <>
-                         <span contentEditable suppressContentEditableWarning className="text-xs font-bold text-white bg-foreground px-3 py-1 uppercase tracking-widest mb-4 outline-none">{node.title}</span>
-                         <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-2xl lowercase outline-none text-brand-orange">{node.subtitle}</h4>
-                         <p contentEditable suppressContentEditableWarning className="font-sans font-light text-sm mt-2 outline-none font-medium">{node.text}</p>
+                         <span contentEditable suppressContentEditableWarning className="text-[10px] md:text-xs font-bold text-white bg-foreground px-2 py-1 uppercase tracking-widest mb-2 md:mb-4 outline-none">{node.title}</span>
+                         <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-lg md:text-2xl lowercase outline-none text-brand-orange">{node.subtitle}</h4>
+                         <p contentEditable suppressContentEditableWarning className="font-sans font-light text-xs md:text-sm mt-1 md:mt-2 outline-none font-medium line-clamp-3">{node.text}</p>
                        </>
                      )}
                      {!isTop && (
                        <>
-                         <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-2xl lowercase outline-none text-brand-orange">{node.subtitle}</h4>
-                         <p contentEditable suppressContentEditableWarning className="font-sans font-light text-sm mt-2 mb-4 outline-none font-medium">{node.text}</p>
-                         <span contentEditable suppressContentEditableWarning className="text-xs font-bold text-white bg-foreground px-3 py-1 uppercase tracking-widest outline-none">{node.title}</span>
+                         <h4 contentEditable suppressContentEditableWarning className="font-display font-black text-lg md:text-2xl lowercase outline-none text-brand-orange">{node.subtitle}</h4>
+                         <p contentEditable suppressContentEditableWarning className="font-sans font-light text-xs md:text-sm mt-1 md:mt-2 mb-2 md:mb-4 outline-none font-medium line-clamp-3">{node.text}</p>
+                         <span contentEditable suppressContentEditableWarning className="text-[10px] md:text-xs font-bold text-white bg-foreground px-2 py-1 uppercase tracking-widest outline-none">{node.title}</span>
                        </>
                      )}
                   </div>
