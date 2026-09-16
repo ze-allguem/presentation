@@ -268,7 +268,9 @@ function App() {
   );
 }
 
-// ---- BACKGROUND GEOMÉTRICO MINIMALISTA ----
+import { TribalZigZag, TribalArrows, TribalSpiral, TribalStickFigure, TribalWave, TribalTriangle, TribalSun } from './TribalElements';
+
+// ---- BACKGROUND GEOMÉTRICO MINIMALISTA E TRIBAL ----
 function GeometricDecorations({ slideIndex, mouseX, mouseY, isMobile }: { slideIndex: number, mouseX: MotionValue<number>, mouseY: MotionValue<number>, isMobile: boolean }) {
   const springConfig = { damping: 50, stiffness: 200 };
   const smoothX = useSpring(mouseX, springConfig);
@@ -277,15 +279,18 @@ function GeometricDecorations({ slideIndex, mouseX, mouseY, isMobile }: { slideI
   const width = typeof window !== 'undefined' ? window.innerWidth : 1920;
   const height = typeof window !== 'undefined' ? window.innerHeight : 1080;
 
-  const parallaxX1 = useTransform(smoothX, [0, width], [-30, 30]);
-  const parallaxY1 = useTransform(smoothY, [0, height], [-30, 30]);
+  const parallaxX1 = useTransform(smoothX, [0, width], [-40, 40]);
+  const parallaxY1 = useTransform(smoothY, [0, height], [-40, 40]);
   
-  const parallaxX2 = useTransform(smoothX, [0, width], [40, -40]);
+  const parallaxX2 = useTransform(smoothX, [0, width], [60, -60]);
+  const parallaxY2 = useTransform(smoothY, [0, height], [60, -60]);
 
   // Modo Otimizado para Mobile (Fixo, sem framer-motion pesados)
   if (isMobile) {
     return (
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-multiply opacity-30">
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-multiply opacity-20">
+        <TribalSun className="absolute top-[10%] right-[10%] w-32 h-32 text-foreground opacity-10" />
+        <TribalZigZag className="absolute bottom-[20%] left-[5%] w-48 h-12 text-foreground opacity-10" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[80vw] font-display font-black tracking-tighter text-foreground/[0.03] select-none">
           {String(slideIndex + 1).padStart(2, '0')}
         </div>
@@ -294,36 +299,51 @@ function GeometricDecorations({ slideIndex, mouseX, mouseY, isMobile }: { slideI
   }
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-multiply opacity-60">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-multiply opacity-50">
       
+      {/* Elementos Tribais Animados */}
+      <motion.div style={{ x: parallaxX1, y: parallaxY1 }} className="absolute top-[15%] left-[5%] opacity-20">
+        <TribalZigZag className="w-64 h-16 text-foreground" />
+      </motion.div>
       
+      <motion.div style={{ x: parallaxX2, y: parallaxY2 }} className="absolute bottom-[10%] right-[10%] opacity-20">
+        <TribalArrows className="w-48 h-24 text-foreground" />
+      </motion.div>
+      
+      <motion.div style={{ x: parallaxY1, y: parallaxX2 }} className="absolute top-[60%] left-[20%] opacity-15">
+        <TribalSpiral className="w-32 h-32 text-foreground" />
+      </motion.div>
 
-      {/* Orbits / Dotted Circles (Low Opacity) */}
+      <motion.div style={{ x: parallaxX1, y: parallaxY2 }} className="absolute top-[20%] right-[30%] opacity-15">
+        <TribalStickFigure className="w-24 h-48 text-foreground" />
+      </motion.div>
+
+      <motion.div style={{ x: parallaxY2, y: parallaxX1 }} className="absolute bottom-[30%] left-[40%] opacity-20">
+        <TribalWave className="w-56 h-16 text-foreground" />
+      </motion.div>
+
+      <motion.div style={{ x: parallaxX2, y: parallaxY1 }} className="absolute top-[40%] right-[5%] opacity-15">
+        <TribalTriangle className="w-40 h-40 text-foreground" />
+      </motion.div>
+
+      {/* Círculos e Eixos Anteriores (Opcional, mantendo para estilo) */}
       <motion.div
         style={{ x: parallaxX1, y: parallaxY1 }}
-        className="absolute top-[-10vh] left-[-10vw] w-[80vh] h-[80vh] rounded-full border-[1px] border-dashed border-foreground/10"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 150, repeat: Infinity, ease: "linear" }}
+        className="absolute top-[-20vh] left-[-20vw] w-[100vh] h-[100vh] rounded-full border-[1px] border-dashed border-foreground/5"
+        animate={{ rotate: 360, scale: [1, 1.02, 1] }}
+        transition={{ duration: 200, repeat: Infinity, ease: "linear" }}
       />
-      
-      {/* Dot Matrix Grid (Low Opacity) */}
-      <motion.div 
-        style={{ x: parallaxX2, y: parallaxY1 }}
-        className="absolute top-[20%] left-[10%] grid grid-cols-6 gap-3 opacity-20"
-      >
-        {[...Array(36)].map((_, i) => (
-          <div key={i} className="w-1 h-1 bg-foreground rounded-full"></div>
-        ))}
-      </motion.div>
 
-      {/* Vertical Axis Line (Minimalist Orange Accent) */}
       <motion.div 
         style={{ x: parallaxX1 }}
-        className="absolute top-0 bottom-0 right-[25%] w-[1px] bg-foreground/10 flex flex-col items-center justify-center"
+        className="absolute top-0 bottom-0 right-[25%] w-[1px] bg-foreground/5 flex flex-col items-center justify-center"
       >
-         <div className="w-2 h-2 bg-brand-orange rounded-full mt-[20vh] shadow-[0_0_10px_#FF4400]"></div>
+         <motion.div 
+           className="w-2 h-2 bg-brand-orange rounded-full shadow-[0_0_10px_#FF4400]"
+           animate={{ y: [-150, 150, -150] }}
+           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+         ></motion.div>
       </motion.div>
-
     </div>
   );
 }
