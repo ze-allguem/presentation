@@ -19,6 +19,27 @@ const slideVariants = {
   }),
 };
 
+function SlideWrapper({ slide, children }: { slide: SlideData, children: React.ReactNode }) {
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      const wrapper = document.querySelector("[data-slide-wrapper='" + slide.id + "']");
+      if (!wrapper) return;
+      const editables = wrapper.querySelectorAll('[contenteditable]');
+      editables.forEach((el, index) => {
+        const key = "slide-" + slide.id + "-edit-" + index;
+        const saved = localStorage.getItem(key);
+        if (saved !== null && el.innerHTML !== saved) {
+          el.innerHTML = saved;
+        }
+        el.addEventListener('input', () => {
+          localStorage.setItem(key, el.innerHTML);
+        });
+      });
+    }, 50);
+    return () => clearTimeout(timeout);
+  }, [slide.id]);
+  return <div data-slide-wrapper={slide.id} className="w-full h-full">{children}</div>;
+}
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -27,7 +48,7 @@ function App() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  const [images, setImages] = useState<Record<string, string>>({});
+  const [images, setImages] = useState<Record<string, string>>(() => { const saved = localStorage.getItem("presentation-images"); return saved ? JSON.parse(saved) : {}; }); useEffect(() => { localStorage.setItem("presentation-images", JSON.stringify(images)); }, [images]);
 
   // Interatividade Avançada de Mouse
   const mouseX = useMotionValue<number>(0);
@@ -190,7 +211,7 @@ function App() {
             className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none"
           >
             <div className="w-full h-full pointer-events-auto relative">
-              <SlideContent 
+              <SlideWrapper slide={slides[currentSlide]}><SlideContent 
                 slide={slides[currentSlide]} 
                 image={images[slides[currentSlide].id]}
                 onImageUpload={(e) => handleImageUpload(slides[currentSlide].id, e)}
@@ -633,6 +654,10 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
 }
 
 export default App;
+
+
+
+
 
 
 
