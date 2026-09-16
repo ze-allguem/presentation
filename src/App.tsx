@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, MotionValue } from 'framer-motion';
-import { Menu, Maximize, Minimize, ChevronRight, ChevronLeft, X, Image as ImageIcon, Quote } from 'lucide-react';
+import { Menu, Maximize, Minimize, ChevronRight, ChevronLeft, X, Quote } from 'lucide-react';
 import { slides } from './data';
 import type { SlideData } from './data';
 
@@ -48,8 +48,7 @@ function App() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  const [images, setImages] = useState<Record<string, string>>(() => { try { const saved = localStorage.getItem("presentation-images"); return saved ? JSON.parse(saved) : {}; } catch(e) { return {}; } }); useEffect(() => { try { localStorage.setItem("presentation-images", JSON.stringify(images)); } catch(e) { console.warn("Quota exceeded for localStorage images"); } }, [images]);
-
+  
   // Interatividade Avançada de Mouse
   const mouseX = useMotionValue<number>(0);
   const mouseY = useMotionValue<number>(0);
@@ -77,18 +76,7 @@ function App() {
     };
   }, [mouseX, mouseY]);
 
-    const handleImageUpload = (slideId: string, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        setImages(prev => ({ ...prev, [slideId]: result }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
+    
   const paginate = (newDirection: number) => {
     const nextSlide = currentSlide + newDirection;
     if (nextSlide >= 0 && nextSlide < slides.length) {
@@ -246,8 +234,7 @@ function App() {
                 </header>
               <SlideWrapper slide={slides[currentSlide]}><SlideContent 
                 slide={slides[currentSlide]} 
-                image={images[slides[currentSlide].id]}
-                onImageUpload={(e) => handleImageUpload(slides[currentSlide].id, e)} /></SlideWrapper></div>
+                 /></SlideWrapper></div>
           </motion.div>
         </AnimatePresence>
       </main>
@@ -340,35 +327,15 @@ function GeometricDecorations({ slideIndex, mouseX, mouseY, isMobile }: { slideI
 
 
 
-function ImageUploader({ slide, image, onUpload }: { slide: SlideData, image?: string, onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
-  return (
-    <label className="w-full h-full min-h-[30vh] bg-gray-200 border border-gray-300 flex flex-col items-center justify-center text-gray-400 group relative overflow-hidden cursor-pointer hover:bg-gray-300 transition-colors">
-      <input type="file" accept="image/*" className="hidden" onChange={onUpload} />
-      {image ? (
-        <img src={image} alt="Uploaded" className="w-full h-full object-cover" />
-      ) : (
-        <>
-          <ImageIcon size={48} className="mb-4 opacity-50 group-hover:scale-110 transition-transform duration-700" strokeWidth={1} />
-          <span className="text-xs md:text-sm font-medium tracking-widest uppercase text-center px-4">Clique para Inserir</span>
-          {slide.imagePlaceholder && (
-            <span className="absolute bottom-6 md:bottom-12 left-1/2 -translate-x-1/2 text-[10px] md:text-xs font-medium italic text-gray-500 whitespace-nowrap">
-              Ref: {slide.imagePlaceholder}
-            </span>
-          )}
-        </>
-      )}
-    </label>
-  );
-}
 
-function SlideContent({ slide, image, onImageUpload }: { slide: SlideData, image?: string, onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
+
+function SlideContent({ slide }: { slide: SlideData }) {
   switch (slide.layout) {
     case 'cover':
       return <CoverLayout slide={slide} />;
-    case 'split-image':
-      return <SplitImageLayout slide={slide} image={image} onUpload={onImageUpload} />;
-    case 'split-block':
-      return <SplitBlockLayout slide={slide} image={image} onUpload={onImageUpload} />;
+        case 'split-block':
+      return <SplitBlockLayout slide={slide} />;
+
     case 'impact-quote':
       return <ImpactQuoteLayout slide={slide} />;
     case 'analysis':
@@ -424,68 +391,35 @@ function ImpactQuoteLayout({ slide }: { slide: SlideData }) {
   );
 }
 
-function SplitBlockLayout({ slide, image, onUpload }: { slide: SlideData, image?: string, onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
+function SplitBlockLayout({ slide }: { slide: SlideData }) {
   return (
     <div className="w-full h-full flex flex-col md:flex-row relative z-10 overflow-y-auto md:overflow-hidden hide-scrollbar">
-      <div className="w-full md:w-[35%] min-h-[40vh] md:min-h-0 bg-transparent text-foreground flex flex-col justify-center p-8 md:p-24 z-20 relative pt-32 md:pt-24">
-        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[5vw] lg:text-[4vw] font-display font-black tracking-tighter leading-none lowercase outline-none drop-shadow-sm break-words">
-          {slide.title}<span className="text-brand-orange">.</span>
-        </h2>
-        {slide.subtitle && (
-          <h3 contentEditable suppressContentEditableWarning className="mt-6 md:mt-12 text-xs md:text-lg font-bold tracking-widest uppercase text-gray-800 outline-none drop-shadow-sm">
-            {slide.subtitle}
-          </h3>
-        )}
+      <div className="w-full md:w-[50%] min-h-[40vh] md:min-h-0 bg-transparent text-foreground flex flex-col justify-center p-8 md:p-24 z-20 relative pt-32 md:pt-24 border-r border-foreground/10">
+        <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+          <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[5vw] lg:text-[4vw] font-display font-black tracking-tighter leading-none lowercase outline-none drop-shadow-sm break-words">
+            {slide.title}<span className="text-brand-orange">.</span>
+          </h2>
+          {slide.subtitle && (
+            <h3 contentEditable suppressContentEditableWarning className="mt-6 md:mt-12 text-xs md:text-lg font-bold tracking-widest uppercase text-gray-800 outline-none drop-shadow-sm">
+              {slide.subtitle}
+            </h3>
+          )}
+        </motion.div>
       </div>
       
-      <div className="w-full md:w-[30%] min-h-[30vh] md:min-h-0 bg-gray-200 flex flex-col border-y md:border-x border-foreground/5 relative z-20 shadow-xl">
-        <ImageUploader slide={slide} image={image} onUpload={onUpload} />
-      </div>
-      
-      <div className="w-full md:w-[35%] bg-[#0f0f0f] text-white flex flex-col h-auto md:h-full overflow-y-visible md:overflow-y-auto hide-scrollbar p-8 md:p-24 py-16 md:py-32 z-20">
-        <div className="space-y-6 md:space-y-8 text-xl md:text-4xl font-light leading-relaxed opacity-90 my-auto">
+      <div className="w-full md:w-[50%] bg-[#0f0f0f] text-white flex flex-col h-auto md:h-full overflow-y-visible md:overflow-y-auto hide-scrollbar p-8 md:p-24 py-16 md:py-32 z-20">
+        <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }} className="space-y-6 md:space-y-8 text-xl md:text-4xl font-light leading-relaxed opacity-90 my-auto">
           {slide.content.map((text, i) => (
             <p key={i} contentEditable suppressContentEditableWarning className="outline-none" 
               dangerouslySetInnerHTML={{ __html: text }}></p>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
 }
 
-function SplitImageLayout({ slide, image, onUpload }: { slide: SlideData, image?: string, onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
-  return (
-    <div className="w-full h-full flex flex-col md:flex-row p-6 md:p-24 pt-24 md:pt-32 gap-8 md:gap-24 overflow-y-auto hide-scrollbar bg-transparent relative z-10">
-      <div className="flex-1 flex justify-center items-center min-h-[30vh] md:min-h-0 md:h-full z-20 shadow-2xl">
-        <ImageUploader slide={slide} image={image} onUpload={onUpload} />
-      </div>
-      <div className="flex-1 flex flex-col h-full overflow-y-visible md:overflow-y-auto hide-scrollbar pb-12 md:py-32 z-20">
-        <div className="my-auto drop-shadow-sm">
-          <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[5.5vw] lg:text-[4.5vw] font-display font-black tracking-tighter leading-none lowercase outline-none break-words">
-            {slide.title}<span className="text-brand-orange">.</span>
-          </h2>
-          {slide.subtitle && (
-            <h3 contentEditable suppressContentEditableWarning className="mt-4 md:mt-8 text-xs md:text-lg font-bold tracking-widest uppercase text-gray-800 outline-none">
-              {slide.subtitle}
-            </h3>
-          )}
-          <div className="mt-8 md:mt-12 space-y-6 md:space-y-8 text-lg md:text-4xl font-light text-gray-800 leading-relaxed">
-            {slide.content.map((text, i) => (
-              <p key={i} contentEditable suppressContentEditableWarning className="outline-none" 
-                dangerouslySetInnerHTML={{ __html: text }}></p>
-            ))}
-          </div>
-          {slide.quote && (
-            <blockquote contentEditable suppressContentEditableWarning className="border-l-4 border-brand-orange pl-4 md:pl-6 py-2 mt-8 md:mt-12 text-2xl md:text-5xl font-display font-black text-foreground leading-snug outline-none lowercase">
-              "{slide.quote}"
-            </blockquote>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+
 
 function AnalysisLayout({ slide }: { slide: SlideData }) {
   return (

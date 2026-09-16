@@ -11,8 +11,7 @@ export type SlideData = {
   subtitle?: string;
   content: string[];
   quote?: string;
-  layout: 'cover' | 'content' | 'split-image' | 'analysis' | 'split-block' | 'impact-quote' | 'concept-map' | 'roadmap';
-  imagePlaceholder?: string;
+  layout: 'cover' | 'content' | 'analysis' | 'split-block' | 'impact-quote' | 'concept-map' | 'roadmap';
   chapter?: string;
   section?: string;
   presenter?: string;
@@ -69,8 +68,7 @@ export const slides: SlideData[] = [
       'De um lado, há nativos altos, de pele mais clara e traços delicados, que <strong class="text-brand-orange">geralmente ocupam as posições sociais mais altas</strong>.',
       'Do outro, há pessoas com traços mais fortes e rústicos. Os mais nobres andam muito enfeitados, exibindo orgulhosamente seus brincos de tartaruga e flores cheirosas pelo corpo.',
     ],
-    imagePlaceholder: 'Três homens nativos de classes altas ("aristocratas" de Kiriwina), vestindo seus enfeites tradicionais',
-    layout: 'split-image',
+    layout: 'split-block',
   },
   {
     id: 'p1-4',
