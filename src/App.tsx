@@ -48,7 +48,7 @@ function App() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  const [images, setImages] = useState<Record<string, string>>(() => { const saved = localStorage.getItem("presentation-images"); return saved ? JSON.parse(saved) : {}; }); useEffect(() => { localStorage.setItem("presentation-images", JSON.stringify(images)); }, [images]);
+  const [images, setImages] = useState<Record<string, string>>(() => { try { const saved = localStorage.getItem("presentation-images"); return saved ? JSON.parse(saved) : {}; } catch(e) { return {}; } }); useEffect(() => { try { localStorage.setItem("presentation-images", JSON.stringify(images)); } catch(e) { console.warn("Quota exceeded for localStorage images"); } }, [images]);
 
   // Interatividade Avançada de Mouse
   const mouseX = useMotionValue<number>(0);
@@ -77,11 +77,15 @@ function App() {
     };
   }, [mouseX, mouseY]);
 
-  const handleImageUpload = (slideId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = (slideId: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const url = URL.createObjectURL(file);
-      setImages(prev => ({ ...prev, [slideId]: url }));
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result as string;
+        setImages(prev => ({ ...prev, [slideId]: result }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -649,6 +653,9 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
 }
 
 export default App;
+
+
+
 
 
 
