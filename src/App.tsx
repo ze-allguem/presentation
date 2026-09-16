@@ -212,13 +212,13 @@ function App() {
           >
             <div className="w-full h-full pointer-events-auto relative mobile-scroll-container hide-scrollbar flex flex-col">
                 {/* MOBILE SCROLLING HEADER */}
-                <header className="md:hidden w-full p-6 pt-8 flex justify-between items-start z-50 mix-blend-difference text-white pointer-events-none shrink-0">
+                <header className="md:hidden w-full p-6 pt-8 flex justify-between items-start z-50 text-foreground pointer-events-none shrink-0">
                   <div className="flex flex-col gap-2 items-start pointer-events-auto">
                     <div className="font-display font-black text-xl tracking-tighter lowercase">
                       argonautas<span className="text-brand-orange">.</span>
                     </div>
                     {(slides[currentSlide].chapter || slides[currentSlide].section) && (
-                      <div className="flex flex-col text-[10px] font-sans uppercase tracking-widest text-gray-300 opacity-80">
+                      <div className="flex flex-col text-[10px] font-sans uppercase tracking-widest text-foreground/70 opacity-80">
                         <span className="font-black outline-none">{slides[currentSlide].chapter}</span>
                         <span className="font-light outline-none">{slides[currentSlide].section}</span>
                       </div>
@@ -234,7 +234,7 @@ function App() {
                       </button>
                     </div>
                     {slides[currentSlide].presenter && (
-                      <span className="text-[10px] font-bold font-sans uppercase tracking-widest text-gray-300 opacity-80 outline-none border-b border-dashed border-gray-400/50 pb-1 mt-1">
+                      <span className="text-[10px] font-bold font-sans uppercase tracking-widest text-foreground/70 opacity-80 outline-none border-b border-dashed border-foreground/30 pb-1 mt-1">
                         {slides[currentSlide].presenter}
                       </span>
                     )}
@@ -253,9 +253,9 @@ function App() {
           <button 
             onClick={() => paginate(-1)} 
             disabled={currentSlide === 0} 
-            className="p-2 md:p-6 hover:bg-foreground/5 disabled:opacity-20 transition-all pointer-events-auto h-3/4 flex items-center group"
+            className="p-4 md:p-8 disabled:opacity-20 transition-all pointer-events-auto flex items-center"
           >
-            <ChevronLeft size={isMobile ? 32 : 48} strokeWidth={1} className="text-foreground/50 group-hover:text-foreground transition-colors" />
+            <ChevronLeft size={isMobile ? 32 : 48} strokeWidth={1} className="text-foreground/70 hover:text-foreground transition-colors" />
           </button>
         </div>
         
@@ -263,9 +263,9 @@ function App() {
           <button 
             onClick={() => paginate(1)} 
             disabled={currentSlide === slides.length - 1} 
-            className="p-2 md:p-6 hover:bg-foreground/5 disabled:opacity-20 transition-all pointer-events-auto h-3/4 flex items-center group"
+            className="p-4 md:p-8 disabled:opacity-20 transition-all pointer-events-auto flex items-center"
           >
-            <ChevronRight size={isMobile ? 32 : 48} strokeWidth={1} className="text-brand-orange/50 group-hover:text-brand-orange transition-colors" />
+            <ChevronRight size={isMobile ? 32 : 48} strokeWidth={1} className="text-brand-orange/70 hover:text-brand-orange transition-colors" />
           </button>
         </div>
 {/* DESKTOP FOOTER & COUNTER */}
@@ -666,6 +666,7 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
 }
 
 export default App;
+
 
 
 
