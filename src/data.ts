@@ -472,5 +472,24 @@ export const slides: SlideData[] = [
   }
 ];
 
+export type PresentationVersion = {
+  id: string;
+  name: string;
+  slides: SlideData[];
+};
+
+export const presentationVersions: PresentationVersion[] = [
+  { id: 'v1', name: 'Versão 1', slides: slides },
+  { id: 'v2', name: 'Versão 2', slides: [
+    {
+      id: 'v2-cover',
+      title: 'Versão 2',
+      subtitle: 'Em breve',
+      content: ['Conteúdo da versão 2 será adicionado em breve.'],
+      layout: 'cover'
+    }
+  ]}
+];
+
 
 

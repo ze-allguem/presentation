@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, MotionValue } from 'framer-motion';
 import { Menu, Maximize, Minimize, ChevronRight, ChevronLeft, X, Quote } from 'lucide-react';
-import { slides } from './data';
+import { presentationVersions } from './data';
 import type { SlideData } from './data';
 
 const slideVariants = {
@@ -41,6 +41,8 @@ function SlideWrapper({ slide, children }: { slide: SlideData, children: React.R
   return <div data-slide-wrapper={slide.id} className="w-full h-full">{children}</div>;
 }
 function App() {
+  const [currentVersionIndex, setCurrentVersionIndex] = useState(0);
+  const slides = presentationVersions[currentVersionIndex].slides;
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -162,7 +164,7 @@ function App() {
           >
             <div className="flex justify-between items-center mb-6 md:mb-12">
               <div className="font-display font-black text-2xl tracking-tighter lowercase">
-                índice<span className="text-brand-orange">.</span>
+                versões<span className="text-brand-orange">.</span>
               </div>
               <button onClick={() => setMenuOpen(false)} className="hover:opacity-60 transition-opacity">
                 <X size={32} strokeWidth={1.5} />
@@ -170,17 +172,19 @@ function App() {
             </div>
             <div className="flex-1 overflow-y-auto hide-scrollbar z-50 relative pointer-events-auto">
               <ul className="flex flex-col gap-4 md:gap-6 max-w-5xl mx-auto mt-6 md:mt-12 pb-24">
-                {slides.map((slide, idx) => (
-                  <li key={slide.id}>
+                {presentationVersions.map((version, idx) => (
+                  <li key={version.id}>
                     <button
-                      className={`text-left text-2xl md:text-5xl font-display font-black tracking-tighter lowercase transition-colors hover:text-brand-orange ${currentSlide === idx ? 'text-foreground' : 'text-gray-400'}`}
+                      className={`text-left text-2xl md:text-5xl font-display font-black tracking-tighter lowercase transition-colors hover:text-brand-orange ${currentVersionIndex === idx ? 'text-foreground' : 'text-gray-400'}`}
                       onClick={() => {
-                        setDirection(idx > currentSlide ? 1 : -1);
-                        setCurrentSlide(idx);
+                        if (currentVersionIndex !== idx) {
+                          setCurrentVersionIndex(idx);
+                          setCurrentSlide(0);
+                        }
                         setMenuOpen(false);
                       }}
                     >
-                      {String(idx + 1).padStart(2, '0')} — {slide.title}<span className="text-brand-orange">.</span>
+                      {String(idx + 1).padStart(2, '0')} — {version.name}<span className="text-brand-orange">.</span>
                     </button>
                   </li>
                 ))}
