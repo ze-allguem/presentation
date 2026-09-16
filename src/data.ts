@@ -25,7 +25,7 @@ export const slides: SlideData[] = [
     title: 'argonautas',
     subtitle: 'do pacífico ocidental\nCapítulos II e III\nBronislaw Malinowski',
     content: [
-      'Trabalho de Antropologia baseado no texto original do PDF.',
+      'Trabalho de Antropologia.',
     ],
     layout: 'cover',
     presenter: 'Equipe',
@@ -473,4 +473,5 @@ export const slides: SlideData[] = [
     layout: 'split-block',
   }
 ];
+
 

@@ -221,47 +221,32 @@ function App() {
         </AnimatePresence>
       </main>
 
-      {/* MOBILE FLOATING NAVIGATION PILL */}
-      <div className="md:hidden fixed bottom-6 right-6 flex items-center bg-foreground text-background rounded-full shadow-2xl z-[100] border border-background/20 pointer-events-auto">
-        <button 
-          onClick={() => paginate(-1)} 
-          disabled={currentSlide === 0} 
-          className="p-4 active:bg-foreground/80 disabled:opacity-30 transition-colors rounded-l-full"
-        >
-          <ChevronLeft size={24} />
-        </button>
-        <div className="w-[1px] h-8 bg-background/20"></div>
-        <button 
-          onClick={() => paginate(1)} 
-          disabled={currentSlide === slides.length - 1} 
-          className="p-4 active:bg-foreground/80 disabled:opacity-30 transition-colors text-brand-orange rounded-r-full"
-        >
-          <ChevronRight size={24} />
-        </button>
-      </div>
-
-      {/* DESKTOP FOOTER & COUNTER */}
+              {/* SIDE NAVIGATION ARROWS (ALWAYS VISIBLE) */}
+        <div className="fixed inset-y-0 left-0 flex items-center z-[100] pointer-events-none">
+          <button 
+            onClick={() => paginate(-1)} 
+            disabled={currentSlide === 0} 
+            className="p-2 md:p-6 hover:bg-foreground/5 disabled:opacity-20 transition-all pointer-events-auto h-3/4 flex items-center group"
+          >
+            <ChevronLeft size={isMobile ? 32 : 48} strokeWidth={1} className="text-foreground/50 group-hover:text-foreground transition-colors" />
+          </button>
+        </div>
+        
+        <div className="fixed inset-y-0 right-0 flex items-center z-[100] pointer-events-none">
+          <button 
+            onClick={() => paginate(1)} 
+            disabled={currentSlide === slides.length - 1} 
+            className="p-2 md:p-6 hover:bg-foreground/5 disabled:opacity-20 transition-all pointer-events-auto h-3/4 flex items-center group"
+          >
+            <ChevronRight size={isMobile ? 32 : 48} strokeWidth={1} className="text-brand-orange/50 group-hover:text-brand-orange transition-colors" />
+          </button>
+        </div>
+{/* DESKTOP FOOTER & COUNTER */}
       <footer className="absolute bottom-6 md:bottom-0 w-full p-6 md:p-12 flex justify-between items-end z-40 pointer-events-none mix-blend-difference text-white">
         <div className="text-xs md:text-sm font-medium tracking-widest uppercase opacity-70">
           {String(currentSlide + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
         </div>
-        <div className="hidden md:flex gap-2 md:gap-4 pointer-events-auto">
-          <button
-            onClick={() => paginate(-1)}
-            disabled={currentSlide === 0}
-            className="p-3 md:p-4 border border-white/30 rounded-full hover:bg-white/10 disabled:opacity-30 transition-all cursor-pointer z-50"
-          >
-            <ChevronLeft size={20} strokeWidth={1} />
-          </button>
-          <button
-            onClick={() => paginate(1)}
-            disabled={currentSlide === slides.length - 1}
-            className="p-3 md:p-4 border border-white/30 rounded-full hover:bg-white/10 disabled:opacity-30 transition-all cursor-pointer z-50"
-          >
-            <ChevronRight size={20} strokeWidth={1} />
-          </button>
-        </div>
-      </footer>
+        </footer>
     </div>
   );
 }
@@ -654,6 +639,7 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
 }
 
 export default App;
+
 
 
 
