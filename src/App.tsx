@@ -378,9 +378,8 @@ function CoverLayout({ slide }: { slide: SlideData }) {
         <div className="h-[2px] w-16 md:w-24 bg-brand-orange mx-auto my-8 md:my-12"></div>
         <div className="space-y-4 max-w-2xl mx-auto text-lg md:text-3xl font-light text-gray-800 drop-shadow-sm px-4">
           {slide.content.map((text, i) => (
-            <p key={i} contentEditable suppressContentEditableWarning className="outline-none">
-              {text}
-            </p>
+            <p key={i} contentEditable suppressContentEditableWarning className="outline-none" 
+              dangerouslySetInnerHTML={{ __html: text }}></p>
           ))}
         </div>
       </div>
@@ -426,9 +425,8 @@ function SplitBlockLayout({ slide, image, onUpload }: { slide: SlideData, image?
       <div className="w-full md:w-[35%] bg-[#0f0f0f] text-white flex flex-col h-auto md:h-full overflow-y-visible md:overflow-y-auto hide-scrollbar p-8 md:p-24 py-16 md:py-32 z-20">
         <div className="space-y-6 md:space-y-8 text-xl md:text-4xl font-light leading-relaxed opacity-90 my-auto">
           {slide.content.map((text, i) => (
-            <p key={i} contentEditable suppressContentEditableWarning className="outline-none">
-              {text}
-            </p>
+            <p key={i} contentEditable suppressContentEditableWarning className="outline-none" 
+              dangerouslySetInnerHTML={{ __html: text }}></p>
           ))}
         </div>
       </div>
@@ -454,9 +452,8 @@ function SplitImageLayout({ slide, image, onUpload }: { slide: SlideData, image?
           )}
           <div className="mt-8 md:mt-12 space-y-6 md:space-y-8 text-lg md:text-4xl font-light text-gray-800 leading-relaxed">
             {slide.content.map((text, i) => (
-              <p key={i} contentEditable suppressContentEditableWarning className="outline-none">
-                {text}
-              </p>
+              <p key={i} contentEditable suppressContentEditableWarning className="outline-none" 
+                dangerouslySetInnerHTML={{ __html: text }}></p>
             ))}
           </div>
           {slide.quote && (
@@ -486,9 +483,8 @@ function AnalysisLayout({ slide }: { slide: SlideData }) {
       <div className="flex-1 flex flex-col h-auto md:h-full overflow-y-visible md:overflow-y-auto hide-scrollbar pb-12 md:py-32 drop-shadow-sm z-20">
         <div className="space-y-6 md:space-y-8 text-lg md:text-4xl font-light text-gray-800 leading-relaxed my-auto">
           {slide.content.map((text, i) => (
-            <p key={i} contentEditable suppressContentEditableWarning className="outline-none">
-              {text}
-            </p>
+            <p key={i} contentEditable suppressContentEditableWarning className="outline-none" 
+              dangerouslySetInnerHTML={{ __html: text }}></p>
           ))}
         </div>
       </div>
@@ -505,9 +501,8 @@ function StandardLayout({ slide }: { slide: SlideData }) {
         </h2>
         <div className="space-y-6 md:space-y-8 text-lg md:text-4xl font-light text-gray-800 leading-relaxed">
           {slide.content.map((text, i) => (
-            <p key={i} contentEditable suppressContentEditableWarning className="outline-none">
-              {text}
-            </p>
+            <p key={i} contentEditable suppressContentEditableWarning className="outline-none" 
+              dangerouslySetInnerHTML={{ __html: text }}></p>
           ))}
         </div>
         {slide.quote && (
@@ -638,3 +633,6 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
 }
 
 export default App;
+
+
+
