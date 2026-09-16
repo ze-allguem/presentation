@@ -243,9 +243,7 @@ function App() {
               <SlideWrapper slide={slides[currentSlide]}><SlideContent 
                 slide={slides[currentSlide]} 
                 image={images[slides[currentSlide].id]}
-                onImageUpload={(e) => handleImageUpload(slides[currentSlide].id, e)}
-              />
-            </div>
+                onImageUpload={(e) => handleImageUpload(slides[currentSlide].id, e)} /></SlideWrapper></div>
           </motion.div>
         </AnimatePresence>
       </main>
@@ -668,6 +666,7 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
 }
 
 export default App;
+
 
 
 
