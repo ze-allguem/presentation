@@ -387,7 +387,7 @@ function CoverLayout({ slide }: { slide: SlideData }) {
   return (
     <div className="max-w-6xl w-full text-center flex flex-col items-center justify-center space-y-8 md:space-y-12 p-6 md:p-12 mt-12 h-full overflow-y-auto hide-scrollbar py-24 md:py-32 bg-transparent relative z-10">
       <div className="my-auto relative z-20 w-full">
-        <h1 contentEditable suppressContentEditableWarning className="text-5xl md:text-[10rem] leading-none font-display font-black tracking-tighter text-foreground lowercase outline-none drop-shadow-sm break-words">
+        <h1 contentEditable suppressContentEditableWarning className="text-5xl md:text-[8vw] lg:text-[7vw] leading-none font-display font-black tracking-tighter text-foreground lowercase outline-none drop-shadow-sm break-words">
           {slide.title}<span className="text-brand-orange">.</span>
         </h1>
         {slide.subtitle && (
@@ -428,7 +428,7 @@ function SplitBlockLayout({ slide, image, onUpload }: { slide: SlideData, image?
   return (
     <div className="w-full h-full flex flex-col md:flex-row relative z-10 overflow-y-auto md:overflow-hidden hide-scrollbar">
       <div className="w-full md:w-[35%] min-h-[40vh] md:min-h-0 bg-transparent text-foreground flex flex-col justify-center p-8 md:p-24 z-20 relative pt-32 md:pt-24">
-        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[6.5rem] font-display font-black tracking-tighter leading-none lowercase outline-none drop-shadow-sm break-words">
+        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[5vw] lg:text-[4vw] font-display font-black tracking-tighter leading-none lowercase outline-none drop-shadow-sm break-words">
           {slide.title}<span className="text-brand-orange">.</span>
         </h2>
         {slide.subtitle && (
@@ -462,7 +462,7 @@ function SplitImageLayout({ slide, image, onUpload }: { slide: SlideData, image?
       </div>
       <div className="flex-1 flex flex-col h-full overflow-y-visible md:overflow-y-auto hide-scrollbar pb-12 md:py-32 z-20">
         <div className="my-auto drop-shadow-sm">
-          <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[7rem] font-display font-black tracking-tighter leading-none lowercase outline-none break-words">
+          <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[5.5vw] lg:text-[4.5vw] font-display font-black tracking-tighter leading-none lowercase outline-none break-words">
             {slide.title}<span className="text-brand-orange">.</span>
           </h2>
           {slide.subtitle && (
@@ -490,8 +490,8 @@ function SplitImageLayout({ slide, image, onUpload }: { slide: SlideData, image?
 function AnalysisLayout({ slide }: { slide: SlideData }) {
   return (
     <div className="w-full h-full flex flex-col md:flex-row p-6 md:p-24 gap-8 md:gap-24 items-start md:items-center bg-transparent relative z-10 overflow-y-auto hide-scrollbar">
-      <div className="flex-1 space-y-4 md:space-y-8 flex flex-col justify-center border-b md:border-b-0 md:border-r border-foreground/10 pb-8 md:pb-0 md:pr-24 drop-shadow-sm z-20 mt-24 md:mt-0">
-        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[7rem] font-display font-black tracking-tighter leading-none lowercase outline-none break-words">
+      <div className="flex-1 min-w-0 md:w-1/2 space-y-4 md:space-y-8 flex flex-col justify-center border-b md:border-b-0 md:border-r border-foreground/10 pb-8 md:pb-0 md:pr-24 drop-shadow-sm z-20 mt-24 md:mt-0">
+        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[5.5vw] lg:text-[4.5vw] font-display font-black tracking-tighter leading-none lowercase outline-none break-words">
           {slide.title}<span className="text-brand-orange">.</span>
         </h2>
         {slide.subtitle && (
@@ -500,7 +500,7 @@ function AnalysisLayout({ slide }: { slide: SlideData }) {
           </h3>
         )}
       </div>
-      <div className="flex-1 flex flex-col h-auto md:h-full overflow-y-visible md:overflow-y-auto hide-scrollbar pb-12 md:py-32 drop-shadow-sm z-20">
+      <div className="flex-1 min-w-0 md:w-1/2 flex flex-col h-auto md:h-full overflow-y-visible md:overflow-y-auto hide-scrollbar pb-12 md:py-32 drop-shadow-sm z-20">
         <div className="space-y-6 md:space-y-8 text-lg md:text-4xl font-light text-gray-800 leading-relaxed my-auto">
           {slide.content.map((text, i) => (
             <p key={i} contentEditable suppressContentEditableWarning className="outline-none" 
@@ -516,7 +516,7 @@ function StandardLayout({ slide }: { slide: SlideData }) {
   return (
     <div className="w-full h-full flex flex-col overflow-y-auto hide-scrollbar p-6 md:p-24 py-24 md:py-32 bg-transparent relative z-10">
       <div className="max-w-6xl mx-auto my-auto w-full drop-shadow-sm z-20">
-        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[8rem] font-display font-black tracking-tighter leading-none lowercase outline-none mb-8 md:mb-12 break-words mt-8 md:mt-0">
+        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[6vw] lg:text-[5vw] font-display font-black tracking-tighter leading-none lowercase outline-none mb-8 md:mb-12 break-words mt-8 md:mt-0">
           {slide.title}<span className="text-brand-orange">.</span>
         </h2>
         <div className="space-y-6 md:space-y-8 text-lg md:text-4xl font-light text-gray-800 leading-relaxed">
@@ -560,7 +560,7 @@ function ConceptMapLayout({ slide }: { slide: SlideData }) {
         </div>
 
         {/* Central Word */}
-        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[11rem] font-display font-black tracking-tighter lowercase leading-none outline-none z-10 bg-background/80 backdrop-blur-md px-6 py-3 md:px-8 md:py-4 rounded-3xl md:rounded-[4rem] break-words text-center">
+        <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[9vw] lg:text-[8vw] font-display font-black tracking-tighter lowercase leading-none outline-none z-10 bg-background/80 backdrop-blur-md px-6 py-3 md:px-8 md:py-4 rounded-3xl md:rounded-[4rem] break-words text-center">
           {slide.title}<span className="text-brand-orange">.</span>
         </h2>
 
@@ -591,7 +591,7 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
   return (
     <div className="w-full h-full flex flex-col md:justify-center bg-transparent text-foreground relative p-6 md:p-12 pt-32 md:pt-32 overflow-hidden z-10">
       <div className="absolute top-20 md:top-32 w-full text-center z-20 drop-shadow-sm px-4">
-         <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[8rem] font-display font-black tracking-tighter leading-none lowercase outline-none">
+         <h2 contentEditable suppressContentEditableWarning className="text-4xl md:text-[6vw] lg:text-[5vw] font-display font-black tracking-tighter leading-none lowercase outline-none">
           {slide.title}<span className="text-brand-orange">.</span>
         </h2>
         {slide.subtitle && (
@@ -653,6 +653,9 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
 }
 
 export default App;
+
+
+
 
 
 
