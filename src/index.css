@@ -35,3 +35,25 @@ html, body, #root {
   padding: 0;
   overflow: hidden;
 }
+
+@media (max-width: 768px) {
+  /* Let the inner motion container scroll */
+  .mobile-scroll-container {
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+  }
+  
+  /* Make layouts grow instead of scrolling internally */
+  [data-slide-wrapper] {
+      height: auto !important;
+      min-height: 100% !important;
+      overflow: visible !important;
+  }
+  
+  [data-slide-wrapper] > div {
+      height: auto !important;
+      min-height: 100% !important;
+      overflow: visible !important;
+      padding-top: 2rem !important;
+  }
+}

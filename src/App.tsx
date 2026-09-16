@@ -130,7 +130,7 @@ function App() {
       {/* Background Geométrico Limpo (Atrás do Texto) */}
       <GeometricDecorations slideIndex={currentSlide} mouseX={mouseX} mouseY={mouseY} isMobile={isMobile} />
 
-      <header className="absolute top-0 w-full p-6 md:p-12 flex justify-between items-start z-50 mix-blend-difference text-white pointer-events-none">
+      <header className="hidden md:flex absolute top-0 w-full p-6 md:p-12 justify-between items-start z-50 mix-blend-difference text-white pointer-events-none">
         <div className="flex flex-col gap-2 md:gap-4 items-start pointer-events-auto">
           <div className="font-display font-black text-xl md:text-2xl tracking-tighter lowercase">
             argonautas<span className="text-brand-orange">.</span>
@@ -210,7 +210,36 @@ function App() {
             transition={{ type: "spring", stiffness: 300, damping: 30, opacity: { duration: 0.2 } }}
             className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none"
           >
-            <div className="w-full h-full pointer-events-auto relative">
+            <div className="w-full h-full pointer-events-auto relative mobile-scroll-container hide-scrollbar flex flex-col">
+                {/* MOBILE SCROLLING HEADER */}
+                <header className="md:hidden w-full p-6 pt-8 flex justify-between items-start z-50 mix-blend-difference text-white pointer-events-none shrink-0">
+                  <div className="flex flex-col gap-2 items-start pointer-events-auto">
+                    <div className="font-display font-black text-xl tracking-tighter lowercase">
+                      argonautas<span className="text-brand-orange">.</span>
+                    </div>
+                    {(slides[currentSlide].chapter || slides[currentSlide].section) && (
+                      <div className="flex flex-col text-[10px] font-sans uppercase tracking-widest text-gray-300 opacity-80">
+                        <span className="font-black outline-none">{slides[currentSlide].chapter}</span>
+                        <span className="font-light outline-none">{slides[currentSlide].section}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col items-end gap-2 pointer-events-auto">
+                    <div className="flex gap-4 items-center">
+                      <button onClick={toggleFullscreen} className="hover:opacity-60 transition-opacity">
+                        {isFullscreen ? <Minimize size={24} strokeWidth={1.5} /> : <Maximize size={24} strokeWidth={1.5} />}
+                      </button>
+                      <button onClick={() => setMenuOpen(true)} className="hover:opacity-60 transition-opacity">
+                        <Menu size={28} strokeWidth={1.5} />
+                      </button>
+                    </div>
+                    {slides[currentSlide].presenter && (
+                      <span className="text-[10px] font-bold font-sans uppercase tracking-widest text-gray-300 opacity-80 outline-none border-b border-dashed border-gray-400/50 pb-1 mt-1">
+                        {slides[currentSlide].presenter}
+                      </span>
+                    )}
+                  </div>
+                </header>
               <SlideWrapper slide={slides[currentSlide]}><SlideContent 
                 slide={slides[currentSlide]} 
                 image={images[slides[currentSlide].id]}
@@ -639,6 +668,8 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
 }
 
 export default App;
+
+
 
 
 
