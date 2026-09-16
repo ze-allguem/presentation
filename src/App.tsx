@@ -253,7 +253,7 @@ function App() {
           <button 
             onClick={() => paginate(-1)} 
             disabled={currentSlide === 0} 
-            className="p-4 md:p-8 disabled:opacity-20 transition-all pointer-events-auto flex items-center"
+            className="p-1 md:p-8 disabled:opacity-20 transition-all pointer-events-auto flex items-center"
           >
             <ChevronLeft size={isMobile ? 32 : 48} strokeWidth={1} className="text-foreground/70 hover:text-foreground transition-colors" />
           </button>
@@ -263,17 +263,12 @@ function App() {
           <button 
             onClick={() => paginate(1)} 
             disabled={currentSlide === slides.length - 1} 
-            className="p-4 md:p-8 disabled:opacity-20 transition-all pointer-events-auto flex items-center"
+            className="p-1 md:p-8 disabled:opacity-20 transition-all pointer-events-auto flex items-center"
           >
             <ChevronRight size={isMobile ? 32 : 48} strokeWidth={1} className="text-brand-orange/70 hover:text-brand-orange transition-colors" />
           </button>
         </div>
-{/* DESKTOP FOOTER & COUNTER */}
-      <footer className="absolute bottom-6 md:bottom-0 w-full p-6 md:p-12 flex justify-between items-end z-40 pointer-events-none mix-blend-difference text-white">
-        <div className="text-xs md:text-sm font-medium tracking-widest uppercase opacity-70">
-          {String(currentSlide + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
-        </div>
-        </footer>
+
     </div>
   );
 }
@@ -306,19 +301,7 @@ function GeometricDecorations({ slideIndex, mouseX, mouseY, isMobile }: { slideI
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-multiply opacity-60">
       
-      {/* Huge Number Watermark (Very Subtle) */}
-      <AnimatePresence mode="wait">
-        <motion.div 
-          key={slideIndex}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[45vw] font-display font-black tracking-tighter text-foreground/[0.03] select-none"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.05 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-        >
-          {String(slideIndex + 1).padStart(2, '0')}
-        </motion.div>
-      </AnimatePresence>
+      
 
       {/* Orbits / Dotted Circles (Low Opacity) */}
       <motion.div
@@ -666,6 +649,7 @@ function RoadmapLayout({ slide }: { slide: SlideData }) {
 }
 
 export default App;
+
 
 
 
