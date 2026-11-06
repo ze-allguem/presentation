@@ -15,7 +15,7 @@ export type Block =
 export type AulaSlide = {
   id: string;
   presenter: 'Laura' | 'Zé' | 'Laura e Zé';
-  layout: 'cover' | 'content' | 'fotos';
+  layout: 'cover' | 'content' | 'fotos' | 'fim';
   topic?: number;
   title: string;
   pages?: string;

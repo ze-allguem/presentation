@@ -3,6 +3,7 @@ import { ArrowDown, ArrowLeft, ArrowRight, Maximize, Menu, Minimize, X } from 'l
 import SlideFigure, { sincronizarImagens } from './SlideFigure';
 import TituloDigitado from './TituloDigitado';
 import PixelWeber from './PixelWeber';
+import Encerramento from './Encerramento';
 import { fotosAutorObra, imagensPorSlide } from './imagens';
 import type { AulaSlide, Block } from './aula';
 import { lauraSlides } from './aula-laura';
@@ -22,7 +23,9 @@ const references: AulaSlide = {
 
 const autorObra: AulaSlide = { id: 'autor-e-obra', presenter: 'Laura e Zé', layout: 'fotos', title: 'o autor e a obra', chapter: 'De onde vem o conteúdo', blocks: [] };
 
-const slides: AulaSlide[] = [cover, autorObra, ...lauraSlides, ...zeSlides, references];
+const obrigado: AulaSlide = { id: 'obrigado', presenter: 'Laura e Zé', layout: 'fim', title: 'obrigado', chapter: 'Encerramento', blocks: [] };
+
+const slides: AulaSlide[] = [cover, autorObra, ...lauraSlides, ...zeSlides, references, obrigado];
 const firstOf = (presenter: string) => slides.findIndex(s => s.presenter === presenter);
 
 const PARTE = { Laura: 'Parte 1', 'Zé': 'Parte 2' } as const;
@@ -238,7 +241,7 @@ export default function WeberApp() {
 
   const ownCount = slides.filter(s => s.presenter === slide.presenter).length;
   const baseTone = theme === 'noite' ? 'dark' : 'light';
-  const tone = isAltTone(slide) ? (baseTone === 'dark' ? 'light' : 'dark') : baseTone;
+  const tone = slide.layout === 'fim' ? 'light' : isAltTone(slide) ? (baseTone === 'dark' ? 'light' : 'dark') : baseTone;
 
   return (
     <div ref={root} className="weber-app bg-grain" data-theme={theme} data-tone={tone} data-fonte={font}>
@@ -263,6 +266,8 @@ export default function WeberApp() {
             <div className="weber-presenters"><p><small>Parte 1</small><strong>Laura</strong><span>p. 139–167</span></p><p><small>Parte 2</small><strong>Zé</strong><span>p. 167–203</span></p></div>
             <p className="weber-cover-hint">Capítulo III · Os tipos de dominação<br />Capítulo IV · Estamentos e classes (início)</p>
           </article>
+        ) : slide.layout === 'fim' ? (
+          <Encerramento key={slide.id} />
         ) : slide.layout === 'fotos' ? (
           <article key={slide.id} className="weber-content weber-enter estilo-novo" aria-labelledby="weber-slide-title">
             <div className="weber-title-column">
@@ -306,7 +311,7 @@ export default function WeberApp() {
           <button aria-label="Próximo slide" onClick={() => goTo(index + 1)} disabled={index === slides.length - 1}><ArrowRight aria-hidden="true" size={16} /></button>
         </div>
       </footer>
-      {bonequinho ? <PixelWeber slide={slide.id} /> : null}
+      {bonequinho && slide.layout !== 'fim' ? <PixelWeber slide={slide.id} /> : null}
       {error ? <div className="weber-error" role="alert">{error}<button onClick={() => setError('')} aria-label="Fechar aviso"><X size={16} aria-hidden="true" /></button></div> : null}
 
       <dialog ref={menu} className="weber-dialog weber-menu" aria-labelledby="weber-menu-title" onClick={event => { if (event.target === event.currentTarget) event.currentTarget.close(); }}>
