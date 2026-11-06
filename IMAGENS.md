@@ -86,7 +86,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 7. a dominação tradicional: "sempre foi assim"
 
-**laura-7-1** · o duplo reino do senhor _(na seção: O "duplo reino")_
+**laura-7-1** · o duplo reino do senhor _(na seção: O "duplo reino")_ ✅ já inserida
 
 Cena: um rei gordo e barbudo, de coroa e manto de arminho, sentado num trono. O braço esquerdo dele está preso por uma corrente grossa a um livro antigo e enorme de costumes, apoiado no chão ao lado do trono. A mão direita, livre, joga moedas para alguns súditos ajoelhados à sua frente, escolhendo uns e virando o rosto para outros, que ficam de mãos vazias. Expressão de capricho no rosto do rei.
 
@@ -94,7 +94,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 8. quem trabalha para o senhor tradicional
 
-**laura-8-1** · a casa do rei vira Estado _(na seção: início do slide)_
+**laura-8-1** · a casa do rei vira Estado _(na seção: início do slide)_ ✅ já inserida
 
 Cena: o salão de um castelo medieval com uma mesa comprida de madeira cheia de pães, carnes e jarras. Na cabeceira, o rei come com a coroa na cabeça. Ao longo da mesa, servidores e criados comem junto com ele. Um copeiro serve vinho de uma jarra; um mordomo segura uma bandeja. Pela porta aberta ao fundo vê-se um cavalariço escovando dois cavalos. Atmosfera de casa, não de escritório.
 
@@ -102,7 +102,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 9. do patriarca ao sultão: as formas da tradição
 
-**laura-9-1** · o poder como patrimônio do senhor _(na seção: Com quadro próprio)_
+**laura-9-1** · o poder como patrimônio do senhor _(na seção: Com quadro próprio)_ ✅ já inserida
 
 Cena: um sultão de turbante e barba pontuda sentado no alto de um trono muito elevado, no topo de uma escadaria. Ele segura um mapa enrolado do território como se fosse a escritura de uma propriedade. Ao redor do trono, uma guarda pessoal de soldados com lanças e mercenários armados. Bem embaixo, súditos pequenos e curvados olham para cima.
 
@@ -110,7 +110,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 10. como se paga o servidor: prebendas e feudos
 
-**laura-10-1** · feudo: poder entregue em pacto _(na seção: início do slide)_
+**laura-10-1** · feudo: poder entregue em pacto _(na seção: início do slide)_ ✅ já inserida
 
 Cena: um senhor feudal de manto e coroa simples, em pé, entrega com as duas mãos um pergaminho com selo de cera e uma espada a um cavaleiro de cota de malha ajoelhado diante dele. Ao fundo, à direita e menores, servidores recebem sacos de grãos e moedas de um mordomo. Clima solene de cerimônia.
 
@@ -118,7 +118,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 11. tradição e economia: por que o capitalismo não nasce ali
 
-**laura-11-1** · sem previsibilidade _(na seção: início do slide)_
+**laura-11-1** · sem previsibilidade _(na seção: início do slide)_ ✅ já inserida
 
 Cena: um comerciante de colete e mangas arregaçadas, com cara preocupada, segura uma bolsa de dinheiro junto ao peito. À sua frente, um cobrador de impostos de chapéu alto e sorriso esperto segura uma balança torta, com um prato bem mais baixo que o outro, e estende a mão aberta pedindo mais. No chão, papéis com valores riscados e reescritos (sem números legíveis).
 
@@ -126,7 +126,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 12. a dominação carismática
 
-**laura-12-1** · o líder carismático _(na seção: início do slide)_
+**laura-12-1** · o líder carismático _(na seção: início do slide)_ ✅ já inserida
 
 Cena: um profeta de barba longa e túnica simples, de pé no alto de uma rocha, de braços abertos e olhar intenso. Atrás dele, raios de luz desenhados em linhas retas. Abaixo da rocha, uma multidão de seguidores olha para cima com devoção: alguns ajoelhados, alguns com as mãos estendidas, uma criança nos ombros do pai.
 
@@ -134,7 +134,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 13. quando o líder morre: a rotinização do carisma
 
-**laura-13-1** · o momento da sucessão _(na seção: início do slide)_
+**laura-13-1** · o momento da sucessão _(na seção: início do slide)_ ✅ já inserida
 
 Cena: no centro de um salão de pedra, um trono vazio com uma coroa pousada sobre o assento. Ao redor, discípulos e conselheiros de túnica discutem acaloradamente, cada um apontando para um candidato diferente: um jovem tímido, um homem forte, uma criança. Expressões de dúvida e tensão. Ninguém senta no trono.
 

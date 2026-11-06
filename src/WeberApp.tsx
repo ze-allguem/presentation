@@ -239,7 +239,7 @@ export default function WeberApp() {
       </header>
 
       <main id="weber-main" ref={main} className="weber-main">
-        <WeberBackground />
+        <WeberBackground variante={index} />
         {slide.layout === 'cover' ? (
           <article key={slide.id} className="weber-cover weber-enter">
             <p className="weber-eyebrow">Leitura de Economia e sociedade</p>
