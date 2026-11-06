@@ -168,7 +168,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 2. quando o carisma vira herança
 
-**ze-2-1** · o poder vira herança _(na seção: início do slide)_
+**ze-2-1** · o poder vira herança _(na seção: início do slide)_ ✅ já inserida
 
 Cena: uma grande árvore genealógica com tronco grosso e muitos galhos. Em cada galho há um retrato oval de um membro da família, e cada um segura um objeto de poder: coroa, cálice, chave, espada, carimbo. Os mesmos objetos passam de um galho para o galho de baixo, de pai para filho, até as raízes.
 
@@ -176,7 +176,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 3. o feudalismo: a Europa dos cavaleiros
 
-**ze-3-1** · a corrente de lealdades _(na seção: O grande problema)_
+**ze-3-1** · a corrente de lealdades _(na seção: O grande problema)_ ✅ já inserida
 
 Cena: uma corrente humana vertical que desce do topo para a base da imagem. No topo, o rei de coroa; abaixo dele, um nobre; abaixo, um cavaleiro; abaixo, um escudeiro. Cada um segura apenas a mão de quem está imediatamente acima. O rei estica o braço tentando alcançar o escudeiro lá embaixo e não consegue: o braço fica curto no meio do caminho.
 

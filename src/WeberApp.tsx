@@ -250,7 +250,7 @@ export default function WeberApp() {
 
       <main id="weber-main" ref={main} className="weber-main">
         <WeberBackground variante={index} />
-        {bonequinho ? <PixelWeber /> : null}
+        {bonequinho ? <PixelWeber slide={slide.id} /> : null}
         {slide.layout === 'cover' ? (
           <article key={slide.id} className="weber-cover weber-enter">
             <p className="weber-eyebrow">Leitura de Economia e sociedade</p>

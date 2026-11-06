@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { comentarTrecho, FALAS_SLIDE, HUMOR, RECLAMACOES } from './falasWeber';
 
 // Max Weber em pixel art (desenho original), de perfil, no estilo de personagem de jogo de plataforma.
 // Cabeça grande e corpo bem magro. Traços de Weber: cabelo escuro penteado para trás, testa alta,
@@ -54,19 +55,34 @@ const POSES = {
   acenoA: { pernas: 'parado', remendos: [...BRACO_DIR_CIMA] },
   acenoB: { pernas: 'parado', remendos: [...BRACO_DIR_ACENO] },
   pe: { pernas: 'batePe', remendos: [] },
+  cafe: { pernas: 'parado', remendos: [[9, 17, 'C'], [10, 17, 'S'], [11, 16, 'W'], [12, 16, 'W'], [11, 17, 'W'], [12, 17, 'W'], [13, 16, 'W'], [11, 15, 'K'], [12, 15, 'K'], [11, 13, 'V'], [12, 12, 'V'], [12, 14, 'V']] },
+  cafeGole: { pernas: 'parado', remendos: [...OLHO_FECHADO, [9, 16, 'C'], [10, 15, 'C'], [11, 14, 'C'], [12, 13, 'S'], [13, 11, 'W'], [14, 11, 'W'], [13, 12, 'W'], [14, 12, 'W'], [15, 11, 'W'], [14, 9, 'V'], [15, 8, 'V']] },
 } satisfies Record<string, { pernas: keyof typeof PERNAS; remendos: Remendo[] }>;
+
+// Frases do balão para cada rotina (na mesma ordem das rotinas abaixo).
+const FALAS: string[][] = [
+  ['Aaaah... que sono!', 'Esse capítulo é longo...', 'Escrever 3 volumes cansa.'],
+  ['Que horas são?', 'O tempo também é racionalizado.', 'Pontualidade é burocracia!'],
+  ['Está escrito... mas eu vos digo!', 'Hmm, cadê a página 167?', 'Tipos ideais, tipos ideais...'],
+  ['Olá, turma!', 'Lembrem: dominação é administração!', 'Sem raiva e sem paixão!'],
+  ['Hmpf.', 'Tic, tac, tic, tac...', 'Calculabilidade, por favor.'],
+  ['Um cafezinho para aguentar a burocracia.', 'Café: o combustível do quadro administrativo.', 'Ahh... agora sim.'],
+];
+const DEMORA = 40; // segundos no mesmo slide até ele começar a reclamar
 
 // Rotinas quando fica parado: sequência de [pose, duração em segundos].
 type Pose = keyof typeof POSES | 'parado';
-const ROTINAS: [Pose, number][][] = [
+type Rotina = { passos: [Pose, number][]; falas: string[] };
+const ROTINAS: Rotina[] = ([
   [['espreguica', 1.1], ['parado', 0.25], ['espreguica', 0.9], ['maoNaBoca', 1.4], ['parado', 0.4]],
   [['relogio', 0.9], ['relogioPe', 0.22], ['relogio', 0.22], ['relogioPe', 0.22], ['relogio', 0.22], ['relogioPe', 0.22], ['relogio', 0.8]],
   [['livroA', 0.8], ['livroB', 0.25], ['livroA', 0.9], ['livroB', 0.25], ['livroA', 0.9], ['livroB', 0.25], ['livroA', 0.7]],
   [['acenoA', 0.22], ['acenoB', 0.22], ['acenoA', 0.22], ['acenoB', 0.22], ['acenoA', 0.22], ['acenoB', 0.22], ['acenoA', 0.3]],
   [['pe', 0.18], ['parado', 0.18], ['pe', 0.18], ['parado', 0.18], ['pe', 0.18], ['parado', 0.18], ['pe', 0.18], ['parado', 0.3]],
-];
+  [['cafe', 1.2], ['cafeGole', 0.9], ['cafe', 1.0], ['cafeGole', 0.9], ['cafe', 1.2]],
+] as [Pose, number][][]).map((passos, i) => ({ passos, falas: FALAS[i] }));
 
-const CLASSE: Record<string, string> = { M: 'px-m', H: 'px-h', h: 'px-h2', S: 'px-s', s: 'px-s2', E: 'px-e', W: 'px-w', K: 'px-k', C: 'px-c', L: 'px-l', B: 'px-b' };
+const CLASSE: Record<string, string> = { V: 'px-v', M: 'px-m', H: 'px-h', h: 'px-h2', S: 'px-s', s: 'px-s2', E: 'px-e', W: 'px-w', K: 'px-k', C: 'px-c', L: 'px-l', B: 'px-b' };
 
 type Quadro = Exclude<keyof typeof PERNAS, 'batePe'> | keyof typeof POSES;
 
@@ -86,10 +102,15 @@ const VELOCIDADE = 520;     // px por segundo
 const PULO_ALTURA = 24;     // px
 const PULO_DURACAO = 0.42;  // s
 
-export default function PixelWeber() {
+export default function PixelWeber({ slide = '' }: { slide?: string }) {
   const caixa = useRef<HTMLDivElement>(null);
   const [quadro, setQuadro] = useState<Quadro>('parado');
   const [olhaEsquerda, setOlhaEsquerda] = useState(false);
+  const [fala, setFala] = useState('');
+  const balao = useRef<HTMLDivElement>(null);
+  const inicioSlide = useRef(performance.now());
+  const slideAtual = useRef(slide);
+  useEffect(() => { inicioSlide.current = performance.now(); slideAtual.current = slide; }, [slide]);
   const desenhos = useMemo(() => {
     const nomes = ['parado', 'passoA', 'passoB', 'pulo', ...Object.keys(POSES)] as Quadro[];
     return Object.fromEntries(nomes.map(n => [n, pixels(n)])) as Record<Quadro, ReturnType<typeof pixels>>;
@@ -109,8 +130,38 @@ export default function PixelWeber() {
     let proximoPulo = 0.6 + Math.random() * 1.2; // segundos andando até o próximo pulinho
     let raf = 0;
     let parado = 0;                             // segundos parado
-    let esperaRotina = 3;                       // segundos parado até começar uma rotina
+    let esperaRotina = 4;                       // segundos parado até a primeira rotina; depois, 6 a 12 s
     let rotina: [Pose, number][] | null = null;
+    let falaAtual = '';
+    let falaRotina = '';
+    let falaMouse = '';
+    let falaMouseAte = 0;
+    const atualizarFala = () => {
+      const t = performance.now() < falaMouseAte ? falaMouse : falaRotina;
+      if (t !== falaAtual) { falaAtual = t; setFala(t); }
+    };
+    const falar = (t: string) => { falaRotina = t; };
+    const sorteio = (l: string[]) => l[Math.floor(Math.random() * l.length)];
+
+    // Comentário quando o mouse para em cima de um trecho do texto.
+    let trechoAtual: Element | null = null;
+    let trechoComentado: Element | null = null;
+    let timerTrecho = 0;
+    const SELETOR = '.weber-body p, .weber-body li, .weber-body .aula-box, .weber-body .aula-destaque, .weber-body td, .weber-body h3';
+    const onOver = (e: MouseEvent) => {
+      const bruto = (e.target as Element | null)?.closest?.(SELETOR) ?? null;
+      const alvoEl = bruto && !bruto.closest('.aula-figura') ? bruto : null; // ignora os espaços de imagem
+      if (alvoEl === trechoAtual) return;
+      trechoAtual = alvoEl;
+      window.clearTimeout(timerTrecho);
+      if (!alvoEl || alvoEl === trechoComentado) return;
+      timerTrecho = window.setTimeout(() => {
+        if (trechoAtual !== alvoEl) return;
+        trechoComentado = alvoEl;
+        falaMouse = comentarTrecho(alvoEl);
+        falaMouseAte = performance.now() + 4500;
+      }, 550);
+    };
     let passoRotina = 0;
     let tempoRotina = 0;
     let ultimaRotina = -1;
@@ -158,27 +209,43 @@ export default function PixelWeber() {
         if (!rotina && parado >= esperaRotina) {
           let k = Math.floor(Math.random() * ROTINAS.length);
           if (k === ultimaRotina) k = (k + 1) % ROTINAS.length;
-          ultimaRotina = k; rotina = ROTINAS[k]; passoRotina = 0; tempoRotina = 0;
+          const demorou = (performance.now() - inicioSlide.current) / 1000 > DEMORA;
+          if (demorou && Math.random() < 0.7) k = Math.random() < 0.5 ? 1 : 4; // relógio ou pé batendo
+          ultimaRotina = k; rotina = ROTINAS[k].passos; passoRotina = 0; tempoRotina = 0;
+          const doSlide = FALAS_SLIDE[slideAtual.current] ?? [];
+          const opcoes = demorou ? RECLAMACOES
+            : Math.random() < 0.6 && doSlide.length ? doSlide
+            : Math.random() < 0.5 ? HUMOR : ROTINAS[k].falas;
+          falar(sorteio(opcoes));
         }
         if (rotina) {
           tempoRotina += dt;
           if (tempoRotina >= rotina[passoRotina][1]) { tempoRotina = 0; passoRotina += 1; }
           if (passoRotina >= rotina.length) {
-            rotina = null; parado = 0; esperaRotina = 2.5 + Math.random() * 2.5;
-            mostrar('parado');
+            rotina = null; parado = 0; esperaRotina = 6 + Math.random() * 6;
+            mostrar('parado'); falar('');
           } else mostrar(rotina[passoRotina][0]);
         } else mostrar('parado');
       }
-      if (andando || pulo >= 0) { parado = 0; rotina = null; esperaRotina = 3; }
+      if (andando || pulo >= 0) { parado = 0; rotina = null; esperaRotina = Math.max(esperaRotina, 4); falar(''); }
+      atualizarFala();
 
       el.style.transform = `translate(${(x - meio).toFixed(1)}px, ${(-y).toFixed(1)}px)`;
       el.style.setProperty('--altura-pulo', (y / PULO_ALTURA).toFixed(2));
+      // mantém o balão dentro da tela
+      const b = balao.current;
+      if (b) {
+        const meiaBalao = b.offsetWidth / 2;
+        const desloc = Math.max(8 + meiaBalao - x, Math.min(0, largura - 8 - meiaBalao - x));
+        b.style.setProperty('--balao-desloc', `${desloc.toFixed(0)}px`);
+      }
       raf = requestAnimationFrame(loop);
     };
 
     window.addEventListener('pointermove', onMove, { passive: true });
+    document.addEventListener('mouseover', onOver);
     raf = requestAnimationFrame(loop);
-    return () => { window.removeEventListener('pointermove', onMove); cancelAnimationFrame(raf); };
+    return () => { window.removeEventListener('pointermove', onMove); document.removeEventListener('mouseover', onOver); window.clearTimeout(timerTrecho); cancelAnimationFrame(raf); };
   }, []);
 
   return (
@@ -187,6 +254,7 @@ export default function PixelWeber() {
         {desenhos[quadro].map((p, i) => <rect key={i} x={p.x} y={p.y} width={1.02} height={1.02} className={p.c} />)}
       </svg>
       <span className="pixel-sombra" />
+      <div ref={balao} className={`pixel-balao${fala ? ' is-visivel' : ''}`} role="status">{fala}</div>
     </div>
   );
 }
