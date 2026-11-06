@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Check, Copy, ImagePlus, RefreshCw, Trash2 } from 'lucide-react';
+import { Check, Copy, ImagePlus, RefreshCw, Trash2, X } from 'lucide-react';
 import { ESTILO, type Imagem } from './imagens';
 
 // Imagens inseridas pelo botão:
@@ -179,7 +179,8 @@ export default function SlideFigure({ info }: { info: Imagem }) {
         {zoom && rect ? createPortal(
           <>
             <div className={`zoom-fundo${zoom.open ? ' is-open' : ''}`} onClick={close} />
-            <img className="zoom-img" src={src} alt="" style={{ left: rect.left, top: rect.top, width: rect.width, height: rect.height }} />
+            <img className="zoom-img" src={src} alt="" onClick={close} style={{ left: rect.left, top: rect.top, width: rect.width, height: rect.height }} />
+            <button type="button" className={`zoom-fechar${zoom.open ? ' is-open' : ''}`} onClick={close} aria-label="Fechar imagem"><X size={22} aria-hidden="true" /></button>
           </>,
           app,
         ) : null}

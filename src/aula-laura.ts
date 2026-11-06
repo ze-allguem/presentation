@@ -162,9 +162,9 @@ export const lauraSlides: AulaSlide[] = [
         `<strong>Prebenda:</strong> renda concedida a uma pessoa, sem herança, com valor fixado pela tradição.`,
         `<strong>Feudo:</strong> poderes de mando entregues por contrato, com direitos e deveres guiados pela honra militar dos cavaleiros.`,
       ),
+      foto(0),
       p(`Nos dois casos quem recebe paga do próprio bolso a administração e as armas, e por isso tende a tratar tudo como dele: <strong>julgar, cobrar impostos e convocar soldados viram bens privados</strong>.`),
       exemplo(`Vale-alimentação, imóvel funcional e concessão de serviço são versões modernas, com outro nome, das formas de sustento que Weber lista.`),
-      foto(0),
       p(`Quando nobreza, clero e cidades negociam as leis e os impostos com o rei, temos a <strong>divisão estamental de poderes</strong>, que só se desenvolveu por completo no Ocidente.`),
       contexto(`É a semente dos parlamentos. Na Magna Carta (1215), os barões obrigaram o rei João a aceitar limites à cobrança de tributos.`),
     ],
@@ -229,9 +229,9 @@ export const lauraSlides: AulaSlide[] = [
     blocks: [
       p(`Poucos discípulos aceitam viver só pela "vocação". A maioria quer segurança: a equipe de seguidores (o quadro) se apropria dos cargos e controla quem entra. Quando a herança domina tudo, surge o <strong>"Estado de linhagem"</strong>: não é o cargo que dá prestígio à família, <strong>é o prestígio da família que define o cargo</strong>.`),
       exemplo(`"Sabe com quem está falando?", frase estudada por Roberto DaMatta, mostra que no Brasil o sobrenome às vezes ainda pesa mais que a regra.`),
-      foto(0),
       p(`Para durar, o carisma precisa aceitar a economia e cobrar contribuições regulares. Aí surgem o <strong>clero</strong>, os <strong>funcionários</strong> do Estado e os funcionários de partido. Do carisma original só sobra o prestígio.`),
       exemplo(`Um movimento começa com líder inspirador e voluntários. Dez anos depois tem CNPJ, sede, diretoria, salários e estatuto, e o fundador virou foto na parede. É a rotinização do começo ao fim.`),
+      foto(0),
     ],
   },
   {
