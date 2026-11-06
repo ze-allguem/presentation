@@ -86,13 +86,13 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 7. a dominação tradicional: "sempre foi assim"
 
-**laura-7-1** · o duplo reino do senhor ✅ já inserida
+**laura-7-1** · o duplo reino do chefe tradicional ✅ já inserida
 
 Cena: um rei gordo e barbudo, de coroa e manto de arminho, sentado num trono. O braço esquerdo dele está preso por uma corrente grossa a um livro antigo e enorme de costumes, apoiado no chão ao lado do trono. A mão direita, livre, joga moedas para alguns súditos ajoelhados à sua frente, escolhendo uns e virando o rosto para outros, que ficam de mãos vazias. Expressão de capricho no rosto do rei.
 
 ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim, no estilo de gravura de jornal antigo. Contornos limpos e firmes, formas simplificadas, sombreado só com hachuras e linhas cruzadas finas, sem cinza chapado e sem degradê. Personagens levemente caricatos, com expressões fortes e fáceis de ler. Fundo branco liso: a cena fica recortada sobre o branco, sem moldura e sem cenário desnecessário. Composição clara de ilustração editorial, com um único foco principal. Sem cor, sem texto, sem letras, sem números, sem placas legíveis, sem logotipos, sem assinatura e sem marca d’água. Formato horizontal 4:3.
 
-### 8. quem trabalha para o senhor tradicional
+### 8. quem trabalha para o chefe tradicional
 
 **laura-8-1** · a casa do rei vira Estado ✅ já inserida
 
@@ -102,7 +102,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 9. do patriarca ao sultão: as formas da tradição
 
-**laura-9-1** · o poder como patrimônio do senhor ✅ já inserida
+**laura-9-1** · o poder como patrimônio do chefe ✅ já inserida
 
 Cena: um sultão de turbante e barba pontuda sentado no alto de um trono muito elevado, no topo de uma escadaria. Ele segura um mapa enrolado do território como se fosse a escritura de uma propriedade. Ao redor do trono, uma guarda pessoal de soldados com lanças e mercenários armados. Bem embaixo, súditos pequenos e curvados olham para cima.
 
@@ -112,7 +112,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 **laura-10-1** · feudo: poder entregue em pacto ✅ já inserida
 
-Cena: um senhor feudal de manto e coroa simples, em pé, entrega com as duas mãos um pergaminho com selo de cera e uma espada a um cavaleiro de cota de malha ajoelhado diante dele. Ao fundo, à direita e menores, servidores recebem sacos de grãos e moedas de um mordomo. Clima solene de cerimônia.
+Cena: um nobre dono de terras, de manto e coroa simples, em pé, entrega com as duas mãos um pergaminho com selo de cera e uma espada a um cavaleiro de cota de malha ajoelhado diante dele. Ao fundo, à direita e menores, servidores recebem sacos de grãos e moedas de um mordomo. Clima solene de cerimônia.
 
 ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim, no estilo de gravura de jornal antigo. Contornos limpos e firmes, formas simplificadas, sombreado só com hachuras e linhas cruzadas finas, sem cinza chapado e sem degradê. Personagens levemente caricatos, com expressões fortes e fáceis de ler. Fundo branco liso: a cena fica recortada sobre o branco, sem moldura e sem cenário desnecessário. Composição clara de ilustração editorial, com um único foco principal. Sem cor, sem texto, sem letras, sem números, sem placas legíveis, sem logotipos, sem assinatura e sem marca d’água. Formato horizontal 4:3.
 
@@ -192,7 +192,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 5. prebendas e "falsos feudalismos"
 
-**ze-5-1** · o arrecadador vira senhor ✅ já inserida
+**ze-5-1** · o arrecadador vira dono da terra ✅ já inserida
 
 Cena: em primeiro plano, um cobrador de impostos a cavalo recolhe sacos de grãos de camponeses curvados numa aldeia pobre. Ao fundo, sobre a colina da mesma terra, um palácio grande onde o mesmo cobrador aparece pequeno na varanda, agora vestido como um nobre e cercado por guardas próprios.
 

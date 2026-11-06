@@ -50,7 +50,7 @@ const defs: Record<string, Def[]> = {
       'Cena: uma máquina gigantesca de engrenagens, alavancas e esteiras, construída com pastas de arquivo, gavetas, carimbos e pilhas de papel. Pequenos funcionários de terno e viseira operam as alavancas, giram manivelas e carregam papéis de um lado para o outro. À direita, em primeiro plano, um ministro baixinho de cartola e fraque empurra a máquina com as duas mãos e o corpo inclinado, suando, sem conseguir movê-la um centímetro.'],
   ],
   'laura-7': [
-    [4, 'o duplo reino do senhor',
+    [4, 'o duplo reino do chefe tradicional',
       'Cena: um rei gordo e barbudo, de coroa e manto de arminho, sentado num trono. O braço esquerdo dele está preso por uma corrente grossa a um livro antigo e enorme de costumes, apoiado no chão ao lado do trono. A mão direita, livre, joga moedas para alguns súditos ajoelhados à sua frente, escolhendo uns e virando o rosto para outros, que ficam de mãos vazias. Expressão de capricho no rosto do rei.'],
   ],
   'laura-8': [
@@ -58,12 +58,12 @@ const defs: Record<string, Def[]> = {
       'Cena: o salão de um castelo medieval com uma mesa comprida de madeira cheia de pães, carnes e jarras. Na cabeceira, o rei come com a coroa na cabeça. Ao longo da mesa, servidores e criados comem junto com ele. Um copeiro serve vinho de uma jarra; um mordomo segura uma bandeja. Pela porta aberta ao fundo vê-se um cavalariço escovando dois cavalos. Atmosfera de casa, não de escritório.'],
   ],
   'laura-9': [
-    [7, 'o poder como patrimônio do senhor',
+    [7, 'o poder como patrimônio do chefe',
       'Cena: um sultão de turbante e barba pontuda sentado no alto de um trono muito elevado, no topo de uma escadaria. Ele segura um mapa enrolado do território como se fosse a escritura de uma propriedade. Ao redor do trono, uma guarda pessoal de soldados com lanças e mercenários armados. Bem embaixo, súditos pequenos e curvados olham para cima.'],
   ],
   'laura-10': [
     [4, 'feudo: poder entregue em pacto',
-      'Cena: um senhor feudal de manto e coroa simples, em pé, entrega com as duas mãos um pergaminho com selo de cera e uma espada a um cavaleiro de cota de malha ajoelhado diante dele. Ao fundo, à direita e menores, servidores recebem sacos de grãos e moedas de um mordomo. Clima solene de cerimônia.'],
+      'Cena: um nobre dono de terras, de manto e coroa simples, em pé, entrega com as duas mãos um pergaminho com selo de cera e uma espada a um cavaleiro de cota de malha ajoelhado diante dele. Ao fundo, à direita e menores, servidores recebem sacos de grãos e moedas de um mordomo. Clima solene de cerimônia.'],
   ],
   'laura-11': [
     [2, 'sem previsibilidade',
@@ -102,7 +102,7 @@ const defs: Record<string, Def[]> = {
       'Cena: em primeiro plano, numa mesa comprida, juristas de toga e peruca branca trabalham com pilhas de documentos, penas e tinteiros. Ao fundo, pela janela grande de um palácio, nobres de roupas luxuosas passeiam despreocupados por um jardim geométrico. Um rei com peruca longa observa os juristas por trás, satisfeito.'],
   ],
   'ze-5': [
-    [3, 'o arrecadador vira senhor',
+    [3, 'o arrecadador vira dono da terra',
       'Cena: em primeiro plano, um cobrador de impostos a cavalo recolhe sacos de grãos de camponeses curvados numa aldeia pobre. Ao fundo, sobre a colina da mesma terra, um palácio grande onde o mesmo cobrador aparece pequeno na varanda, agora vestido como um nobre e cercado por guardas próprios.'],
   ],
   'ze-6': [
