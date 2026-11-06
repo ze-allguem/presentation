@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowLeft, ArrowRight, Maximize, Menu, Minimize, X } from 'lucide-react';
 import SlideFigure from './SlideFigure';
+import { imagensPorSlide } from './imagens';
 import type { AulaSlide, Block } from './aula';
 import { lauraSlides } from './aula-laura';
 import { zeSlides } from './aula-ze';
@@ -28,13 +29,17 @@ const isAltTone = (s: AulaSlide) =>
   s.layout === 'cover' || (s.topic !== undefined && s.topic % 3 === 0) || s.id === 'ze-14';
 
 // Agrupa os blocos em seções: cada subtítulo abre uma seção nova, com respiro e divisória.
-function renderSections(blocks: Block[]) {
-  const groups: Block[][] = [];
-  for (const b of blocks) {
+// As imagens entram logo depois do bloco indicado em imagens.ts.
+function renderSections(slideId: string, blocks: Block[]) {
+  const imgs = imagensPorSlide[slideId] ?? [];
+  const groups: React.ReactNode[][] = [];
+  blocks.forEach((b, i) => {
     if (b.t === 'h' || groups.length === 0) groups.push([]);
-    groups[groups.length - 1].push(b);
-  }
-  return groups.map((g, i) => <section key={i} className="aula-secao">{g.map(renderBlock)}</section>);
+    const g = groups[groups.length - 1];
+    g.push(renderBlock(b, i));
+    for (const img of imgs) if (img.apos === i) g.push(<SlideFigure key={img.id} info={img} />);
+  });
+  return groups.map((g, i) => <section key={i} className="aula-secao">{g}</section>);
 }
 
 const THEMES = [
@@ -46,6 +51,23 @@ const THEMES = [
   { id: 'noite', name: 'Noite (amarelo)', bg: '#121212', accent: '#ffd400', on: '#111' },
 ] as const;
 type ThemeId = typeof THEMES[number]['id'];
+
+const FONTS = [
+  { id: 'anton', name: 'Anton', family: 'Anton' },
+  { id: 'caesar', name: 'Caesar Dressing', family: "'Caesar Dressing'" },
+  { id: 'fell', name: 'IM Fell English SC', family: "'IM Fell English SC'" },
+  { id: 'fondamento', name: 'Fondamento', family: 'Fondamento' },
+  { id: 'gravitas', name: 'Gravitas One', family: "'Gravitas One'" },
+] as const;
+type FontId = typeof FONTS[number]['id'];
+
+function savedFont(): FontId {
+  try {
+    const v = localStorage.getItem('weber-fonte');
+    if (FONTS.some(f => f.id === v)) return v as FontId;
+  } catch { /* usa o padrão */ }
+  return 'anton';
+}
 
 function savedTheme(): ThemeId {
   try {
@@ -110,6 +132,7 @@ export default function WeberApp() {
   const [error, setError] = useState('');
   const [moreBelow, setMoreBelow] = useState(false);
   const [theme, setTheme] = useState<ThemeId>(savedTheme);
+  const [font, setFont] = useState<FontId>(savedFont);
   const root = useRef<HTMLDivElement>(null);
   const main = useRef<HTMLElement>(null);
   const text = useRef<HTMLDivElement>(null);
@@ -179,6 +202,11 @@ export default function WeberApp() {
     }
   }
 
+  function chooseFont(id: FontId) {
+    setFont(id);
+    try { localStorage.setItem('weber-fonte', id); } catch { /* ignora */ }
+  }
+
   function chooseTheme(id: ThemeId) {
     setTheme(id);
     try { localStorage.setItem('weber-tema', id); } catch { /* ignora */ }
@@ -194,7 +222,7 @@ export default function WeberApp() {
   const tone = isAltTone(slide) ? (baseTone === 'dark' ? 'light' : 'dark') : baseTone;
 
   return (
-    <div ref={root} className="weber-app bg-grain" data-theme={theme} data-tone={tone}>
+    <div ref={root} className="weber-app bg-grain" data-theme={theme} data-tone={tone} data-fonte={font}>
       <a className="weber-skip" href="#weber-main" onClick={event => { event.preventDefault(); text.current?.focus(); }}>Ir para o conteúdo</a>
       <header className="weber-header">
         <button className="weber-wordmark" onClick={() => goTo(0)} aria-label="Voltar à capa">max weber<span>.</span></button>
@@ -222,11 +250,10 @@ export default function WeberApp() {
               <p className="weber-eyebrow">{slide.presenter === 'Laura e Zé' ? 'Laura e Zé' : <><span className="weber-part">{PARTE[slide.presenter]}</span>{slide.presenter} · {String(slide.topic).padStart(2, '0')}/{String(ownCount).padStart(2, '0')}</>}</p>
               <h2 id="weber-slide-title">{typo(slide.title)}{/[?!.:"]$/.test(slide.title) ? null : <span>.</span>}</h2>
               {slide.pages ? <p className="weber-page-label">Na obra: p. {slide.pages}</p> : null}
-              <SlideFigure key={slide.id} id={slide.id} />
             </div>
             <div className={`weber-body-wrap${moreBelow ? ' has-more' : ''}`}>
               <div ref={text} className="weber-body" tabIndex={0} role="region" aria-label="Texto do slide" onScroll={updateMore}>
-                {renderSections(slide.blocks)}
+                {renderSections(slide.id, slide.blocks)}
               </div>
               <button className={`weber-more${moreBelow ? ' is-visible' : ''}`} aria-hidden={!moreBelow} tabIndex={moreBelow ? 0 : -1}
                 onClick={() => text.current?.scrollBy({ top: text.current.clientHeight * 0.8, behavior: 'smooth' })}>
@@ -255,6 +282,12 @@ export default function WeberApp() {
             <button key={t.id} aria-pressed={theme === t.id} onClick={() => chooseTheme(t.id)}>
               <span className="weber-swatch" style={{ background: t.accent, color: t.on, outline: `3px solid ${t.bg}`, outlineOffset: '-6px' }} aria-hidden="true">A</span>{t.name}
             </button>
+          ))}
+        </div>
+        <p className="weber-menu-label">Fonte dos títulos</p>
+        <div className="weber-themes weber-fonts" role="group" aria-label="Fonte dos títulos">
+          {FONTS.map(f => (
+            <button key={f.id} aria-pressed={font === f.id} onClick={() => chooseFont(f.id)} style={{ fontFamily: f.family, fontSize: f.id === 'gravitas' ? 12 : 15 }}>{f.name}</button>
           ))}
         </div>
         <p className="weber-menu-label">Ir para</p>

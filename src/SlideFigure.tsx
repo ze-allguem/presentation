@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, Copy, ImagePlus, RefreshCw, Trash2 } from 'lucide-react';
-import { ESTILO, imagens } from './imagens';
+import { ESTILO, type Imagem } from './imagens';
 
 // Imagens inseridas pelo botão ficam guardadas neste navegador (IndexedDB).
 // Prioridade: imagem inserida > arquivo em public/imagens/<id>.png > espaço reservado.
@@ -25,8 +25,8 @@ async function dbRun<T>(mode: IDBTransactionMode, fn: (s: IDBObjectStore) => IDB
   });
 }
 
-export default function SlideFigure({ id }: { id: string }) {
-  const info = imagens[id];
+export default function SlideFigure({ info }: { info: Imagem }) {
+  const id = info.id;
   const input = useRef<HTMLInputElement>(null);
   const [stored, setStored] = useState<string | null>(null);
   const [fileMissing, setFileMissing] = useState(false);
@@ -42,7 +42,6 @@ export default function SlideFigure({ id }: { id: string }) {
     return () => { if (url) URL.revokeObjectURL(url); };
   }, [id]);
 
-  if (!info) return null;
   const prompt = `${info.prompt} ${ESTILO}`;
 
   async function save(file: File | undefined) {
@@ -78,7 +77,7 @@ export default function SlideFigure({ id }: { id: string }) {
 
   if (src) {
     return (
-      <figure className={`weber-figure${dragging ? ' is-dragging' : ''}`} {...dropProps}>
+      <figure className={`weber-figure aula-figura${dragging ? ' is-dragging' : ''}`} {...dropProps}>
         {picker}
         <img src={src} alt={info.ideia} onError={() => { if (!stored) setFileMissing(true); }} />
         <div className="weber-figure-tools">
@@ -90,7 +89,7 @@ export default function SlideFigure({ id }: { id: string }) {
   }
 
   return (
-    <div className={`weber-figure weber-figure--vazio${dragging ? ' is-dragging' : ''}`} {...dropProps}>
+    <div className={`weber-figure aula-figura weber-figure--vazio${dragging ? ' is-dragging' : ''}`} {...dropProps}>
       {picker}
       <button className="weber-figure-insert" onClick={() => input.current?.click()}>
         <ImagePlus aria-hidden="true" size={22} />
@@ -98,7 +97,7 @@ export default function SlideFigure({ id }: { id: string }) {
         <span className="weber-figure-hint">ou arraste o arquivo para cá</span>
       </button>
       <div className="weber-figure-brief">
-        <span className="weber-figure-label">Imagem para criar na IA</span>
+        <span className="weber-figure-label">Imagem para criar na IA · {info.ideia}</span>
         <p>{info.prompt}</p>
         <p className="weber-figure-style">{ESTILO}</p>
       </div>
