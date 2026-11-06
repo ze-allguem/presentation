@@ -16,6 +16,9 @@ export type SlideData = {
   section?: string;
   presenter?: string;
   nodes?: ConceptNode[];
+  pages?: string;
+  notes?: string;
+  quotePage?: number;
 };
 
 export const slides: SlideData[] = [

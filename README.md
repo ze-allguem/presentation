@@ -1,4 +1,14 @@
-# React + TypeScript + Vite
+# Apresentações: Max Weber e Argonautas
+
+Execute `npm run dev -- --host 127.0.0.1` e abra http://127.0.0.1:5173/ para Weber. A apresentação original fica em http://127.0.0.1:5173/?deck=argonautas.
+
+Weber possui 38 slides: capa, 18 de Laura (p. 139–166), 18 de Zé (p. 167–202) e referências. As páginas são as impressas na obra. O ícone de livro abre o roteiro de fala; o menu abre o sumário e os atalhos por apresentador. Setas e PageUp/PageDown navegam; Home abre a capa e End, as referências. Esc fecha os diálogos.
+
+O conteúdo e as notas estão em `src/weber.ts`. Depois de editar, execute `node scripts/export-weber-notes.mjs` para atualizar `docs/ROTEIRO-WEBER.md` e `public/weber-roteiro.md`. O script usa a execução nativa de TypeScript do Node instalado neste ambiente (v24). Verifique com `npm run build` e `npm run lint`.
+
+O conteúdo original de Argonautas permanece em `src/data.ts` e sua interface em `src/App.tsx`. O arquivo `src/main.tsx` seleciona a apresentação pelo parâmetro `deck`.
+
+## Documentação original do template
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
