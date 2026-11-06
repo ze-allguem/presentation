@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowLeft, ArrowRight, Maximize, Menu, Minimize, X } from 'lucide-react';
-import SlideFigure from './SlideFigure';
+import SlideFigure, { sincronizarImagens } from './SlideFigure';
 import { fotosAutorObra, imagensPorSlide } from './imagens';
 import type { AulaSlide, Block } from './aula';
 import { lauraSlides } from './aula-laura';
@@ -158,6 +158,9 @@ export default function WeberApp() {
     main.current?.scrollTo({ top: 0 });
     updateMore();
   }, [index, updateMore]);
+
+  // No servidor local, copia para public/imagens/ as imagens já inseridas neste navegador.
+  useEffect(() => { sincronizarImagens(); }, []);
 
   useEffect(() => {
     document.title = 'Max Weber · Economia e sociedade · Laura e Zé';

@@ -224,3 +224,13 @@
 .weber-foto-legenda{margin:14px 0 0;font-size:14px;line-height:1.45;text-align:center;max-width:36ch;color:var(--t-muted)}
 .weber-foto:first-child .weber-foto-legenda{font-family:var(--fonte-titulo,Anton);font-size:22px;color:var(--t-ink);letter-spacing:.01em}
 @media(max-width:800px){.weber-fotos{grid-template-columns:1fr;gap:28px}.aula-figura.aula-figura--foto,.aula-figura--foto.weber-figure--vazio{width:100%}}
+
+/* ===== Zoom das imagens: centro da imagem amplia; cantos ficam para os botões ===== */
+.zoom-alvo{position:absolute;inset:22%;z-index:1;cursor:zoom-in}
+.weber-figure-tools{z-index:2}
+.aula-figura.is-zoomed>img{opacity:0}
+.zoom-fundo{position:fixed;inset:0;z-index:300;background:#000b;opacity:0;transition:opacity .3s ease;pointer-events:none}
+.zoom-fundo.is-open{opacity:1}
+.zoom-img{position:fixed;z-index:301;object-fit:cover;border-radius:6px;pointer-events:none;box-shadow:0 24px 70px #0009;transition:left .3s ease,top .3s ease,width .3s ease,height .3s ease}
+.weber-figure-error--sobre{position:absolute;left:8px;right:8px;bottom:8px;z-index:2;background:var(--t-bg);padding:6px 10px;border-radius:4px}
+@media(prefers-reduced-motion:reduce){.zoom-img,.zoom-fundo{transition:none}}
