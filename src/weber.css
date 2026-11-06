@@ -338,3 +338,6 @@
 .jogo-obs.carimbo{border-radius:3px 3px 1px 1px;background:linear-gradient(#111 0 38%,#fff 38% 70%,var(--t-accent) 70%)}
 .jogo-obs.pasta{background:#f0d9a0;border-radius:2px 8px 2px 2px}
 .jogo-obs.pasta::before{content:'';position:absolute;left:4px;top:-9px;width:18px;height:9px;background:#f0d9a0;border:2.5px solid #111;border-bottom:none;border-radius:3px 3px 0 0}
+
+.jogo-obs.caixa{display:flex;align-items:center;justify-content:center;padding:0 10px;white-space:nowrap;font-family:Anton,Impact,Arial,sans-serif;font-size:15px;letter-spacing:.02em;text-transform:uppercase;color:#111;background:#fff;border:2.5px solid #111;border-radius:6px;box-shadow:3px 3px 0 var(--t-accent)}
+.jogo-obs.caixa--duas{width:92px;white-space:normal;text-align:center;line-height:1.05;font-size:14px}

@@ -12,11 +12,12 @@ const WEBER_X = 70;
 const PULO = 600;         // velocidade inicial do pulo (px/s)
 const GRAVIDADE = 2100;   // px/s²
 
-const TIPOS = [
-  { cls: 'pilha', w: 34, h: 46 },
-  { cls: 'carimbo', w: 26, h: 52 },
-  { cls: 'pasta', w: 48, h: 34 },
-  { cls: 'pilha pilha--alta', w: 34, h: 62 },
+// Obstáculos: caixas com termos e frases do trabalho. [texto, altura, duas linhas?]
+const CAIXAS: [string, number, boolean][] = [
+  ['Carisma', 40, false], ['Patrimonialismo', 40, false], ['Feudo', 40, false], ['Prebenda', 40, false],
+  ['Estamento', 40, false], ['Tipo ideal', 40, false], ['Competência', 40, false], ['Notáveis', 40, false],
+  ['Colegiado', 40, false], ['Impessoalidade', 40, false],
+  ['Sempre foi assim', 56, true], ['Obedecer à regra', 56, true], ['Ministro amador', 56, true], ['Dinheiro não compra prestígio', 62, true],
 ];
 
 export default function JogoWeber() {
@@ -42,13 +43,13 @@ export default function JogoWeber() {
 
       proximo -= vel * dt;
       if (proximo <= 0) {
-        const tp = TIPOS[Math.floor(Math.random() * TIPOS.length)];
+        const [texto, h, duas] = CAIXAS[Math.floor(Math.random() * CAIXAS.length)];
         const o = document.createElement('div');
-        o.className = `jogo-obs ${tp.cls}`;
-        o.style.width = `${tp.w}px`;
-        o.style.height = `${tp.h}px`;
+        o.className = `jogo-obs caixa${duas ? ' caixa--duas' : ''}`;
+        o.style.height = `${h}px`;
+        o.textContent = texto;
         el.appendChild(o);
-        obstaculos.push({ el: o, x: largura() + 20, w: tp.w });
+        obstaculos.push({ el: o, x: largura() + 20, w: o.offsetWidth });
         proximo = 420 + Math.random() * 360;
       }
       for (let i = obstaculos.length - 1; i >= 0; i--) {
@@ -91,7 +92,7 @@ export default function JogoWeber() {
 
   return (
     <div className="jogo" ref={caixa} style={{ height: ALTURA_CAIXA }}>
-      <span className="jogo-aviso">Sem conexão com a internet</span>
+      <span className="jogo-aviso">Sem legitimidade, sem obediência. Tentando reconectar...</span>
       <span className="jogo-placar">HI 00520 <span ref={placar}>00000</span></span>
       <div className="jogo-chao" style={{ bottom: CHAO - 3 }} />
       <div className="jogo-weber" ref={weber} style={{ left: WEBER_X, bottom: CHAO, width: WEBER_W, height: WEBER_H }}>
