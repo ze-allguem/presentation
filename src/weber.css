@@ -341,3 +341,6 @@
 
 .jogo-obs.caixa{display:flex;align-items:center;justify-content:center;padding:0 10px;white-space:nowrap;font-family:Anton,Impact,Arial,sans-serif;font-size:15px;letter-spacing:.02em;text-transform:uppercase;color:#111;background:#fff;border:2.5px solid #111;border-radius:6px;box-shadow:3px 3px 0 var(--t-accent)}
 .jogo-obs.caixa--duas{width:92px;white-space:normal;text-align:center;line-height:1.05;font-size:14px}
+
+.jogo-obs.sprite{background:none;border:none;box-shadow:none;border-radius:0}
+.jogo-obs.sprite svg{display:block}

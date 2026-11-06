@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { SPRITES } from './spritesJogo';
 
 // Mini jogo de corrida automático (inspirado no jogo de quando falta internet no navegador):
 // o Weber, pequeno, corre sozinho e pula obstáculos da apresentação (formulários, carimbos, pastas).
@@ -9,16 +10,10 @@ const CHAO = 26;          // altura do chão dentro da caixa
 const WEBER_W = 36;
 const WEBER_H = 65;
 const WEBER_X = 70;
-const PULO = 600;         // velocidade inicial do pulo (px/s)
+const PULO = 680;         // velocidade inicial do pulo (px/s)
 const GRAVIDADE = 2100;   // px/s²
 
-// Obstáculos: caixas com termos e frases do trabalho. [texto, altura, duas linhas?]
-const CAIXAS: [string, number, boolean][] = [
-  ['Carisma', 40, false], ['Patrimonialismo', 40, false], ['Feudo', 40, false], ['Prebenda', 40, false],
-  ['Estamento', 40, false], ['Tipo ideal', 40, false], ['Competência', 40, false], ['Notáveis', 40, false],
-  ['Colegiado', 40, false], ['Impessoalidade', 40, false],
-  ['Sempre foi assim', 56, true], ['Obedecer à regra', 56, true], ['Ministro amador', 56, true], ['Dinheiro não compra prestígio', 62, true],
-];
+
 
 export default function JogoWeber() {
   const caixa = useRef<HTMLDivElement>(null);
@@ -43,13 +38,14 @@ export default function JogoWeber() {
 
       proximo -= vel * dt;
       if (proximo <= 0) {
-        const [texto, h, duas] = CAIXAS[Math.floor(Math.random() * CAIXAS.length)];
+        const sp = SPRITES[Math.floor(Math.random() * SPRITES.length)];
         const o = document.createElement('div');
-        o.className = `jogo-obs caixa${duas ? ' caixa--duas' : ''}`;
-        o.style.height = `${h}px`;
-        o.textContent = texto;
+        o.className = 'jogo-obs sprite';
+        o.style.width = `${sp.w}px`;
+        o.style.height = `${sp.h}px`;
+        o.innerHTML = sp.svg;
         el.appendChild(o);
-        obstaculos.push({ el: o, x: largura() + 20, w: o.offsetWidth });
+        obstaculos.push({ el: o, x: largura() + 20, w: sp.w });
         proximo = 420 + Math.random() * 360;
       }
       for (let i = obstaculos.length - 1; i >= 0; i--) {
@@ -63,7 +59,7 @@ export default function JogoWeber() {
         const alvo = obstaculos.find(o => o.x + o.w > WEBER_X);
         if (alvo) {
           const dx = alvo.x + alvo.w / 2 - (WEBER_X + WEBER_W / 2);
-          if (dx > 0 && dx <= vel * 0.29) { noAr = true; vy = PULO; }
+          if (dx > 0 && dx <= vel * 0.32) { noAr = true; vy = PULO; }
         }
       }
       if (noAr) {
