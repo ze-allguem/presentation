@@ -1,63 +1,59 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { comentarTrecho, FALAS_SLIDE, HUMOR, RECLAMACOES } from './falasWeber';
 
-// Max Weber em pixel art (desenho original), de perfil, no estilo de personagem de jogo de plataforma.
-// Cabeça grande e corpo bem magro. Traços de Weber: cabelo escuro penteado para trás, testa alta,
-// sobrancelha grossa, nariz marcado, bigode e barba cheia. Terno preto, camisa branca e gravata preta.
-// Anda sobre a linha do rodapé seguindo a posição horizontal do mouse e dá pulinhos de vez em quando.
-// O desenho olha para a direita; para andar para a esquerda ele é espelhado.
+// Max Weber em pixel art, feito a partir da ilustração "cabeção" (cabelo penteado para trás,
+// sobrancelha franzida, orelhona, barba e bigode cheios, mão no queixo). Sprite de 31 x 56 px em
+// public/pixel-weber*.png, olhando para a direita (para andar para a esquerda ele é espelhado).
+// Os quadros de andar mexem só nas pernas. Objetos (xícara, relógio, livro, mão acenando) são
+// desenhados em pixel por cima, na mesma grade do sprite.
 
-const CABECA_E_CORPO = [
-  '....HHHHHH......',
-  '..HHHHHHHHH.....',
-  '.HHHhhhhhSSS....',
-  '.HHHhhhSSSSSS...',
-  '.HHHHSSSSSSSS...',
-  '.HHHSSSSSHHHS...',
-  '.HHsSSSSSSESS...',
-  '.HHssSSSSSSSSS..',
-  '.HHHSSSSSSSSSSS.',
-  '.HHHSSSSSHHHHS..',
-  '..HHHSSHHHHHHH..',
-  '..HHHHHHHHHHHH..',
-  '...HHHHHHHHHHH..',
-  '....HHHHHHHHH...',
-  '......HHHHH.....',
-  '......CWW.......',
-  '......CWK.......',
-  '......CCK.......',
-  '......CCC.......',
-  '......CCC.......',
-];
+const LARGURA = 31;
+const ALTURA = 56;
+const ESCALA = 2;           // cada pixel do sprite vira 2 px na tela
+const VELOCIDADE = 520;     // px por segundo
+const PULO_ALTURA = 24;     // px
+const PULO_DURACAO = 0.42;  // s
 
-const PERNAS = {
-  parado: ['......L.L.......', '......L.L.......', '......L.L.......', '......BBBB......'],
-  passoA: ['.....L...L......', '....L.....L.....', '...L.......L....', '..BB.......BB...'],
-  passoB: ['......LL........', '.......L........', '.......L........', '.......BBB......'],
-  pulo: ['....L....L......', '...L......L.....', '...BB.....BB....', '................'],
-  batePe: ['......L.L.......', '......L..L......', '......L...BB....', '......BB........'],
-};
+type Cor = Record<string, string>;
+const COR: Cor = { K: 'px-k', W: 'px-w', M: 'px-m', V: 'px-v', G: 'px-g' };
+type Pixel = [number, number, string];
+function desenho(ox: number, oy: number, linhas: string[]): Pixel[] {
+  const r: Pixel[] = [];
+  linhas.forEach((l, y) => Array.from(l).forEach((ch, x) => { if (COR[ch]) r.push([ox + x, oy + y, COR[ch]]); }));
+  return r;
+}
 
-// Poses de espera: pernas + "remendos" [x, y, cor] por cima do desenho base (olhando para a direita).
-type Remendo = [number, number, string];
-const OLHO_FECHADO: Remendo[] = [[10, 6, 'H'], [9, 6, 'S']];
-const BOCA_ABERTA: Remendo[] = [[12, 10, 'M'], [13, 10, 'M'], [12, 11, 'M'], [13, 11, 'M']];
-const BRACO_ESQ_CIMA: Remendo[] = [[5, 15, 'C'], [4, 15, 'C'], [3, 14, 'C'], [2, 13, 'C'], [1, 12, 'C'], [0, 11, 'S']];
-const BRACO_DIR_CIMA: Remendo[] = [[9, 15, 'C'], [10, 15, 'C'], [11, 15, 'C'], [12, 14, 'C'], [13, 13, 'C'], [14, 12, 'C'], [15, 11, 'S']];
-const BRACO_DIR_ACENO: Remendo[] = [[9, 15, 'C'], [10, 15, 'C'], [11, 15, 'C'], [12, 14, 'C'], [13, 14, 'C'], [14, 13, 'S']];
+const XICARA = desenho(24, 33, ['KKKKK..', 'KMMMMK.', 'KWWWWKK', 'KWWWWKK', '.KWWWK.', '..KKK..']);
+const XICARA_BOCA = desenho(23, 27, ['KKKKK..', 'KMMMMK.', 'KWWWWKK', 'KWWWWKK', '.KWWWK.', '..KKK..']);
+const VAPOR_A: Pixel[] = [[26, 31, 'px-v'], [27, 30, 'px-v'], [26, 29, 'px-v'], [27, 28, 'px-v']];
+const VAPOR_B: Pixel[] = [[27, 31, 'px-v'], [26, 30, 'px-v'], [27, 29, 'px-v'], [26, 28, 'px-v']];
+const RELOGIO = [...desenho(25, 36, ['.KKK.', 'KWWWK', 'KWKWK', 'KWWWK', '.KKK.']), [24, 37, 'px-k'] as Pixel, [23, 38, 'px-k'] as Pixel];
+const LIVRO = desenho(23, 35, ['KKKKKKKK', 'KWWKWWWK', 'KWWKWWWK', 'KWWKWWWK', 'KKKKKKKK']);
+const PAGINA: Pixel[] = [[27, 33, 'px-k'], [28, 33, 'px-w'], [29, 33, 'px-w'], [30, 34, 'px-k'], [27, 34, 'px-k'], [28, 34, 'px-w'], [29, 34, 'px-w']];
+const ACENO_A: Pixel[] = [...desenho(26, 18, ['KKK', 'KWK', 'KKK']), [25, 22, 'px-k'], [25, 23, 'px-k'], [26, 24, 'px-k'], [26, 25, 'px-k']];
+const ACENO_B: Pixel[] = [...desenho(28, 21, ['KKK', 'KWK', 'KKK']), [27, 25, 'px-k'], [27, 26, 'px-k'], [26, 27, 'px-k']];
+const ZZZ: Pixel[] = [[3, 6, 'px-g'], [4, 6, 'px-g'], [4, 7, 'px-g'], [3, 8, 'px-g'], [4, 8, 'px-g'], [7, 2, 'px-g'], [8, 2, 'px-g'], [8, 3, 'px-g'], [7, 4, 'px-g'], [8, 4, 'px-g']];
+
+// Cada pose: qual quadro de pernas usar, objetos por cima e um efeito de corpo (classe CSS).
+type Desenho = { img: '' | 'a' | 'b' | 'c' | 'd'; extra: Pixel[]; efeito?: string };
 const POSES = {
-  espreguica: { pernas: 'parado', remendos: [...BRACO_ESQ_CIMA, ...BRACO_DIR_CIMA, ...OLHO_FECHADO, ...BOCA_ABERTA] },
-  maoNaBoca: { pernas: 'parado', remendos: [...OLHO_FECHADO, [12, 10, 'M'], [9, 16, 'C'], [10, 15, 'C'], [11, 14, 'C'], [12, 13, 'C'], [13, 12, 'C'], [13, 11, 'S'], [14, 11, 'S'], [14, 10, 'S']] },
-  relogio: { pernas: 'parado', remendos: [[9, 17, 'C'], [10, 17, 'C'], [11, 17, 'S'], [12, 16, 'W'], [13, 16, 'W'], [12, 17, 'W'], [13, 17, 'K'], [12, 15, 'K']] },
-  relogioPe: { pernas: 'batePe', remendos: [[9, 17, 'C'], [10, 17, 'C'], [11, 17, 'S'], [12, 16, 'W'], [13, 16, 'W'], [12, 17, 'W'], [13, 17, 'K'], [12, 15, 'K']] },
-  livroA: { pernas: 'parado', remendos: [[9, 17, 'C'], [10, 17, 'S'], [11, 15, 'W'], [12, 15, 'W'], [13, 15, 'K'], [14, 15, 'W'], [15, 15, 'W'], [11, 16, 'W'], [12, 16, 'W'], [13, 16, 'K'], [14, 16, 'W'], [15, 16, 'W'], [11, 17, 'K'], [12, 17, 'K'], [13, 17, 'K'], [14, 17, 'K'], [15, 17, 'K']] },
-  livroB: { pernas: 'parado', remendos: [[9, 17, 'C'], [10, 17, 'S'], [11, 15, 'W'], [12, 15, 'W'], [13, 15, 'K'], [14, 14, 'W'], [15, 13, 'W'], [11, 16, 'W'], [12, 16, 'W'], [13, 16, 'K'], [14, 15, 'W'], [14, 16, 'W'], [11, 17, 'K'], [12, 17, 'K'], [13, 17, 'K'], [14, 17, 'K'], [15, 17, 'K']] },
-  acenoA: { pernas: 'parado', remendos: [...BRACO_DIR_CIMA] },
-  acenoB: { pernas: 'parado', remendos: [...BRACO_DIR_ACENO] },
-  pe: { pernas: 'batePe', remendos: [] },
-  cafe: { pernas: 'parado', remendos: [[9, 17, 'C'], [10, 17, 'S'], [11, 16, 'W'], [12, 16, 'W'], [11, 17, 'W'], [12, 17, 'W'], [13, 16, 'W'], [11, 15, 'K'], [12, 15, 'K'], [11, 13, 'V'], [12, 12, 'V'], [12, 14, 'V']] },
-  cafeGole: { pernas: 'parado', remendos: [...OLHO_FECHADO, [9, 16, 'C'], [10, 15, 'C'], [11, 14, 'C'], [12, 13, 'S'], [13, 11, 'W'], [14, 11, 'W'], [13, 12, 'W'], [14, 12, 'W'], [15, 11, 'W'], [14, 9, 'V'], [15, 8, 'V']] },
-} satisfies Record<string, { pernas: keyof typeof PERNAS; remendos: Remendo[] }>;
+  parado: { img: '', extra: [] },
+  passoA: { img: 'a', extra: [] },
+  passoB: { img: 'b', extra: [] },
+  pulo: { img: 'd', extra: [] },
+  espreguica: { img: '', extra: ZZZ, efeito: 'ef-estica' },
+  maoNaBoca: { img: '', extra: [], efeito: 'ef-bocejo' },
+  relogio: { img: '', extra: RELOGIO },
+  relogioPe: { img: 'c', extra: RELOGIO },
+  livroA: { img: '', extra: LIVRO },
+  livroB: { img: '', extra: [...LIVRO, ...PAGINA] },
+  acenoA: { img: '', extra: ACENO_A, efeito: 'ef-balanca' },
+  acenoB: { img: '', extra: ACENO_B, efeito: 'ef-balanca' },
+  pe: { img: 'c', extra: [] },
+  cafe: { img: '', extra: [...XICARA, ...VAPOR_A] },
+  cafeGole: { img: '', extra: [...XICARA_BOCA, ...VAPOR_B], efeito: 'ef-gole' },
+} satisfies Record<string, Desenho>;
+type Quadro = keyof typeof POSES;
 
 // Frases do balão para cada rotina (na mesma ordem das rotinas abaixo).
 const FALAS: string[][] = [
@@ -71,7 +67,7 @@ const FALAS: string[][] = [
 const DEMORA = 40; // segundos no mesmo slide até ele começar a reclamar
 
 // Rotinas quando fica parado: sequência de [pose, duração em segundos].
-type Pose = keyof typeof POSES | 'parado';
+type Pose = Quadro;
 type Rotina = { passos: [Pose, number][]; falas: string[] };
 const ROTINAS: Rotina[] = ([
   [['espreguica', 1.1], ['parado', 0.25], ['espreguica', 0.9], ['maoNaBoca', 1.4], ['parado', 0.4]],
@@ -82,26 +78,6 @@ const ROTINAS: Rotina[] = ([
   [['cafe', 1.2], ['cafeGole', 0.9], ['cafe', 1.0], ['cafeGole', 0.9], ['cafe', 1.2]],
 ] as [Pose, number][][]).map((passos, i) => ({ passos, falas: FALAS[i] }));
 
-const CLASSE: Record<string, string> = { V: 'px-v', M: 'px-m', H: 'px-h', h: 'px-h2', S: 'px-s', s: 'px-s2', E: 'px-e', W: 'px-w', K: 'px-k', C: 'px-c', L: 'px-l', B: 'px-b' };
-
-type Quadro = Exclude<keyof typeof PERNAS, 'batePe'> | keyof typeof POSES;
-
-function pixels(quadro: Quadro) {
-  const pose = quadro in POSES ? POSES[quadro as keyof typeof POSES] : { pernas: quadro as keyof typeof PERNAS, remendos: [] as Remendo[] };
-  const linhas = [...CABECA_E_CORPO, ...PERNAS[pose.pernas]].map(l => Array.from(l));
-  for (const [x, y, c] of pose.remendos) linhas[y][x] = c;
-  const rects: { x: number; y: number; c: string }[] = [];
-  linhas.forEach((linha, y) => linha.forEach((ch, x) => { if (CLASSE[ch]) rects.push({ x, y, c: CLASSE[ch] }); }));
-  return rects;
-}
-
-const LARGURA = CABECA_E_CORPO[0].length;
-const ALTURA = CABECA_E_CORPO.length + PERNAS.parado.length;
-const ESCALA = 3.2;         // px por "pixel" do desenho
-const VELOCIDADE = 520;     // px por segundo
-const PULO_ALTURA = 24;     // px
-const PULO_DURACAO = 0.42;  // s
-
 export default function PixelWeber({ slide = '' }: { slide?: string }) {
   const caixa = useRef<HTMLDivElement>(null);
   const [quadro, setQuadro] = useState<Quadro>('parado');
@@ -111,10 +87,6 @@ export default function PixelWeber({ slide = '' }: { slide?: string }) {
   const inicioSlide = useRef(performance.now());
   const slideAtual = useRef(slide);
   useEffect(() => { inicioSlide.current = performance.now(); slideAtual.current = slide; }, [slide]);
-  const desenhos = useMemo(() => {
-    const nomes = ['parado', 'passoA', 'passoB', 'pulo', ...Object.keys(POSES)] as Quadro[];
-    return Object.fromEntries(nomes.map(n => [n, pixels(n)])) as Record<Quadro, ReturnType<typeof pixels>>;
-  }, []);
 
   useEffect(() => {
     const el = caixa.current;
@@ -248,11 +220,19 @@ export default function PixelWeber({ slide = '' }: { slide?: string }) {
     return () => { window.removeEventListener('pointermove', onMove); document.removeEventListener('mouseover', onOver); window.clearTimeout(timerTrecho); cancelAnimationFrame(raf); };
   }, []);
 
+  const pose: Desenho = POSES[quadro];
   return (
     <div ref={caixa} className="pixel-weber" aria-hidden="true" style={{ width: LARGURA * ESCALA, height: ALTURA * ESCALA }}>
-      <svg viewBox={`0 0 ${LARGURA} ${ALTURA}`} shapeRendering="crispEdges" style={{ transform: olhaEsquerda ? 'scaleX(-1)' : undefined }}>
-        {desenhos[quadro].map((p, i) => <rect key={i} x={p.x} y={p.y} width={1.02} height={1.02} className={p.c} />)}
-      </svg>
+      <div className="pixel-giro" style={{ transform: olhaEsquerda ? 'scaleX(-1)' : undefined }}>
+        <div className={`pixel-corpo${pose.efeito ? ` ${pose.efeito}` : ''}`}>
+          <img src={`${import.meta.env.BASE_URL}pixel-weber${pose.img ? `-${pose.img}` : ''}.png`} alt="" draggable={false} />
+          {pose.extra.length ? (
+            <svg viewBox={`0 0 ${LARGURA} ${ALTURA}`} shapeRendering="crispEdges">
+              {pose.extra.map(([x, y, c], i) => <rect key={i} x={x} y={y} width={1.02} height={1.02} className={c} />)}
+            </svg>
+          ) : null}
+        </div>
+      </div>
       <span className="pixel-sombra" />
       <div ref={balao} className={`pixel-balao${fala ? ' is-visivel' : ''}`} role="status">{fala}</div>
     </div>

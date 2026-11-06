@@ -184,7 +184,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 4. como os reis venceram e nasceu o Estado moderno
 
-**ze-4-1** · o rei e seus juristas _(na seção: início do slide)_
+**ze-4-1** · o rei e seus juristas _(na seção: início do slide)_ ✅ já inserida
 
 Cena: em primeiro plano, numa mesa comprida, juristas de toga e peruca branca trabalham com pilhas de documentos, penas e tinteiros. Ao fundo, pela janela grande de um palácio, nobres de roupas luxuosas passeiam despreocupados por um jardim geométrico. Um rei com peruca longa observa os juristas por trás, satisfeito.
 
@@ -192,7 +192,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 5. prebendas e "falsos feudalismos"
 
-**ze-5-1** · o arrecadador vira senhor _(na seção: início do slide)_
+**ze-5-1** · o arrecadador vira senhor _(na seção: início do slide)_ ✅ já inserida
 
 Cena: em primeiro plano, um cobrador de impostos a cavalo recolhe sacos de grãos de camponeses curvados numa aldeia pobre. Ao fundo, sobre a colina da mesma terra, um palácio grande onde o mesmo cobrador aparece pequeno na varanda, agora vestido como um nobre e cercado por guardas próprios.
 
@@ -200,7 +200,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 6. nenhum governo é puro
 
-**ze-6-1** · mais fraco que todos juntos _(na seção: O chefe e o quadro)_
+**ze-6-1** · mais fraco que todos juntos _(na seção: O chefe e o quadro)_ ✅ já inserida
 
 Cena: uma mesa comprida de reunião. De um lado, sozinho, um diretor de escola de terno, suando e afrouxando a gravata. Do outro lado, uma fileira de professores e professoras de braços cruzados, sérios e unidos, ombro a ombro. Composição que deixa claro o desequilíbrio: um contra muitos.
 
@@ -208,7 +208,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 7. o carisma de cabeça para baixo: a democracia
 
-**ze-7-1** · o carisma vira voto _(na seção: início do slide)_
+**ze-7-1** · o carisma vira voto _(na seção: início do slide)_ ✅ já inserida
 
 Cena: no centro, uma urna eleitoral grande sobre um pedestal, cercada por raios de luz como se fosse um altar. Ao redor, uma multidão de pessoas diversas ergue cédulas de papel acima da cabeça em direção à urna, com expressões de fé e esperança.
 
@@ -216,7 +216,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 8. governar em grupo: a colegialidade
 
-**ze-8-1** · decisão em grupo demora _(na seção: início do slide)_
+**ze-8-1** · decisão em grupo demora _(na seção: início do slide)_ ✅ já inserida
 
 Cena: uma mesa redonda de conselho com dez pessoas de terno falando ao mesmo tempo, gesticulando, algumas bocejando, papéis espalhados. Na parede atrás, um grande relógio de ponteiros. No centro da mesa, um documento com um espaço de assinatura em branco, que ninguém assina.
 
@@ -224,7 +224,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 9. divisão de poderes
 
-**ze-9-1** · quem manda no dinheiro manda _(na seção: início do slide)_
+**ze-9-1** · quem manda no dinheiro manda _(na seção: início do slide)_ ✅ já inserida
 
 Cena: uma balança gigante com três pratos pendurados num suporte central. Em cada prato, uma miniatura de prédio: um parlamento com cúpula, um tribunal com colunas e um palácio de governo. Os três estão em equilíbrio. Pendurada no centro, logo abaixo do suporte, uma grande bolsa de moedas.
 
@@ -232,7 +232,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 10. partidos
 
-**ze-10-1** · candidatos na prateleira _(na seção: A anatomia de um partido)_
+**ze-10-1** · candidatos na prateleira _(na seção: A anatomia de um partido)_ ✅ já inserida
 
 Cena: o corredor de um supermercado. Na prateleira, em vez de produtos, há candidatos sorridentes de terno dentro de caixas e embalagens, como bonecos à venda. Eleitores empurram carrinhos e escolhem entre eles com cara de dúvida. Só existem as opções da prateleira.
 
@@ -240,7 +240,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 11. democracia direta e os notáveis
 
-**ze-11-1** · os notáveis na primeira fila _(na seção: início do slide)_
+**ze-11-1** · os notáveis na primeira fila _(na seção: início do slide)_ ✅ já inserida
 
 Cena: uma reunião de associação de bairro num salão simples. Na primeira fila, poucos senhores bem vestidos e aposentados estão sentados confortavelmente, falando. Atrás deles, muitas cadeiras vazias. Pela janela do salão, trabalhadores de uniforme passam apressados para o trabalho, sem tempo de entrar.
 
@@ -248,7 +248,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 12. representação
 
-**ze-12-1** · mandato livre x mandato vinculado _(na seção: início do slide)_
+**ze-12-1** · mandato livre x mandato vinculado _(na seção: início do slide)_ ✅ já inserida
 
 Cena: num plenário, um deputado de terno está de pé, com a mão no peito, votando com convicção. Acima, na galeria, eleitores irritados levantam cartazes (sem texto legível) e apontam para ele, cobrando. O deputado olha para frente, sem se abalar.
 
@@ -256,7 +256,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 13. classes e estamentos
 
-**ze-13-1** · dinheiro x prestígio _(na seção: O que é estamento)_
+**ze-13-1** · dinheiro x prestígio _(na seção: O que é estamento)_ ✅ já inserida
 
 Cena: a entrada de um clube tradicional com colunas. À esquerda, um novo-rico de terno chamativo, carregando sacos de dinheiro, é barrado pelo porteiro com a mão espalmada. À direita, um nobre idoso de roupas gastas e remendadas é recebido pelo mesmo porteiro com uma reverência profunda.
 
@@ -264,7 +264,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 14. fechando a aula
 
-**ze-14-1** · ler o jornal com Weber _(na seção: início do slide)_
+**ze-14-1** · ler o jornal com Weber _(na seção: início do slide)_ ✅ já inserida
 
 Cena: uma mesa de madeira vista de cima em leve ângulo. Sobre ela, um jornal aberto (com colunas de linhas, sem texto legível), um par de óculos redondos apoiado em cima do jornal, um livro antigo de capa dura ao lado e uma xícara de café fumegante.
 
