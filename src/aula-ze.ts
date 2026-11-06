@@ -10,7 +10,7 @@ export const zeSlides: AulaSlide[] = [
     ...base, id: 'ze-1', topic: 1,
     title: 'a pergunta que guia a parte 2',
     blocks: [
-      p(`Continuando de onde a Laura parou: toda dominação precisa de legitimidade e de uma equipe para executar as ordens.`),
+      p(`Toda dominação precisa de legitimidade e de uma equipe para executar as ordens.`),
       conceito(`<strong>Quadro administrativo</strong> é o grupo que executa as ordens de quem manda: funcionários, assessores, vassalos, soldados. Nenhum chefe governa sozinho.`),
       destaque(`Quem controla os meios de governar: o chefe ou a equipe dele?`),
       p(`Se os funcionários são donos das ferramentas (terra, armas, o próprio cargo), eles podem desafiar o chefe. Se só recebem salário, dependem dele. Essa ideia explica o feudalismo, o Estado moderno e a burocracia.`),

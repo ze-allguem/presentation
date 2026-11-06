@@ -10,7 +10,7 @@ export const lauraSlides: AulaSlide[] = [
     title: 'antes de tudo: quem era Weber',
     blocks: [
       contexto(`Max Weber (1864 a 1920) foi um estudioso alemão de economia, história, direito e sociologia, considerado um dos três "pais" da sociologia, junto com Marx e Durkheim. Ficou famoso com <em>A ética protestante e o espírito do capitalismo</em>. <em>Economia e Sociedade</em> é a obra principal dele, mas <strong>ficou inacabada</strong>: Weber morreu em 1920 e a esposa, Marianne, publicou o livro.`),
-      p(`O trecho que vamos ver é o começo do capítulo III, "Os tipos de dominação", escrito entre 1918 e 1920. A Alemanha tinha perdido a Primeira Guerra, o imperador havia fugido, surgiam "conselhos de trabalhadores e soldados" e nascia a República de Weimar. Quando Weber fala de burocracia que sobrevive a revoluções e de líderes carismáticos, <strong>ele descreve o que via pela janela</strong>.`),
+      p(`O trecho estudado é o começo do capítulo III, "Os tipos de dominação", escrito entre 1918 e 1920. A Alemanha tinha perdido a Primeira Guerra, o imperador havia fugido, surgiam "conselhos de trabalhadores e soldados" e nascia a República de Weimar. Quando Weber fala de burocracia que sobrevive a revoluções e de líderes carismáticos, <strong>ele descreve o que via pela janela</strong>.`),
       foto(0),
       conceito(`<strong>Tipo ideal</strong> é um modelo "puro", exagerado de propósito, que serve como régua para medir a realidade. Ninguém encontra um tipo ideal perfeito na vida real.`),
       exemplo(`O "aluno ideal" que o professor imagina: chega na hora, lê tudo, participa. Nenhum aluno é assim, mas o modelo ajuda a descrever os reais: "esse é pontual, mas não lê".`),
@@ -104,7 +104,7 @@ export const lauraSlides: AulaSlide[] = [
     ...base, id: 'laura-7', topic: 7, pages: '148',
     title: 'a dominação tradicional: "sempre foi assim"',
     blocks: [
-      conceito(`<strong>Dominação tradicional:</strong> a legitimidade vem do valor sagrado do que existe "desde sempre". Obedece-se ao chefe, de forma pessoal, pelo respeito que a tradição dá a ele. Weber chama esse chefe de "senhor"; aqui vamos usar "chefe", como o chefe de uma família, um rei ou um dono do poder local.`),
+      conceito(`<strong>Dominação tradicional:</strong> a legitimidade vem do valor sagrado do que existe "desde sempre". Obedece-se ao chefe, de forma pessoal, pelo respeito que a tradição dá a ele. Weber usa a palavra "senhor" para esse chefe, que pode ser o chefe de uma família, um rei ou o dono do poder numa região.`),
       tabela(
         ['', 'Legal', 'Tradicional'],
         ['Quem manda', 'Um superior', 'Um chefe pessoal'],
@@ -232,7 +232,6 @@ export const lauraSlides: AulaSlide[] = [
       foto(0),
       p(`Para durar, o carisma precisa aceitar a economia e cobrar contribuições regulares. Aí surgem o <strong>clero</strong>, os <strong>funcionários</strong> do Estado e os funcionários de partido. Do carisma original só sobra o prestígio.`),
       exemplo(`Um movimento começa com líder inspirador e voluntários. Dez anos depois tem CNPJ, sede, diretoria, salários e estatuto, e o fundador virou foto na parede. É a rotinização do começo ao fim.`),
-      destaque(`Aqui, na página 167, termina a Parte 1. O Zé continua na Parte 2.`),
     ],
   },
   {
@@ -251,7 +250,7 @@ export const lauraSlides: AulaSlide[] = [
         `"Toda dominação procura despertar e cultivar a crença em sua legitimidade."`,
         `"Só existe escolha entre burocratização e diletantização da administração."`,
       ),
-      p(`A lei, a tradição e o carisma continuam sendo ferramentas para entender por que as pessoas obedecem. Agora o Zé mostra como essas ideias explicam o feudalismo, o Estado moderno, a democracia e as classes.`),
+      p(`A lei, a tradição e o carisma continuam sendo ferramentas para entender por que as pessoas obedecem.`),
     ],
   },
 ];

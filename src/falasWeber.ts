@@ -1,7 +1,7 @@
 // Frases do Weber em pixel. Por slide: sobre o conteúdo daquele slide, com uma pitada de humor.
 
 export const FALAS_SLIDE: Record<string, string[]> = {
-  'capa': ['Bem-vindos à minha aula!', 'Laura e Zé: confio em vocês.', 'Sim, sou eu mesmo. Em pixel.'],
+  'capa': ['Bem-vindos à minha aula!', 'Preparados para falar de dominação?', 'Sim, sou eu mesmo. Em pixel.'],
   'autor-e-obra': ['Esse livro pesa mais que eu.', 'Foi a Marianne que organizou tudo.', 'Foto boa, né? 1918.'],
   'laura-1': ['Eu via a revolução pela janela!', 'Tipo ideal é régua, não retrato.', 'Morri em 1920 e o livro ficou pela metade...'],
   'laura-2': ['Dominação: chance de ser obedecido.', 'Sem legitimidade, ninguém aguenta.', 'O entregador do app que o diga.'],
@@ -17,8 +17,8 @@ export const FALAS_SLIDE: Record<string, string[]> = {
   'laura-12': ['Carisma: quando te acham extraordinário.', 'Está escrito... mas eu vos digo!', 'Carisma não paga boleto.'],
   'laura-13': ['O líder morreu, e agora?', 'Fumaça branca é carisma rotinizado.', 'Respeito a toga, não o juiz.'],
   'laura-14': ['O fundador vira foto na parede.', '"Sabe com quem está falando?"', 'Quase no fim da Parte 1!'],
-  'laura-15': ['Lei, tradição e carisma. Fechou!', 'Parte 1 concluída. Valeu, Laura!', 'Agora é com o Zé!'],
-  'ze-1': ['Quem controla os meios de governar?', 'Bem-vindo, Zé!', 'Chefe sem quadro não governa nada.'],
+  'laura-15': ['Lei, tradição e carisma. Fechou!', 'Três réguas na mão e a dominação na cabeça.', 'Até a burocracia agradece a atenção.'],
+  'ze-1': ['Quem controla os meios de governar?', 'Chefe ou equipe: quem manda mais?', 'Chefe sem quadro não governa nada.'],
   'ze-2': ['Filho de quem mandava, manda.', 'Fundar seita era fundar dinastia.', 'O sobrenome abre portas, infelizmente.'],
   'ze-3': ['Ninguém obedece ao chefe do chefe!', 'Rei feudal: frágil de dar dó.', 'Jurei lealdade só pelo café.'],
   'ze-4': ['Os juristas salvaram os reis.', 'Luís XIV levou a nobreza pra Versalhes.', 'Nasce o Estado moderno!'],

@@ -16,7 +16,7 @@ const references: AulaSlide = {
   blocks: [
     { t: 'p', html: '<strong>WEBER, Max. Economia e sociedade.</strong> v. 1. Brasília: Editora UnB, 1999.' },
     { t: 'p', html: '<strong>Trechos estudados:</strong> capítulo III, "Os tipos de dominação", e início do capítulo IV, "Estamentos e classes".' },
-    { t: 'p', html: 'Laura (Parte 1): p. 139–167. Zé (Parte 2): p. 167–203. Os números indicam as <strong>páginas impressas no livro</strong>.' },
+    { t: 'p', html: 'Parte 1: p. 139–167. Parte 2: p. 167–203. Os números indicam as <strong>páginas impressas no livro</strong>.' },
   ],
 };
 
