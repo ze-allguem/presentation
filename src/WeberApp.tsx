@@ -1,13 +1,106 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, BookOpen, Download, Maximize, Menu, Minimize, X } from 'lucide-react';
-import { weberSlides } from './weber';
+import { ArrowDown, ArrowLeft, ArrowRight, Maximize, Menu, Minimize, X } from 'lucide-react';
+import SlideFigure from './SlideFigure';
+import type { AulaSlide, Block } from './aula';
+import { lauraSlides } from './aula-laura';
+import { zeSlides } from './aula-ze';
 import './weber.css';
 import WeberBackground from './WeberBackground';
 
-const darkSlides = new Set(['weber-laura-4', 'weber-laura-15', 'weber-laura-18', 'weber-ze-1', 'weber-ze-5', 'weber-ze-9', 'weber-ze-16']);
+const cover: AulaSlide = { id: 'capa', presenter: 'Laura e Zé', layout: 'cover', title: 'max weber', blocks: [] };
+const references: AulaSlide = {
+  id: 'referencias', presenter: 'Laura e Zé', layout: 'content', title: 'referências', chapter: 'A obra e os trechos estudados',
+  blocks: [
+    { t: 'p', html: '<strong>WEBER, Max. Economia e sociedade.</strong> v. 1. Brasília: Editora UnB, 1999.' },
+    { t: 'p', html: '<strong>Trechos estudados:</strong> capítulo III, "Os tipos de dominação", e início do capítulo IV, "Estamentos e classes".' },
+    { t: 'p', html: 'Laura: p. 139–167. Zé: p. 167–203. Os números indicam as <strong>páginas impressas no livro</strong>.' },
+    { t: 'p', html: 'Texto dos slides adaptado das aulas escritas "Aprendendo Weber com calma", em linguagem didática. Somente os trechos entre aspas atribuídos a Weber são citações.' },
+  ],
+};
+
+const slides: AulaSlide[] = [cover, ...lauraSlides, ...zeSlides, references];
+const firstOf = (presenter: string) => slides.findIndex(s => s.presenter === presenter);
+
+const PARTE = { Laura: 'Parte 1', 'Zé': 'Parte 2' } as const;
+
+// Telas que invertem o tom do tema (claro ↔ escuro), para variar o ritmo visual.
+const isAltTone = (s: AulaSlide) =>
+  s.layout === 'cover' || (s.topic !== undefined && s.topic % 3 === 0) || s.id === 'ze-14';
+
+// Agrupa os blocos em seções: cada subtítulo abre uma seção nova, com respiro e divisória.
+function renderSections(blocks: Block[]) {
+  const groups: Block[][] = [];
+  for (const b of blocks) {
+    if (b.t === 'h' || groups.length === 0) groups.push([]);
+    groups[groups.length - 1].push(b);
+  }
+  return groups.map((g, i) => <section key={i} className="aula-secao">{g.map(renderBlock)}</section>);
+}
+
+const THEMES = [
+  { id: 'laranja', name: 'Laranja', bg: '#f4f4f4', accent: '#ff4400', on: '#111' },
+  { id: 'azul', name: 'Azul', bg: '#f3f5f9', accent: '#1f5eff', on: '#fff' },
+  { id: 'magenta', name: 'Magenta', bg: '#f7f3f5', accent: '#d6005c', on: '#fff' },
+  { id: 'roxo', name: 'Roxo', bg: '#f5f3f9', accent: '#6b2bd9', on: '#fff' },
+  { id: 'mono', name: 'Preto e branco', bg: '#fff', accent: '#000', on: '#fff' },
+  { id: 'noite', name: 'Noite (amarelo)', bg: '#121212', accent: '#ffd400', on: '#111' },
+] as const;
+type ThemeId = typeof THEMES[number]['id'];
+
+function savedTheme(): ThemeId {
+  try {
+    const v = localStorage.getItem('weber-tema');
+    if (THEMES.some(t => t.id === v)) return v as ThemeId;
+  } catch { /* sem armazenamento: usa o padrão */ }
+  return 'laranja';
+}
+
+const BOX_LABEL = { conceito: 'Conceito-chave', exemplo: 'Exemplo de hoje', contexto: 'Contexto histórico' } as const;
+
+// Aspas retas → aspas curvas (o conteúdo não usa atributos HTML).
+const typo = (html: string) => html.replace(/"([^"]*)"/g, '“$1”');
+const Html = ({ as: Tag = 'p', html, className }: { as?: 'p' | 'li' | 'td' | 'th' | 'span'; html: string; className?: string }) =>
+  <Tag className={className} dangerouslySetInnerHTML={{ __html: typo(html) }} />;
+
+function renderBlock(block: Block, key: number) {
+  switch (block.t) {
+    case 'p': return <Html key={key} html={block.html} />;
+    case 'h': return <h3 key={key} className="aula-h">{block.text}</h3>;
+    case 'destaque': return <Html key={key} className="aula-destaque" html={block.html} />;
+    case 'box': return (
+      <aside key={key} className={`aula-box aula-box--${block.kind}`}>
+        <span className="aula-box-label">{BOX_LABEL[block.kind]}</span>
+        {block.html.map((html, i) => <Html key={i} html={html} />)}
+      </aside>
+    );
+    case 'lista': {
+      const List = block.ordered ? 'ol' : 'ul';
+      return <List key={key} className="aula-lista">{block.items.map((html, i) => <Html as="li" key={i} html={html} />)}</List>;
+    }
+    case 'tabela': return (
+      <div key={key} className="aula-tabela" tabIndex={0} role="region" aria-label="Tabela">
+        <table>
+          <thead><tr>{block.head.map((cell, i) => <Html as="th" key={i} html={cell} />)}</tr></thead>
+          <tbody>{block.rows.map((row, r) => (
+            <tr key={r}>{row.map((cell, c) => {
+              const span = c === row.length - 1 ? block.head.length - row.length + 1 : 1;
+              return <td key={c} colSpan={span > 1 ? span : undefined} dangerouslySetInnerHTML={{ __html: typo(cell) }} />;
+            })}</tr>
+          ))}</tbody>
+        </table>
+      </div>
+    );
+    case 'revisao': return (
+      <aside key={key} className="aula-box aula-box--revisao">
+        <span className="aula-box-label">Revisão rápida</span>
+        <ul>{block.items.map((html, i) => <Html as="li" key={i} html={html} />)}</ul>
+      </aside>
+    );
+  }
+}
 
 function indexFromHash() {
-  const index = weberSlides.findIndex(slide => `#${slide.id}` === window.location.hash);
+  const index = slides.findIndex(slide => `#${slide.id}` === window.location.hash);
   return Math.max(0, index);
 }
 
@@ -15,42 +108,61 @@ export default function WeberApp() {
   const [index, setIndex] = useState(indexFromHash);
   const [fullscreen, setFullscreen] = useState(false);
   const [error, setError] = useState('');
+  const [moreBelow, setMoreBelow] = useState(false);
+  const [theme, setTheme] = useState<ThemeId>(savedTheme);
   const root = useRef<HTMLDivElement>(null);
   const main = useRef<HTMLElement>(null);
+  const text = useRef<HTMLDivElement>(null);
   const menu = useRef<HTMLDialogElement>(null);
-  const notes = useRef<HTMLDialogElement>(null);
-  const slide = weberSlides[index];
-  const dark = darkSlides.has(slide.id);
+  const slide = slides[index];
+
+  const updateMore = useCallback(() => {
+    const el = text.current;
+    setMoreBelow(Boolean(el && el.scrollHeight - el.scrollTop - el.clientHeight > 8));
+  }, []);
 
   const goTo = useCallback((next: number) => {
-    const bounded = Math.max(0, Math.min(weberSlides.length - 1, next));
+    const bounded = Math.max(0, Math.min(slides.length - 1, next));
     setIndex(bounded);
-    window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${weberSlides[bounded].id}`);
-    main.current?.scrollTo({ top: 0 });
+    window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${slides[bounded].id}`);
   }, []);
+
+  // Ao trocar de slide, o texto volta ao topo.
+  useEffect(() => {
+    text.current?.scrollTo({ top: 0 });
+    main.current?.scrollTo({ top: 0 });
+    updateMore();
+  }, [index, updateMore]);
 
   useEffect(() => {
     document.title = 'Max Weber · Economia e sociedade · Laura e Zé';
-    const onHash = () => { setIndex(indexFromHash()); main.current?.scrollTo({ top: 0 }); };
+    const onHash = () => setIndex(indexFromHash());
     const onFullscreen = () => setFullscreen(Boolean(document.fullscreenElement));
     window.addEventListener('hashchange', onHash);
+    window.addEventListener('resize', updateMore);
     document.addEventListener('fullscreenchange', onFullscreen);
     return () => {
       window.removeEventListener('hashchange', onHash);
+      window.removeEventListener('resize', updateMore);
       document.removeEventListener('fullscreenchange', onFullscreen);
     };
-  }, []);
+  }, [updateMore]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.altKey || event.ctrlKey || event.metaKey || menu.current?.open || notes.current?.open) return;
+      if (event.altKey || event.ctrlKey || event.metaKey || menu.current?.open) return;
       const target = event.target as HTMLElement;
       if (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
+      // Rola o texto do slide (ou a página, no celular, onde o texto não tem rolagem própria).
+      const scroller = text.current && text.current.scrollHeight > text.current.clientHeight ? text.current : main.current;
+      const step = (scroller?.clientHeight ?? 400) * 0.8;
       if (event.key === 'ArrowRight' || event.key === 'PageDown') { event.preventDefault(); goTo(index + 1); }
       else if (event.key === 'ArrowLeft' || event.key === 'PageUp') { event.preventDefault(); goTo(index - 1); }
       else if (event.key === 'Home') { event.preventDefault(); goTo(0); }
-      else if (event.key === 'End') { event.preventDefault(); goTo(weberSlides.length - 1); }
-      else if (event.key === ' ' && !['BUTTON', 'A'].includes(target.tagName)) { event.preventDefault(); goTo(index + 1); }
+      else if (event.key === 'End') { event.preventDefault(); goTo(slides.length - 1); }
+      else if (event.key === 'ArrowDown') { event.preventDefault(); scroller?.scrollBy({ top: 90, behavior: 'smooth' }); }
+      else if (event.key === 'ArrowUp') { event.preventDefault(); scroller?.scrollBy({ top: -90, behavior: 'smooth' }); }
+      else if (event.key === ' ' && !['BUTTON', 'A'].includes(target.tagName)) { event.preventDefault(); scroller?.scrollBy({ top: event.shiftKey ? -step : step, behavior: 'smooth' }); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -67,25 +179,33 @@ export default function WeberApp() {
     }
   }
 
+  function chooseTheme(id: ThemeId) {
+    setTheme(id);
+    try { localStorage.setItem('weber-tema', id); } catch { /* ignora */ }
+  }
+
   function jump(next: number) {
     goTo(next);
     menu.current?.close();
   }
 
+  const ownCount = slides.filter(s => s.presenter === slide.presenter).length;
+  const baseTone = theme === 'noite' ? 'dark' : 'light';
+  const tone = isAltTone(slide) ? (baseTone === 'dark' ? 'light' : 'dark') : baseTone;
+
   return (
-    <div ref={root} className="weber-app bg-grain">
-      <a className="weber-skip" href="#weber-main" onClick={event => { event.preventDefault(); main.current?.focus(); }}>Ir para o conteúdo</a>
+    <div ref={root} className="weber-app bg-grain" data-theme={theme} data-tone={tone}>
+      <a className="weber-skip" href="#weber-main" onClick={event => { event.preventDefault(); text.current?.focus(); }}>Ir para o conteúdo</a>
       <header className="weber-header">
         <button className="weber-wordmark" onClick={() => goTo(0)} aria-label="Voltar à capa">max weber<span>.</span></button>
         <div className="weber-context"><span>Economia e sociedade</span><span>{slide.chapter || 'Dominação, representação e desigualdade'}</span></div>
         <div className="weber-tools">
-          <button onClick={() => notes.current?.showModal()} aria-label="Abrir roteiro de fala" title="Roteiro de fala"><BookOpen aria-hidden="true" size={21} /></button>
           <button onClick={toggleFullscreen} aria-label={fullscreen ? 'Sair da tela cheia' : 'Tela cheia'} title={fullscreen ? 'Sair da tela cheia' : 'Tela cheia'}>{fullscreen ? <Minimize aria-hidden="true" size={21} /> : <Maximize aria-hidden="true" size={21} />}</button>
           <button onClick={() => menu.current?.showModal()} aria-label="Abrir sumário" title="Sumário"><Menu aria-hidden="true" size={25} /></button>
         </div>
       </header>
 
-      <main id="weber-main" tabIndex={-1} ref={main} className={`weber-main${dark ? ' weber-main--dark' : ''}`}>
+      <main id="weber-main" ref={main} className="weber-main">
         <WeberBackground />
         {slide.layout === 'cover' ? (
           <article key={slide.id} className="weber-cover weber-enter">
@@ -93,51 +213,71 @@ export default function WeberApp() {
             <h1>max weber<span>.</span></h1>
             <p className="weber-cover-subtitle">Dominação, representação<br />e desigualdade</p>
             <div className="weber-cover-rule" />
-            <div className="weber-presenters"><p><strong>Laura</strong><span>p. 139–166</span></p><p><strong>Zé</strong><span>p. 167–202</span></p></div>
+            <div className="weber-presenters"><p><small>Parte 1</small><strong>Laura</strong><span>p. 139–167</span></p><p><small>Parte 2</small><strong>Zé</strong><span>p. 167–203</span></p></div>
             <p className="weber-cover-hint">Capítulo III · Os tipos de dominação<br />Capítulo IV · Estamentos e classes (início)</p>
           </article>
         ) : (
-          <article key={slide.id} className="weber-content weber-enter" aria-labelledby="weber-slide-title">
+          <article key={slide.id} className="weber-content weber-enter estilo-novo" aria-labelledby="weber-slide-title">
             <div className="weber-title-column">
-              <p className="weber-eyebrow">{slide.presenter === 'Laura e Zé' ? 'A leitura' : slide.presenter}</p>
-              <h2 id="weber-slide-title">{slide.title}{/[?!.]$/.test(slide.title) ? null : <span>.</span>}</h2>
-              <p className="weber-topic">{slide.subtitle}</p>
+              <p className="weber-eyebrow">{slide.presenter === 'Laura e Zé' ? 'Laura e Zé' : <><span className="weber-part">{PARTE[slide.presenter]}</span>{slide.presenter} · {String(slide.topic).padStart(2, '0')}/{String(ownCount).padStart(2, '0')}</>}</p>
+              <h2 id="weber-slide-title">{typo(slide.title)}{/[?!.:"]$/.test(slide.title) ? null : <span>.</span>}</h2>
               {slide.pages ? <p className="weber-page-label">Na obra: p. {slide.pages}</p> : null}
+              <SlideFigure key={slide.id} id={slide.id} />
             </div>
-            <div className="weber-body">
-              {slide.content.map((paragraph, i) => <p key={i} dangerouslySetInnerHTML={{ __html: paragraph }} />)}
-              {slide.quote ? <blockquote><p>(“{slide.quote}”)</p><cite>Weber, Economia e sociedade, p. {slide.quotePage}.</cite></blockquote> : null}
+            <div className={`weber-body-wrap${moreBelow ? ' has-more' : ''}`}>
+              <div ref={text} className="weber-body" tabIndex={0} role="region" aria-label="Texto do slide" onScroll={updateMore}>
+                {renderSections(slide.blocks)}
+              </div>
+              <button className={`weber-more${moreBelow ? ' is-visible' : ''}`} aria-hidden={!moreBelow} tabIndex={moreBelow ? 0 : -1}
+                onClick={() => text.current?.scrollBy({ top: text.current.clientHeight * 0.8, behavior: 'smooth' })}>
+                continua <ArrowDown aria-hidden="true" size={15} />
+              </button>
             </div>
           </article>
         )}
       </main>
 
       <footer className="weber-footer">
-        <div className="weber-footer-source">{slide.pages ? <>Weber · p. {slide.pages}<span>Página impressa no livro</span></> : <>{slide.presenter}<span>Economia e sociedade</span></>}</div>
+        <div className="weber-footer-source">{slide.pages ? <>Weber · p. {slide.pages}<span>Página impressa no livro</span></> : <>{slide.presenter === 'Laura e Zé' ? 'Laura e Zé' : `${PARTE[slide.presenter]} · ${slide.presenter}`}<span>Economia e sociedade</span></>}</div>
         <div className="weber-pagination">
           <button aria-label="Slide anterior" onClick={() => goTo(index - 1)} disabled={index === 0}><ArrowLeft aria-hidden="true" size={23} /></button>
-          <span aria-live="polite" aria-atomic="true">{String(index + 1).padStart(2, '0')} <span>/ {weberSlides.length}</span></span>
-          <button aria-label="Próximo slide" onClick={() => goTo(index + 1)} disabled={index === weberSlides.length - 1}><ArrowRight aria-hidden="true" size={23} /></button>
+          <span aria-live="polite" aria-atomic="true">{String(index + 1).padStart(2, '0')} <span>/ {slides.length}</span></span>
+          <button aria-label="Próximo slide" onClick={() => goTo(index + 1)} disabled={index === slides.length - 1}><ArrowRight aria-hidden="true" size={23} /></button>
         </div>
       </footer>
       {error ? <div className="weber-error" role="alert">{error}<button onClick={() => setError('')} aria-label="Fechar aviso"><X size={16} aria-hidden="true" /></button></div> : null}
 
       <dialog ref={menu} className="weber-dialog weber-menu" aria-labelledby="weber-menu-title" onClick={event => { if (event.target === event.currentTarget) event.currentTarget.close(); }}>
         <div className="weber-dialog-header"><h2 id="weber-menu-title">sumário<span>.</span></h2><button onClick={() => menu.current?.close()} aria-label="Fechar sumário"><X aria-hidden="true" size={26} /></button></div>
-        <div className="weber-menu-shortcuts"><button onClick={() => jump(0)}>Capa</button><button onClick={() => jump(1)}>Laura · p. 139–166</button><button onClick={() => jump(19)}>Zé · p. 167–202</button><button onClick={() => jump(37)}>Referências</button></div>
+        <p className="weber-menu-label">Tema de cores</p>
+        <div className="weber-themes" role="group" aria-label="Tema de cores">
+          {THEMES.map(t => (
+            <button key={t.id} aria-pressed={theme === t.id} onClick={() => chooseTheme(t.id)}>
+              <span className="weber-swatch" style={{ background: t.accent, color: t.on, outline: `3px solid ${t.bg}`, outlineOffset: '-6px' }} aria-hidden="true">A</span>{t.name}
+            </button>
+          ))}
+        </div>
+        <p className="weber-menu-label">Ir para</p>
+        <div className="weber-menu-shortcuts">
+          <button onClick={() => jump(0)}>Capa</button>
+          <button onClick={() => jump(firstOf('Laura'))}>Parte 1 · Laura · p. 139–167</button>
+          <button onClick={() => jump(firstOf('Zé'))}>Parte 2 · Zé · p. 167–203</button>
+          <button onClick={() => jump(slides.length - 1)}>Referências</button>
+        </div>
         <div className="weber-menu-columns">
-          {['Laura', 'Zé'].map(person => <section key={person}><h3>{person}<span>18 slides</span></h3><ol>{weberSlides.map((entry, slideIndex) => entry.presenter === person ? <li key={entry.id}><button aria-current={slideIndex === index ? 'step' : undefined} onClick={() => jump(slideIndex)}><span>{String(person === 'Laura' ? slideIndex : slideIndex - 18).padStart(2, '0')}</span><span>{entry.title}<small>p. {entry.pages}</small></span></button></li> : null)}</ol></section>)}
+          {(['Laura', 'Zé'] as const).map(person => {
+            const own = slides.filter(s => s.presenter === person);
+            return (
+              <section key={person}><h3>{PARTE[person]} · {person}<span>{own.length} slides</span></h3><ol>
+                {own.map(entry => {
+                  const slideIndex = slides.indexOf(entry);
+                  return <li key={entry.id}><button aria-current={slideIndex === index ? 'step' : undefined} onClick={() => jump(slideIndex)}><span>{String(entry.topic).padStart(2, '0')}</span><span>{typo(entry.title)}{entry.pages ? <small>p. {entry.pages}</small> : null}</span></button></li>;
+                })}
+              </ol></section>
+            );
+          })}
         </div>
         <a className="weber-original" href="?deck=argonautas">Abrir a apresentação original: Argonautas <ArrowRight aria-hidden="true" size={18} /></a>
-      </dialog>
-
-      <dialog ref={notes} className="weber-dialog weber-notes" aria-labelledby="weber-notes-title" onClick={event => { if (event.target === event.currentTarget) event.currentTarget.close(); }}>
-        <div className="weber-dialog-header"><h2 id="weber-notes-title">roteiro de fala<span>.</span></h2><button onClick={() => notes.current?.close()} aria-label="Fechar roteiro"><X aria-hidden="true" size={26} /></button></div>
-        <p className="weber-eyebrow">{slide.presenter}{slide.pages ? ` · p. ${slide.pages}` : ''}</p>
-        <h3>{slide.title}</h3><p className="weber-note-text">{slide.notes}</p>
-        {slide.quote ? <blockquote><p>(“{slide.quote}”)</p><cite>Weber, Economia e sociedade, p. {slide.quotePage}.</cite></blockquote> : null}
-        <p className="weber-notes-help">Os números indicam as páginas do livro. As explicações usam palavras mais simples. Somente os trechos entre aspas são citações diretas.</p>
-        <a className="weber-download" href="/weber-roteiro.md" download><Download aria-hidden="true" size={19} /> Baixar roteiro completo</a>
       </dialog>
     </div>
   );
