@@ -19,9 +19,28 @@ const FALAS = [
   'Preciso preencher um formulário pra sair daqui?',
   'Classe é mercado; estamento é prestígio!',
 ];
-const ESPERA_FINAL = 120_000; // quadro final na tela por 2 minutos (balanço)
-const DURACAO_JOGO = 120_000; // e mais 2 minutos de jogo de corrida
-const FALAS_BALANCO = ['Wheeeee!', 'Isso é que é dominação legítima!', 'Fiquem à vontade para ler.', 'Balançar também é racionalizar.', 'Eu avisei: era só mais uma coisinha.'];
+const DURACAO_JOGO = 120_000; // 2 minutos de jogo de corrida no final
+
+// Antes do jogo: o Weber anda pela tela reclamando e imaginando as perguntas da professora.
+// [fala, gesto]: 'pensa' = mão na cabeça, 'ponta' = aponta para o público.
+const RECLAMACOES_FINAIS: [string, 'normal' | 'pensa' | 'ponta'][] = [
+  ['Zé... Laura... já deu, né? O pessoal está cansado!', 'normal'],
+  ['Eu escrevi três volumes mais rápido que essa apresentação.', 'normal'],
+  ['Olhem a turma: já estão olhando o relógio.', 'ponta'],
+  ['Parem de falar! A burocracia já fechou o expediente.', 'normal'],
+  ['Até o carisma de vocês está virando rotina...', 'normal'],
+  ['Perdi a conta: já passou dos 20 minutos?', 'pensa'],
+  ['Mas calma... ainda vem a professora com a pergunta.', 'normal'],
+  ['Será que ela pergunta pra Laura: "qual a diferença entre dominação legal, tradicional e carismática?"', 'pensa'],
+  ['Ou: "por que a burocracia vence sempre?" Laura, respira e fala de conhecimento!', 'pensa'],
+  ['E pro Zé? Talvez: "por que colegialidade não é o mesmo que democracia?"', 'pensa'],
+  ['Ou: "qual a diferença entre classe e estamento?" Dinheiro não garante prestígio, Zé!', 'pensa'],
+  ['Cada um responde a sua parte, hein? Sem passar a bola.', 'ponta'],
+  ['Se perguntarem o que é legitimidade: é a crença de que é certo obedecer!', 'ponta'],
+  ['Respirem fundo. Eu torço por vocês... e torço mais ainda para acabar!', 'normal'],
+  ['Se ninguém perguntar nada, a gente ganha um intervalo. Sonhar não custa.', 'normal'],
+  ['Ok, ok. Enquanto vocês respondem, eu vou jogar um pouquinho...', 'normal'],
+];
 
 // Desenhados por cima do sprite, na mesma grade de 31 x 56.
 type Px = [number, number, string];
@@ -38,11 +57,11 @@ type Estado = 'oculto' | 'carregado' | 'fixo' | 'caido' | 'apagado' | 'chao';
 type Cena = {
   wx: number; dur: number; anda: boolean; flip: boolean; fala: string;
   cartoes: Estado[]; rots: number[]; papeis: boolean; ponta: boolean; coca: boolean;
-  tropeca: boolean; reverencia: boolean; placa: boolean; balanco: boolean; jogo: boolean;
+  tropeca: boolean; reverencia: boolean; placa: boolean; jogo: boolean;
 };
 const INICIAL: Cena = {
   wx: -16, dur: 0, anda: false, flip: false, fala: '', cartoes: ['oculto', 'oculto', 'oculto', 'oculto'],
-  rots: [-3, 2.5, -2, 3], papeis: false, ponta: false, coca: false, tropeca: false, reverencia: false, placa: false, balanco: false, jogo: false,
+  rots: [-3, 2.5, -2, 3], papeis: false, ponta: false, coca: false, tropeca: false, reverencia: false, placa: false, jogo: false,
 };
 
 const PAPEIS = Array.from({ length: 10 }, (_, i) => ({ x: 6 + i * 9, atraso: (i % 5) * 0.12, giro: (i % 2 ? 1 : -1) * (20 + i * 9) }));
@@ -89,6 +108,9 @@ export default function Encerramento() {
         }
         await dorme(900);
 
+        const pularIntro = new URLSearchParams(window.location.search).get('fase') === 'reclama';
+        if (pularIntro) set({ cartoes: ['fixo', 'fixo', 'fixo', 'fixo'], rots: [0, 0, 0, 0], wx: 50, placa: true, dur: 0 });
+        if (!pularIntro) {
         // CENA 1: entra como quem vai embora e lembra de algo
         await anda(76, 3600, false);
         await fala('Opa! Só mais uma coisinha...', 2300);
@@ -156,23 +178,25 @@ export default function Encerramento() {
         // CENA 7: reverência e plaquinha, que ficam na tela por 2 minutos
         set({ reverencia: true, placa: true });
         await dorme(5000);
-        // Nos 2 minutos finais: monta um balanço preso no cartão "Dominação legítima" e fica se balançando
+        }
+
+        // Antes do jogo: anda de um lado para o outro, reclama e imagina as perguntas da professora
         set({ reverencia: false });
-        await fala('Hora de relaxar um pouco...', 1800);
-        await anda(X[1], 1600, false);
-        set({ balanco: true });
-        let restante = ESPERA_FINAL - 5000 - 1800 - 1600;
-        let k = 0;
-        while (vivo && restante > 0) {
-          await dorme(5000);
-          set({ fala: FALAS_BALANCO[k++ % FALAS_BALANCO.length] });
-          await dorme(4500);
-          set({ fala: '' });
-          restante -= 9500;
+        let atual = 50;
+        for (let k = 0; k < RECLAMACOES_FINAIS.length && vivo; k++) {
+          const [texto, gesto] = RECLAMACOES_FINAIS[k];
+          const destino = k % 2 === 0 ? 24 + Math.random() * 10 : 66 + Math.random() * 10;
+          const leitura = Math.min(7000, 3400 + texto.length * 55);
+          set({ fala: texto, coca: gesto === 'pensa', ponta: gesto === 'ponta' });
+          await anda(destino, 2200, destino < atual);
+          atual = destino;
+          await dorme(Math.max(900, leitura - 2200));
+          set({ fala: '', coca: false, ponta: false });
+          await dorme(700);
         }
 
         // Mais 2 minutos: sem internet, ele joga uma corrida sozinho, pulando obstáculos
-        set({ balanco: false, placa: false, fala: '' });
+        set({ placa: false, fala: '' });
         await fala('Sem internet... hora de jogar!', 2400);
         set({ jogo: true });
         await dorme(DURACAO_JOGO);
@@ -205,19 +229,11 @@ export default function Encerramento() {
             <div key={k.titulo} className="encerra-cartao" style={estilos[est]}>
               <strong>{k.titulo}</strong>
               <span>{k.texto}</span>
-              {i === 1 && c.balanco ? (
-                <div className="encerra-balanco">
-                  <i className="corda corda-e" /><i className="corda corda-d" />
-                  <i className="assento" />
-                  <img src={`${base}pixel-weber.png`} alt="" draggable={false} />
-                </div>
-              ) : null}
-              {i === 1 && c.balanco && c.fala ? <div className="encerra-balao encerra-balao--balanco" key={c.fala}>{c.fala}</div> : null}
             </div>
           );
         })}
 
-        <div className="encerra-weber" style={{ left: `${c.wx}%`, transition: c.dur ? `left ${c.dur}ms linear` : 'none', visibility: c.balanco || c.jogo ? 'hidden' : 'visible' }}>
+        <div className="encerra-weber" style={{ left: `${c.wx}%`, transition: c.dur ? `left ${c.dur}ms linear` : 'none', visibility: c.jogo ? 'hidden' : 'visible' }}>
           <div className={`encerra-corpo${c.anda ? ' is-andando' : ''}${c.reverencia ? ' is-reverencia' : ''}${c.tropeca ? ' is-tropeca' : ''}`} style={{ transform: c.flip ? 'scaleX(-1)' : undefined }}>
             <img src={`${base}pixel-weber${frame}.png`} alt="" draggable={false} />
             {c.ponta || c.coca ? (
