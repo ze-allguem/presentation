@@ -323,3 +323,18 @@
 .encerra-balao--balanco::after{top:auto;left:-6px;bottom:14px;margin:0;transform:rotate(135deg)}
 @keyframes enc-balanca{from{transform:rotate(-26deg)}to{transform:rotate(26deg)}}
 @keyframes enc-corda{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+/* Mini jogo de corrida (Weber pequeno pulando obstáculos) */
+.jogo{position:absolute;left:5%;right:5%;bottom:10px;border:3px solid #111;border-radius:12px;background:#fff;overflow:hidden;box-shadow:5px 5px 0 var(--t-accent)}
+.jogo-chao{position:absolute;left:0;right:0;height:0;border-top:3px solid #111}
+.jogo-chao::after{content:'';position:absolute;left:0;right:0;top:6px;height:3px;background:repeating-linear-gradient(90deg,#999 0 8px,transparent 8px 38px);animation:jogo-chao .45s linear infinite}
+@keyframes jogo-chao{to{background-position:-46px 0}}
+.jogo-aviso{position:absolute;left:14px;top:10px;font-family:Inter,Arial,sans-serif;font-size:13px;font-weight:600;color:#555}
+.jogo-placar{position:absolute;right:14px;top:10px;font-family:'Courier New',monospace;font-size:16px;font-weight:700;color:#555;letter-spacing:.08em}
+.jogo-weber{position:absolute;will-change:transform}
+.jogo-weber img{width:100%;height:100%;max-width:none;image-rendering:pixelated;display:block}
+.jogo-obs{position:absolute;left:0;bottom:26px;will-change:transform;background:#fff;border:2.5px solid #111;border-radius:3px}
+.jogo-obs.pilha{background:repeating-linear-gradient(0deg,#fff 0 9px,#ccc 9px 11px)}
+.jogo-obs.carimbo{border-radius:3px 3px 1px 1px;background:linear-gradient(#111 0 38%,#fff 38% 70%,var(--t-accent) 70%)}
+.jogo-obs.pasta{background:#f0d9a0;border-radius:2px 8px 2px 2px}
+.jogo-obs.pasta::before{content:'';position:absolute;left:4px;top:-9px;width:18px;height:9px;background:#f0d9a0;border:2.5px solid #111;border-bottom:none;border-radius:3px 3px 0 0}

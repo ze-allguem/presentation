@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import JogoWeber from './JogoWeber';
 
 // Slide final: "Obrigado pela atenção!" com uma cena animada do Weber em pixel (versão completa).
 // 1) tenta ir embora e lembra de algo; 2) traz 4 cartões (um cai nele); 3) chuva de papéis da
@@ -18,7 +19,8 @@ const FALAS = [
   'Preciso preencher um formulário pra sair daqui?',
   'Classe é mercado; estamento é prestígio!',
 ];
-const ESPERA_FINAL = 120_000; // quadro final na tela por 2 minutos
+const ESPERA_FINAL = 120_000; // quadro final na tela por 2 minutos (balanço)
+const DURACAO_JOGO = 120_000; // e mais 2 minutos de jogo de corrida
 const FALAS_BALANCO = ['Wheeeee!', 'Isso é que é dominação legítima!', 'Fiquem à vontade para ler.', 'Balançar também é racionalizar.', 'Eu avisei: era só mais uma coisinha.'];
 
 // Desenhados por cima do sprite, na mesma grade de 31 x 56.
@@ -36,11 +38,11 @@ type Estado = 'oculto' | 'carregado' | 'fixo' | 'caido' | 'apagado' | 'chao';
 type Cena = {
   wx: number; dur: number; anda: boolean; flip: boolean; fala: string;
   cartoes: Estado[]; rots: number[]; papeis: boolean; ponta: boolean; coca: boolean;
-  tropeca: boolean; reverencia: boolean; placa: boolean; balanco: boolean;
+  tropeca: boolean; reverencia: boolean; placa: boolean; balanco: boolean; jogo: boolean;
 };
 const INICIAL: Cena = {
   wx: -16, dur: 0, anda: false, flip: false, fala: '', cartoes: ['oculto', 'oculto', 'oculto', 'oculto'],
-  rots: [-3, 2.5, -2, 3], papeis: false, ponta: false, coca: false, tropeca: false, reverencia: false, placa: false, balanco: false,
+  rots: [-3, 2.5, -2, 3], papeis: false, ponta: false, coca: false, tropeca: false, reverencia: false, placa: false, balanco: false, jogo: false,
 };
 
 const PAPEIS = Array.from({ length: 10 }, (_, i) => ({ x: 6 + i * 9, atraso: (i % 5) * 0.12, giro: (i % 2 ? 1 : -1) * (20 + i * 9) }));
@@ -79,6 +81,12 @@ export default function Encerramento() {
     (async () => {
       while (vivo) {
         set({ ...INICIAL, rots: [-3, 2.5, -2, 3].sort(() => Math.random() - 0.5) });
+        // atalho para testes: ?fase=jogo abre direto no jogo de corrida
+        if (new URLSearchParams(window.location.search).get('fase') === 'jogo') {
+          set({ cartoes: ['fixo', 'fixo', 'fixo', 'fixo'], rots: [0, 0, 0, 0], jogo: true });
+          await dorme(DURACAO_JOGO);
+          continue;
+        }
         await dorme(900);
 
         // CENA 1: entra como quem vai embora e lembra de algo
@@ -162,6 +170,12 @@ export default function Encerramento() {
           set({ fala: '' });
           restante -= 9500;
         }
+
+        // Mais 2 minutos: sem internet, ele joga uma corrida sozinho, pulando obstáculos
+        set({ balanco: false, placa: false, fala: '' });
+        await fala('Sem internet... hora de jogar!', 2400);
+        set({ jogo: true });
+        await dorme(DURACAO_JOGO);
       }
     })();
     return () => { vivo = false; };
@@ -203,7 +217,7 @@ export default function Encerramento() {
           );
         })}
 
-        <div className="encerra-weber" style={{ left: `${c.wx}%`, transition: c.dur ? `left ${c.dur}ms linear` : 'none', visibility: c.balanco ? 'hidden' : 'visible' }}>
+        <div className="encerra-weber" style={{ left: `${c.wx}%`, transition: c.dur ? `left ${c.dur}ms linear` : 'none', visibility: c.balanco || c.jogo ? 'hidden' : 'visible' }}>
           <div className={`encerra-corpo${c.anda ? ' is-andando' : ''}${c.reverencia ? ' is-reverencia' : ''}${c.tropeca ? ' is-tropeca' : ''}`} style={{ transform: c.flip ? 'scaleX(-1)' : undefined }}>
             <img src={`${base}pixel-weber${frame}.png`} alt="" draggable={false} />
             {c.ponta || c.coca ? (
@@ -219,6 +233,7 @@ export default function Encerramento() {
             </div>
           ) : null}
         </div>
+        {c.jogo ? <JogoWeber /> : null}
         {c.placa ? <div className="encerra-placa">Pronto. Agora acabou!</div> : null}
       </div>
     </article>
