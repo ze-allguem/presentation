@@ -108,11 +108,16 @@ export default function PixelWeber({ slide = '' }: { slide?: string }) {
     let falaRotina = '';
     let falaMouse = '';
     let falaMouseAte = 0;
+    let falaRotinaAte = 0;
+    let slideVisto = slideAtual.current;
     const atualizarFala = () => {
-      const t = performance.now() < falaMouseAte ? falaMouse : falaRotina;
+      const agora = performance.now();
+      if (slideAtual.current !== slideVisto) { slideVisto = slideAtual.current; falaRotinaAte = 0; falaMouseAte = 0; trechoComentado = null; }
+      const t = agora < falaMouseAte ? falaMouse : agora < falaRotinaAte ? falaRotina : '';
       if (t !== falaAtual) { falaAtual = t; setFala(t); }
     };
-    const falar = (t: string) => { falaRotina = t; };
+    // O balão fica na tela por 8 s, ou mais se a frase for longa, mesmo depois de a rotina acabar.
+    const falar = (t: string) => { falaRotina = t; falaRotinaAte = t ? performance.now() + Math.max(8000, 4000 + t.length * 110) : 0; };
     const sorteio = (l: string[]) => l[Math.floor(Math.random() * l.length)];
 
     // Comentário quando o mouse para em cima de um trecho do texto.
@@ -131,7 +136,7 @@ export default function PixelWeber({ slide = '' }: { slide?: string }) {
         if (trechoAtual !== alvoEl) return;
         trechoComentado = alvoEl;
         falaMouse = comentarTrecho(alvoEl);
-        falaMouseAte = performance.now() + 4500;
+        falaMouseAte = performance.now() + Math.max(8000, 4000 + falaMouse.length * 110);
       }, 550);
     };
     let passoRotina = 0;
@@ -195,7 +200,7 @@ export default function PixelWeber({ slide = '' }: { slide?: string }) {
           if (tempoRotina >= rotina[passoRotina][1]) { tempoRotina = 0; passoRotina += 1; }
           if (passoRotina >= rotina.length) {
             rotina = null; parado = 0; esperaRotina = 6 + Math.random() * 6;
-            mostrar('parado'); falar('');
+            mostrar('parado');
           } else mostrar(rotina[passoRotina][0]);
         } else mostrar('parado');
       }

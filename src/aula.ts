@@ -9,7 +9,8 @@ export type Block =
   | { t: 'box'; kind: BoxKind; html: string[] }
   | { t: 'lista'; ordered: boolean; items: string[] }
   | { t: 'tabela'; head: string[]; rows: string[][] }
-  | { t: 'revisao'; items: string[] };
+  | { t: 'revisao'; items: string[] }
+  | { t: 'foto'; n: number };
 
 export type AulaSlide = {
   id: string;
@@ -31,4 +32,6 @@ export const contexto = (...html: string[]): Block => ({ t: 'box', kind: 'contex
 export const lista = (...items: string[]): Block => ({ t: 'lista', ordered: false, items });
 export const numerada = (...items: string[]): Block => ({ t: 'lista', ordered: true, items });
 export const tabela = (head: string[], ...rows: string[][]): Block => ({ t: 'tabela', head, rows });
+// Marca o ponto do texto onde entra a imagem n (0 = primeira imagem do slide, em imagens.ts).
+export const foto = (n = 0): Block => ({ t: 'foto', n });
 export const revisao = (...items: string[]): Block => ({ t: 'revisao', items });

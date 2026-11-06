@@ -16,8 +16,7 @@ const references: AulaSlide = {
   blocks: [
     { t: 'p', html: '<strong>WEBER, Max. Economia e sociedade.</strong> v. 1. Brasília: Editora UnB, 1999.' },
     { t: 'p', html: '<strong>Trechos estudados:</strong> capítulo III, "Os tipos de dominação", e início do capítulo IV, "Estamentos e classes".' },
-    { t: 'p', html: 'Laura: p. 139–167. Zé: p. 167–203. Os números indicam as <strong>páginas impressas no livro</strong>.' },
-    { t: 'p', html: 'Texto dos slides adaptado das aulas escritas "Aprendendo Weber com calma", em linguagem didática. Somente os trechos entre aspas atribuídos a Weber são citações.' },
+    { t: 'p', html: 'Laura (Parte 1): p. 139–167. Zé (Parte 2): p. 167–203. Os números indicam as <strong>páginas impressas no livro</strong>.' },
   ],
 };
 
@@ -40,8 +39,12 @@ function renderSections(slideId: string, blocks: Block[]) {
   blocks.forEach((b, i) => {
     if (b.t === 'h' || groups.length === 0) groups.push([]);
     const g = groups[groups.length - 1];
+    if (b.t === 'foto') {
+      const img = imgs[b.n];
+      if (img) g.push(<SlideFigure key={img.id} info={img} />);
+      return;
+    }
     g.push(renderBlock(b, i));
-    for (const img of imgs) if (img.apos === i) g.push(<SlideFigure key={img.id} info={img} />);
   });
   return groups.map((g, i) => <section key={i} className="aula-secao">{g}</section>);
 }
@@ -116,9 +119,10 @@ function renderBlock(block: Block, key: number) {
         </table>
       </div>
     );
+    case 'foto': return null;
     case 'revisao': return (
       <aside key={key} className="aula-box aula-box--revisao">
-        <span className="aula-box-label">Revisão rápida</span>
+        <span className="aula-box-label">Para fixar</span>
         <ul>{block.items.map((html, i) => <Html as="li" key={i} html={html} />)}</ul>
       </aside>
     );
