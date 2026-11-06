@@ -150,7 +150,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 15. fechando a parte 1
 
-**laura-15-1** · a caixa de ferramentas de Weber _(na seção: início do slide)_
+**laura-15-1** · a caixa de ferramentas de Weber _(na seção: início do slide)_ ✅ já inserida
 
 Cena: uma caixa de ferramentas de metal aberta sobre uma mesa de madeira, vista de cima em leve ângulo. Dentro, três objetos arrumados lado a lado: um livro de leis grosso, uma chave antiga de ferro e uma tocha acesa com chamas desenhadas em linhas. Ao lado da caixa, um par de óculos redondos.
 
@@ -160,7 +160,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 1. a pergunta que guia a parte 2
 
-**ze-1-1** · o chefe e o quadro _(na seção: início do slide)_
+**ze-1-1** · o chefe e o quadro _(na seção: início do slide)_ ✅ já inserida
 
 Cena: um rei de coroa sentado no topo de uma pirâmide humana. A pirâmide é feita de servidores, soldados, escrivães e cobradores, uns sobre os ombros dos outros. Os da base seguram espadas, chaves e ferramentas e olham uns para os outros de canto de olho, como se combinassem soltar o rei. O rei, lá em cima, sorri sem perceber.
 

@@ -68,7 +68,7 @@ export async function sincronizarImagens(): Promise<number> {
 
 type Rect = { left: number; top: number; width: number; height: number };
 
-// Zoom: passar o mouse (ou clicar) no centro da imagem amplia; sair do centro (ou clicar de novo) volta.
+// Zoom: clicar na imagem abre em tela cheia; clicar em qualquer lugar (ou Esc) fecha.
 function useZoom(img: React.RefObject<HTMLImageElement | null>) {
   const [zoom, setZoom] = useState<{ from: Rect; to: Rect; open: boolean } | null>(null);
   const timer = useRef<number | undefined>(undefined);
@@ -100,8 +100,6 @@ function useZoom(img: React.RefObject<HTMLImageElement | null>) {
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
   const hotspot = {
-    onMouseEnter: () => { window.clearTimeout(timer.current); timer.current = window.setTimeout(open, 120); },
-    onMouseLeave: () => { window.clearTimeout(timer.current); if (zoom) close(); },
     onClick: () => { window.clearTimeout(timer.current); if (zoom?.open) close(); else open(); },
   };
   return { zoom, hotspot };
@@ -172,7 +170,7 @@ export default function SlideFigure({ info }: { info: Imagem }) {
         {picker}
         <img ref={imgRef} src={src} alt={info.ideia}
           onError={() => { if (stored) return; setExt(e => (e === 'webp' ? 'png' : null)); }} />
-        <div className="zoom-alvo" {...hotspot} title="Passe o mouse ou clique para ampliar" aria-hidden="true" />
+        <button type="button" className="zoom-alvo" {...hotspot} aria-label={`Ampliar imagem: ${info.ideia}`} title="Clique para ver em tela cheia" />
         <div className="weber-figure-tools">
           <button onClick={() => input.current?.click()} aria-label="Trocar imagem" title="Trocar imagem"><RefreshCw size={15} aria-hidden="true" /></button>
           {stored || ext ? <button onClick={remove} aria-label="Remover imagem" title="Remover imagem"><Trash2 size={15} aria-hidden="true" /></button> : null}
@@ -180,7 +178,7 @@ export default function SlideFigure({ info }: { info: Imagem }) {
         {error ? <p className="weber-figure-error weber-figure-error--sobre" role="alert">{error}</p> : null}
         {zoom && rect ? createPortal(
           <>
-            <div className={`zoom-fundo${zoom.open ? ' is-open' : ''}`} />
+            <div className={`zoom-fundo${zoom.open ? ' is-open' : ''}`} onClick={close} />
             <img className="zoom-img" src={src} alt="" style={{ left: rect.left, top: rect.top, width: rect.width, height: rect.height }} />
           </>,
           app,

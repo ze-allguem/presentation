@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowLeft, ArrowRight, Maximize, Menu, Minimize, X } from 'lucide-react';
 import SlideFigure, { sincronizarImagens } from './SlideFigure';
 import TituloDigitado from './TituloDigitado';
+import PixelWeber from './PixelWeber';
 import { fotosAutorObra, imagensPorSlide } from './imagens';
 import type { AulaSlide, Block } from './aula';
 import { lauraSlides } from './aula-laura';
@@ -136,6 +137,7 @@ export default function WeberApp() {
   const [moreBelow, setMoreBelow] = useState(false);
   const [theme, setTheme] = useState<ThemeId>(savedTheme);
   const [font, setFont] = useState<FontId>(savedFont);
+  const [bonequinho, setBonequinho] = useState(() => { try { return localStorage.getItem('weber-boneco') !== 'nao'; } catch { return true; } });
   const root = useRef<HTMLDivElement>(null);
   const main = useRef<HTMLElement>(null);
   const text = useRef<HTMLDivElement>(null);
@@ -208,6 +210,13 @@ export default function WeberApp() {
     }
   }
 
+  function toggleBonequinho() {
+    setBonequinho(v => {
+      try { localStorage.setItem('weber-boneco', v ? 'nao' : 'sim'); } catch { /* ignora */ }
+      return !v;
+    });
+  }
+
   function chooseFont(id: FontId) {
     setFont(id);
     try { localStorage.setItem('weber-fonte', id); } catch { /* ignora */ }
@@ -241,6 +250,7 @@ export default function WeberApp() {
 
       <main id="weber-main" ref={main} className="weber-main">
         <WeberBackground variante={index} />
+        {bonequinho ? <PixelWeber /> : null}
         {slide.layout === 'cover' ? (
           <article key={slide.id} className="weber-cover weber-enter">
             <p className="weber-eyebrow">Leitura de Economia e sociedade</p>
@@ -311,6 +321,10 @@ export default function WeberApp() {
           {FONTS.map(f => (
             <button key={f.id} aria-pressed={font === f.id} onClick={() => chooseFont(f.id)} style={{ fontFamily: f.family, fontSize: f.id === 'gravitas' ? 12 : 15 }}>{f.name}</button>
           ))}
+        </div>
+        <p className="weber-menu-label">Weber em pixel</p>
+        <div className="weber-themes weber-fonts">
+          <button aria-pressed={bonequinho} onClick={toggleBonequinho}>{bonequinho ? 'Andando na tela · clique para esconder' : 'Escondido · clique para mostrar'}</button>
         </div>
         <p className="weber-menu-label">Ir para</p>
         <div className="weber-menu-shortcuts">
