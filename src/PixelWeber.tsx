@@ -109,6 +109,9 @@ export default function PixelWeber({ slide = '' }: { slide?: string }) {
     let falaMouse = '';
     let falaMouseAte = 0;
     let falaRotinaAte = 0;
+    const INTERVALO_FALA = 20000; // outro balão só depois de 20 s, ou ao clicar/passar o mouse num texto
+    const DURACAO_FALA = 4000;    // cada balão fica 4 s
+    let ultimaFalaEm = performance.now() - 14000; // a primeira fala vem logo (cerca de 6 s depois de abrir)
     let slideVisto = slideAtual.current;
     const atualizarFala = () => {
       const agora = performance.now();
@@ -116,8 +119,8 @@ export default function PixelWeber({ slide = '' }: { slide?: string }) {
       const t = agora < falaMouseAte ? falaMouse : agora < falaRotinaAte ? falaRotina : '';
       if (t !== falaAtual) { falaAtual = t; setFala(t); }
     };
-    // O balão fica na tela por 8 s, ou mais se a frase for longa, mesmo depois de a rotina acabar.
-    const falar = (t: string) => { falaRotina = t; falaRotinaAte = t ? performance.now() + Math.max(8000, 4000 + t.length * 110) : 0; };
+    // O balão fica 4 s na tela, mesmo depois de a rotina acabar.
+    const falar = (t: string) => { falaRotina = t; falaRotinaAte = t ? performance.now() + DURACAO_FALA : 0; if (t) ultimaFalaEm = performance.now(); };
     const sorteio = (l: string[]) => l[Math.floor(Math.random() * l.length)];
 
     // Comentário quando o mouse para em cima de um trecho do texto.
@@ -135,9 +138,18 @@ export default function PixelWeber({ slide = '' }: { slide?: string }) {
       timerTrecho = window.setTimeout(() => {
         if (trechoAtual !== alvoEl) return;
         trechoComentado = alvoEl;
-        falaMouse = comentarTrecho(alvoEl);
-        falaMouseAte = performance.now() + Math.max(8000, 4000 + falaMouse.length * 110);
+        comentar(alvoEl);
       }, 550);
+    };
+    const comentar = (el: Element) => {
+      falaMouse = comentarTrecho(el);
+      falaMouseAte = performance.now() + DURACAO_FALA;
+      ultimaFalaEm = performance.now();
+    };
+    // Clicar num texto também faz ele comentar na hora.
+    const onClick = (e: MouseEvent) => {
+      const bruto = (e.target as Element | null)?.closest?.(SELETOR) ?? null;
+      if (bruto && !bruto.closest('.aula-figura')) { trechoComentado = bruto; comentar(bruto); }
     };
     let passoRotina = 0;
     let tempoRotina = 0;
@@ -189,11 +201,13 @@ export default function PixelWeber({ slide = '' }: { slide?: string }) {
           const demorou = (performance.now() - inicioSlide.current) / 1000 > DEMORA;
           if (demorou && Math.random() < 0.7) k = Math.random() < 0.5 ? 1 : 4; // relógio ou pé batendo
           ultimaRotina = k; rotina = ROTINAS[k].passos; passoRotina = 0; tempoRotina = 0;
-          const doSlide = FALAS_SLIDE[slideAtual.current] ?? [];
-          const opcoes = demorou ? RECLAMACOES
-            : Math.random() < 0.6 && doSlide.length ? doSlide
-            : Math.random() < 0.5 ? HUMOR : ROTINAS[k].falas;
-          falar(sorteio(opcoes));
+          if (performance.now() - ultimaFalaEm >= INTERVALO_FALA) {
+            const doSlide = FALAS_SLIDE[slideAtual.current] ?? [];
+            const opcoes = demorou ? RECLAMACOES
+              : Math.random() < 0.6 && doSlide.length ? doSlide
+              : Math.random() < 0.5 ? HUMOR : ROTINAS[k].falas;
+            falar(sorteio(opcoes));
+          }
         }
         if (rotina) {
           tempoRotina += dt;
@@ -221,8 +235,9 @@ export default function PixelWeber({ slide = '' }: { slide?: string }) {
 
     window.addEventListener('pointermove', onMove, { passive: true });
     document.addEventListener('mouseover', onOver);
+    document.addEventListener('click', onClick);
     raf = requestAnimationFrame(loop);
-    return () => { window.removeEventListener('pointermove', onMove); document.removeEventListener('mouseover', onOver); window.clearTimeout(timerTrecho); cancelAnimationFrame(raf); };
+    return () => { window.removeEventListener('pointermove', onMove); document.removeEventListener('mouseover', onOver); document.removeEventListener('click', onClick); window.clearTimeout(timerTrecho); cancelAnimationFrame(raf); };
   }, []);
 
   const pose: Desenho = POSES[quadro];

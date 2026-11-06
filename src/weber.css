@@ -19,14 +19,14 @@
 .weber-app button:disabled{cursor:default;opacity:.3}
 .weber-app :focus-visible{outline:3px solid var(--t-accent);outline-offset:5px}
 .weber-app button:hover:not(:disabled),.weber-app a:hover{color:var(--t-accent-text)}
-.weber-header{display:flex;align-items:center;gap:32px;padding:24px 48px;position:relative;z-index:2;border-bottom:1px solid var(--t-line)}
-.weber-wordmark{font-family:Epilogue,Arial,sans-serif;font-size:22px;font-weight:900;letter-spacing:-1.1px;white-space:nowrap;min-height:44px}
+.weber-header{display:flex;align-items:center;gap:20px;padding:8px 28px;position:relative;z-index:2;border-bottom:1px solid var(--t-line)}
+.weber-wordmark{font-family:Epilogue,Arial,sans-serif;font-size:18px;font-weight:900;letter-spacing:-.9px;white-space:nowrap;min-height:36px}
 .weber-wordmark span,.weber-cover h1>span,.weber-dialog-header h2>span{color:var(--t-accent)}
-.weber-context{display:flex;flex-direction:column;gap:4px;font-size:11px;letter-spacing:.08em;margin-left:auto;line-height:1.5}
+.weber-context{display:flex;flex-direction:column;gap:1px;font-size:10px;letter-spacing:.08em;margin-left:auto;line-height:1.4}
 .weber-context span:first-child{font-weight:600}
 .weber-context span+span{color:var(--t-muted)}
 .weber-tools{display:flex;gap:8px}
-.weber-tools button,.weber-dialog-header button{display:grid;place-items:center;width:44px;height:44px;border-radius:4px}
+.weber-tools button,.weber-dialog-header button{display:grid;place-items:center;width:36px;height:36px;border-radius:4px}
 .weber-tools button:hover,.weber-dialog-header button:hover{background:var(--t-soft)}
 .weber-main{overflow:hidden;min-width:0;min-height:0;position:relative}
 
@@ -95,12 +95,10 @@
 .weber-cover-hint{font-size:11px;line-height:1.8;color:var(--t-muted);margin:32px 0 0}
 
 /* ===== Rodapé ===== */
-.weber-footer{padding:12px 48px;display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;z-index:2;border-top:1px solid var(--t-line);background:var(--t-bg)}
-.weber-footer-source{font-size:12px;line-height:1.6;font-weight:500}
-.weber-footer-source>span{display:block;font-size:10px;color:var(--t-muted);font-weight:400}
-.weber-pagination{display:flex;align-items:center;gap:20px;font-size:14px;font-variant-numeric:tabular-nums}
-.weber-pagination>span{min-width:58px;text-align:center;font-size:11px;color:var(--t-muted);letter-spacing:.03em}
-.weber-pagination button{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--t-line);border-radius:50%}
+.weber-footer{padding:5px 0 7px;display:flex;align-items:center;justify-content:center;position:relative;z-index:8;background:transparent}
+.weber-pagination{display:flex;align-items:center;gap:12px;font-size:12px;font-variant-numeric:tabular-nums}
+.weber-pagination>span{min-width:48px;text-align:center;font-size:11px;color:var(--t-muted);letter-spacing:.03em}
+.weber-pagination button{width:30px;height:30px;display:grid;place-items:center;border:1px solid var(--t-line);border-radius:50%}
 .weber-app .weber-pagination button:last-child{background:var(--t-accent);color:var(--t-on-accent);border-color:var(--t-accent)}
 .weber-app .weber-pagination button:last-child:hover:not(:disabled){background:var(--t-accent-hover);color:var(--t-on-accent)}
 
@@ -135,7 +133,7 @@
 .weber-background{position:absolute;inset:0;overflow:hidden;pointer-events:none;color:inherit;z-index:0;contain:paint}
 .weber-cover,.weber-content{position:relative;z-index:1}
 @keyframes weber-enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@media(min-width:1600px){.weber-header{padding:28px 64px}.weber-footer{padding:16px 64px}}
+@media(min-width:1600px){.weber-header{padding:10px 40px}}
 @media(max-width:800px){
     .weber-header{padding:14px 20px;gap:12px}.weber-wordmark{font-size:18px}.weber-context{display:none}.weber-tools{margin-left:auto;gap:2px}
   .weber-main{overflow-y:auto}
@@ -246,7 +244,7 @@
 @keyframes cursor-pisca{0%,50%{opacity:1}50.01%,100%{opacity:0}}
 
 /* ===== Max Weber em pixel, andando sobre a linha do rodapé ===== */
-.pixel-weber{position:absolute;left:0;bottom:1px;z-index:6;pointer-events:none;will-change:transform}
+.pixel-weber{position:absolute;left:0;bottom:0;z-index:6;pointer-events:none;will-change:transform}
 .pixel-weber svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(1px 0 0 var(--px-contorno)) drop-shadow(-1px 0 0 var(--px-contorno)) drop-shadow(0 1px 0 var(--px-contorno)) drop-shadow(0 -1px 0 var(--px-contorno))}
 .pixel-weber{--px-contorno:color-mix(in srgb,var(--t-ink) 22%,transparent)}
 .weber-app[data-tone="dark"] .pixel-weber{--px-contorno:color-mix(in srgb,var(--t-ink) 70%,transparent)}

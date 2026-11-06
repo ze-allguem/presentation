@@ -254,7 +254,6 @@ export default function WeberApp() {
 
       <main id="weber-main" ref={main} className="weber-main">
         <WeberBackground variante={index} />
-        {bonequinho ? <PixelWeber slide={slide.id} /> : null}
         {slide.layout === 'cover' ? (
           <article key={slide.id} className="weber-cover weber-enter">
             <p className="weber-eyebrow">Leitura de Economia e sociedade</p>
@@ -301,13 +300,13 @@ export default function WeberApp() {
       </main>
 
       <footer className="weber-footer">
-        <div className="weber-footer-source">{slide.pages ? <>Weber · p. {slide.pages}<span>Página impressa no livro</span></> : <>{slide.presenter === 'Laura e Zé' ? 'Laura e Zé' : `${PARTE[slide.presenter]} · ${slide.presenter}`}<span>Economia e sociedade</span></>}</div>
         <div className="weber-pagination">
-          <button aria-label="Slide anterior" onClick={() => goTo(index - 1)} disabled={index === 0}><ArrowLeft aria-hidden="true" size={23} /></button>
+          <button aria-label="Slide anterior" onClick={() => goTo(index - 1)} disabled={index === 0}><ArrowLeft aria-hidden="true" size={16} /></button>
           <span aria-live="polite" aria-atomic="true">{String(index + 1).padStart(2, '0')} <span>/ {slides.length}</span></span>
-          <button aria-label="Próximo slide" onClick={() => goTo(index + 1)} disabled={index === slides.length - 1}><ArrowRight aria-hidden="true" size={23} /></button>
+          <button aria-label="Próximo slide" onClick={() => goTo(index + 1)} disabled={index === slides.length - 1}><ArrowRight aria-hidden="true" size={16} /></button>
         </div>
       </footer>
+      {bonequinho ? <PixelWeber slide={slide.id} /> : null}
       {error ? <div className="weber-error" role="alert">{error}<button onClick={() => setError('')} aria-label="Fechar aviso"><X size={16} aria-hidden="true" /></button></div> : null}
 
       <dialog ref={menu} className="weber-dialog weber-menu" aria-labelledby="weber-menu-title" onClick={event => { if (event.target === event.currentTarget) event.currentTarget.close(); }}>
