@@ -309,3 +309,6 @@
   .encerra-cartao span{font-size:clamp(11px,3.3vw,15px)}
 }
 @media print{.encerra-palco{display:none}}
+
+.encerra-corpo.is-tropeca{animation:enc-tropeca 1.2s ease-in-out}
+@keyframes enc-tropeca{0%{transform:rotate(0)}15%{transform:rotate(-14deg) translateX(-6px)}35%{transform:rotate(12deg) translateX(6px)}55%{transform:rotate(-8deg)}80%{transform:rotate(4deg)}100%{transform:rotate(0)}}
