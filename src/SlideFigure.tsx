@@ -77,7 +77,7 @@ export default function SlideFigure({ info }: { info: Imagem }) {
 
   if (src) {
     return (
-      <figure className={`weber-figure aula-figura${dragging ? ' is-dragging' : ''}`} {...dropProps}>
+      <figure className={`weber-figure aula-figura${info.foto ? ' aula-figura--foto' : ''}${dragging ? ' is-dragging' : ''}`} {...dropProps}>
         {picker}
         <img src={src} alt={info.ideia} onError={() => { if (!stored) setFileMissing(true); }} />
         <div className="weber-figure-tools">
@@ -89,22 +89,24 @@ export default function SlideFigure({ info }: { info: Imagem }) {
   }
 
   return (
-    <div className={`weber-figure aula-figura weber-figure--vazio${dragging ? ' is-dragging' : ''}`} {...dropProps}>
+    <div className={`weber-figure aula-figura weber-figure--vazio${info.foto ? ' aula-figura--foto' : ''}${dragging ? ' is-dragging' : ''}`} {...dropProps}>
       {picker}
       <button className="weber-figure-insert" onClick={() => input.current?.click()}>
         <ImagePlus aria-hidden="true" size={22} />
-        <strong>Clique para inserir a imagem</strong>
+        <strong>{info.foto ? 'Clique para inserir a foto' : 'Clique para inserir a imagem'}</strong>
         <span className="weber-figure-hint">ou arraste o arquivo para cá</span>
       </button>
       <div className="weber-figure-brief">
-        <span className="weber-figure-label">Imagem para criar na IA · {info.ideia}</span>
+        <span className="weber-figure-label">{info.foto ? `Foto sugerida · ${info.ideia}` : `Imagem para criar na IA · ${info.ideia}`}</span>
         <p>{info.prompt}</p>
-        <p className="weber-figure-style">{ESTILO}</p>
+        {info.foto ? null : <p className="weber-figure-style">{ESTILO}</p>}
       </div>
-      <button className="weber-figure-copy" onClick={copy}>
-        {copied ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
-        {copied ? 'Copiado' : 'Copiar pedido para a IA'}
-      </button>
+      {info.foto ? null : (
+        <button className="weber-figure-copy" onClick={copy}>
+          {copied ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+          {copied ? 'Copiado' : 'Copiar pedido para a IA'}
+        </button>
+      )}
       {error ? <p className="weber-figure-error" role="alert">{error}</p> : null}
     </div>
   );

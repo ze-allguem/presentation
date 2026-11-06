@@ -214,3 +214,13 @@
 .aula-figura .weber-figure-error{grid-column:1/-1}
 @media(max-width:800px){.aula-figura.weber-figure--vazio{grid-template-columns:1fr;grid-template-areas:"insert" "brief" "copy"}}
 .aula-figura .weber-figure-copy{justify-self:start}
+
+/* ===== Slide "o autor e a obra": duas fotos verticais lado a lado ===== */
+.weber-fotos{align-self:center;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,3vw,48px);max-width:1000px}
+.weber-foto{min-width:0;display:flex;flex-direction:column;align-items:center}
+.aula-figura.aula-figura--foto{margin:0;width:min(100%,calc(62vh * .75));aspect-ratio:3/4}
+.aula-figura--foto.weber-figure--vazio{width:min(100%,calc(62vh * .75));height:auto;aspect-ratio:3/4;display:flex;flex-direction:column;gap:12px;overflow:auto}
+.aula-figura--foto .weber-figure-insert{height:auto;flex:1 1 auto;min-height:120px}
+.weber-foto-legenda{margin:14px 0 0;font-size:14px;line-height:1.45;text-align:center;max-width:36ch;color:var(--t-muted)}
+.weber-foto:first-child .weber-foto-legenda{font-family:var(--fonte-titulo,Anton);font-size:22px;color:var(--t-ink);letter-spacing:.01em}
+@media(max-width:800px){.weber-fotos{grid-template-columns:1fr;gap:28px}.aula-figura.aula-figura--foto,.aula-figura--foto.weber-figure--vazio{width:100%}}

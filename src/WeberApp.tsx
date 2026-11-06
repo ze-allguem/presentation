@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowLeft, ArrowRight, Maximize, Menu, Minimize, X } from 'lucide-react';
 import SlideFigure from './SlideFigure';
-import { imagensPorSlide } from './imagens';
+import { fotosAutorObra, imagensPorSlide } from './imagens';
 import type { AulaSlide, Block } from './aula';
 import { lauraSlides } from './aula-laura';
 import { zeSlides } from './aula-ze';
@@ -19,7 +19,9 @@ const references: AulaSlide = {
   ],
 };
 
-const slides: AulaSlide[] = [cover, ...lauraSlides, ...zeSlides, references];
+const autorObra: AulaSlide = { id: 'autor-e-obra', presenter: 'Laura e Zé', layout: 'fotos', title: 'o autor e a obra', chapter: 'De onde vem o conteúdo', blocks: [] };
+
+const slides: AulaSlide[] = [cover, autorObra, ...lauraSlides, ...zeSlides, references];
 const firstOf = (presenter: string) => slides.findIndex(s => s.presenter === presenter);
 
 const PARTE = { Laura: 'Parte 1', 'Zé': 'Parte 2' } as const;
@@ -244,6 +246,22 @@ export default function WeberApp() {
             <div className="weber-presenters"><p><small>Parte 1</small><strong>Laura</strong><span>p. 139–167</span></p><p><small>Parte 2</small><strong>Zé</strong><span>p. 167–203</span></p></div>
             <p className="weber-cover-hint">Capítulo III · Os tipos de dominação<br />Capítulo IV · Estamentos e classes (início)</p>
           </article>
+        ) : slide.layout === 'fotos' ? (
+          <article key={slide.id} className="weber-content weber-enter estilo-novo" aria-labelledby="weber-slide-title">
+            <div className="weber-title-column">
+              <p className="weber-eyebrow">Laura e Zé</p>
+              <h2 id="weber-slide-title">{slide.title}<span>.</span></h2>
+              <p className="weber-page-label">Capítulo III e início do IV · p. 139–203</p>
+            </div>
+            <div className="weber-fotos">
+              {fotosAutorObra.map(f => (
+                <div key={f.id} className="weber-foto">
+                  <SlideFigure info={f} />
+                  <p className="weber-foto-legenda">{f.legenda}</p>
+                </div>
+              ))}
+            </div>
+          </article>
         ) : (
           <article key={slide.id} className="weber-content weber-enter estilo-novo" aria-labelledby="weber-slide-title">
             <div className="weber-title-column">
@@ -293,6 +311,7 @@ export default function WeberApp() {
         <p className="weber-menu-label">Ir para</p>
         <div className="weber-menu-shortcuts">
           <button onClick={() => jump(0)}>Capa</button>
+          <button onClick={() => jump(1)}>O autor e a obra</button>
           <button onClick={() => jump(firstOf('Laura'))}>Parte 1 · Laura · p. 139–167</button>
           <button onClick={() => jump(firstOf('Zé'))}>Parte 2 · Zé · p. 167–203</button>
           <button onClick={() => jump(slides.length - 1)}>Referências</button>
