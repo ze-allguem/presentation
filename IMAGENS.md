@@ -142,7 +142,7 @@ ESTILO (obrigatório): ilustração editorial em preto e branco feita a nanquim,
 
 ### 14. o carisma vira instituição
 
-**laura-14-1** · o fundador vira foto na parede _(na seção: O carisma precisa aceitar a economia)_
+**laura-14-1** · o fundador vira foto na parede _(na seção: O carisma precisa aceitar a economia)_ ✅ já inserida
 
 Cena: um escritório moderno com mesas iguais, computadores, arquivos e funcionários de crachá trabalhando de cabeça baixa. Na parede ao fundo, um retrato antigo e emoldurado de um fundador carismático de olhar inspirado e cabelo revolto, com uma pequena luminária em cima. Nenhum funcionário olha para o retrato.
 

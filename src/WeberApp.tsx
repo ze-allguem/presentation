@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowLeft, ArrowRight, Maximize, Menu, Minimize, X } from 'lucide-react';
 import SlideFigure, { sincronizarImagens } from './SlideFigure';
+import TituloDigitado from './TituloDigitado';
 import { fotosAutorObra, imagensPorSlide } from './imagens';
 import type { AulaSlide, Block } from './aula';
 import { lauraSlides } from './aula-laura';
@@ -47,7 +48,7 @@ function renderSections(slideId: string, blocks: Block[]) {
 const THEMES = [
   { id: 'laranja', name: 'Laranja', bg: '#f4f4f4', accent: '#ff4400', on: '#111' },
   { id: 'azul', name: 'Azul', bg: '#f3f5f9', accent: '#1f5eff', on: '#fff' },
-  { id: 'magenta', name: 'Magenta', bg: '#f7f3f5', accent: '#d6005c', on: '#fff' },
+  { id: 'magenta', name: 'Magenta', bg: '#ffffff', accent: '#d6005c', on: '#fff' },
   { id: 'roxo', name: 'Roxo', bg: '#f5f3f9', accent: '#6b2bd9', on: '#fff' },
   { id: 'mono', name: 'Preto e branco', bg: '#fff', accent: '#000', on: '#fff' },
   { id: 'noite', name: 'Noite (amarelo)', bg: '#121212', accent: '#ffd400', on: '#111' },
@@ -253,7 +254,7 @@ export default function WeberApp() {
           <article key={slide.id} className="weber-content weber-enter estilo-novo" aria-labelledby="weber-slide-title">
             <div className="weber-title-column">
               <p className="weber-eyebrow">Laura e Zé</p>
-              <h2 id="weber-slide-title">{slide.title}<span>.</span></h2>
+              <TituloDigitado key={slide.id} id="weber-slide-title" texto={slide.title} ponto />
               <p className="weber-page-label">Capítulo III e início do IV · p. 139–203</p>
             </div>
             <div className="weber-fotos">
@@ -269,7 +270,7 @@ export default function WeberApp() {
           <article key={slide.id} className="weber-content weber-enter estilo-novo" aria-labelledby="weber-slide-title">
             <div className="weber-title-column">
               <p className="weber-eyebrow">{slide.presenter === 'Laura e Zé' ? 'Laura e Zé' : <><span className="weber-part">{PARTE[slide.presenter]}</span>{slide.presenter} · {String(slide.topic).padStart(2, '0')}/{String(ownCount).padStart(2, '0')}</>}</p>
-              <h2 id="weber-slide-title">{typo(slide.title)}{/[?!.:"]$/.test(slide.title) ? null : <span>.</span>}</h2>
+              <TituloDigitado key={slide.id} id="weber-slide-title" texto={typo(slide.title)} ponto={!/[?!.:"]$/.test(slide.title)} />
               {slide.pages ? <p className="weber-page-label">Na obra: p. {slide.pages}</p> : null}
             </div>
             <div className={`weber-body-wrap${moreBelow ? ' has-more' : ''}`}>

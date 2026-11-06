@@ -3,7 +3,7 @@
 .weber-app[data-theme="laranja"][data-tone="dark"]{--t-bg:#131313;--t-surface:#1e1e1e;--t-ink:#f4f4f4;--t-muted:#b3b3b3;--t-line:#3a3a3a;--t-soft:#242424;--t-accent:#ff4400;--t-accent-hover:#ff5f24;--t-accent-text:#ff7a45;--t-on-accent:#111;--t-accent-inv:#b93100;color-scheme:dark}
 .weber-app[data-theme="azul"][data-tone="light"]{--t-bg:#f3f5f9;--t-surface:#fff;--t-ink:#0d1321;--t-muted:#4f5869;--t-line:#cdd3de;--t-soft:#e2e7f0;--t-accent:#1f5eff;--t-accent-hover:#1a4fd6;--t-accent-text:#1a4fd6;--t-on-accent:#fff;--t-accent-inv:#8fb0ff;color-scheme:light}
 .weber-app[data-theme="azul"][data-tone="dark"]{--t-bg:#0d1321;--t-surface:#151d31;--t-ink:#eef2fa;--t-muted:#a9b3c7;--t-line:#2c3650;--t-soft:#18213a;--t-accent:#5b87ff;--t-accent-hover:#7a9dff;--t-accent-text:#8fb0ff;--t-on-accent:#0d1321;--t-accent-inv:#1a4fd6;color-scheme:dark}
-.weber-app[data-theme="magenta"][data-tone="light"]{--t-bg:#f7f3f5;--t-surface:#fff;--t-ink:#1a0d13;--t-muted:#5f5058;--t-line:#dccfd5;--t-soft:#eee2e8;--t-accent:#d6005c;--t-accent-hover:#b0004c;--t-accent-text:#b0004c;--t-on-accent:#fff;--t-accent-inv:#ff7fb0;color-scheme:light}
+.weber-app[data-theme="magenta"][data-tone="light"]{--t-bg:#ffffff;--t-surface:#fff;--t-ink:#1a0d13;--t-muted:#5f5058;--t-line:#dccfd5;--t-soft:#eee2e8;--t-accent:#d6005c;--t-accent-hover:#b0004c;--t-accent-text:#b0004c;--t-on-accent:#fff;--t-accent-inv:#ff7fb0;color-scheme:light}
 .weber-app[data-theme="magenta"][data-tone="dark"]{--t-bg:#1a0d13;--t-surface:#241219;--t-ink:#f7eef2;--t-muted:#c0aab4;--t-line:#3d2630;--t-soft:#2a1820;--t-accent:#ff3d8b;--t-accent-hover:#ff5f9f;--t-accent-text:#ff7fb0;--t-on-accent:#1a0d13;--t-accent-inv:#b0004c;color-scheme:dark}
 .weber-app[data-theme="roxo"][data-tone="light"]{--t-bg:#f5f3f9;--t-surface:#fff;--t-ink:#140d21;--t-muted:#575069;--t-line:#d4cfe0;--t-soft:#e7e2f2;--t-accent:#6b2bd9;--t-accent-hover:#5a22bb;--t-accent-text:#5a22bb;--t-on-accent:#fff;--t-accent-inv:#bfa0ff;color-scheme:light}
 .weber-app[data-theme="roxo"][data-tone="dark"]{--t-bg:#140d21;--t-surface:#1c142c;--t-ink:#f1edf9;--t-muted:#b4abc8;--t-line:#33294a;--t-soft:#221a35;--t-accent:#9b6bff;--t-accent-hover:#ad85ff;--t-accent-text:#bfa0ff;--t-on-accent:#140d21;--t-accent-inv:#5a22bb;color-scheme:dark}
@@ -21,7 +21,7 @@
 .weber-app button:hover:not(:disabled),.weber-app a:hover{color:var(--t-accent-text)}
 .weber-header{display:flex;align-items:center;gap:32px;padding:24px 48px;position:relative;z-index:2;border-bottom:1px solid var(--t-line)}
 .weber-wordmark{font-family:Epilogue,Arial,sans-serif;font-size:22px;font-weight:900;letter-spacing:-1.1px;white-space:nowrap;min-height:44px}
-.weber-wordmark span,.weber-title-column h2>span,.weber-cover h1>span,.weber-dialog-header h2>span{color:var(--t-accent)}
+.weber-wordmark span,.weber-cover h1>span,.weber-dialog-header h2>span{color:var(--t-accent)}
 .weber-context{display:flex;flex-direction:column;gap:4px;font-size:11px;letter-spacing:.08em;margin-left:auto;line-height:1.5}
 .weber-context span:first-child{font-weight:600}
 .weber-context span+span{color:var(--t-muted)}
@@ -237,3 +237,10 @@
 /* Nos slides de texto as linhas ficam mais suaves; tabelas com fundo sólido */
 .weber-main:has(.weber-content) .weber-vento{--vento-forca:.75}
 .aula-tabela{background:var(--t-bg)}
+
+/* ===== Título digitando, com cursor piscando na cor do tema ===== */
+.titulo-ponto{color:var(--t-accent)}
+.titulo-oculto{visibility:hidden}
+.titulo-cursor{display:inline-block;width:.09em;height:.86em;margin-left:.05em;margin-right:-.14em;vertical-align:-.06em;background:var(--t-accent);border-radius:1px;animation:cursor-pisca 1s steps(1,end) infinite}
+.titulo-cursor.is-digitando{animation:none}
+@keyframes cursor-pisca{0%,50%{opacity:1}50.01%,100%{opacity:0}}
