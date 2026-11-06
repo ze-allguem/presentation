@@ -18,7 +18,8 @@ const FALAS = [
   'Preciso preencher um formulário pra sair daqui?',
   'Classe é mercado; estamento é prestígio!',
 ];
-const ESPERA_FINAL = 120_000; // quadro final parado por 2 minutos
+const ESPERA_FINAL = 120_000; // quadro final na tela por 2 minutos
+const FALAS_BALANCO = ['Wheeeee!', 'Isso é que é dominação legítima!', 'Fiquem à vontade para ler.', 'Balançar também é racionalizar.', 'Eu avisei: era só mais uma coisinha.'];
 
 // Desenhados por cima do sprite, na mesma grade de 31 x 56.
 type Px = [number, number, string];
@@ -35,11 +36,11 @@ type Estado = 'oculto' | 'carregado' | 'fixo' | 'caido' | 'apagado' | 'chao';
 type Cena = {
   wx: number; dur: number; anda: boolean; flip: boolean; fala: string;
   cartoes: Estado[]; rots: number[]; papeis: boolean; ponta: boolean; coca: boolean;
-  tropeca: boolean; reverencia: boolean; placa: boolean;
+  tropeca: boolean; reverencia: boolean; placa: boolean; balanco: boolean;
 };
 const INICIAL: Cena = {
   wx: -16, dur: 0, anda: false, flip: false, fala: '', cartoes: ['oculto', 'oculto', 'oculto', 'oculto'],
-  rots: [-3, 2.5, -2, 3], papeis: false, ponta: false, coca: false, tropeca: false, reverencia: false, placa: false,
+  rots: [-3, 2.5, -2, 3], papeis: false, ponta: false, coca: false, tropeca: false, reverencia: false, placa: false, balanco: false,
 };
 
 const PAPEIS = Array.from({ length: 10 }, (_, i) => ({ x: 6 + i * 9, atraso: (i % 5) * 0.12, giro: (i % 2 ? 1 : -1) * (20 + i * 9) }));
@@ -146,7 +147,21 @@ export default function Encerramento() {
 
         // CENA 7: reverência e plaquinha, que ficam na tela por 2 minutos
         set({ reverencia: true, placa: true });
-        await dorme(ESPERA_FINAL);
+        await dorme(5000);
+        // Nos 2 minutos finais: monta um balanço preso no cartão "Dominação legítima" e fica se balançando
+        set({ reverencia: false });
+        await fala('Hora de relaxar um pouco...', 1800);
+        await anda(X[1], 1600, false);
+        set({ balanco: true });
+        let restante = ESPERA_FINAL - 5000 - 1800 - 1600;
+        let k = 0;
+        while (vivo && restante > 0) {
+          await dorme(5000);
+          set({ fala: FALAS_BALANCO[k++ % FALAS_BALANCO.length] });
+          await dorme(4500);
+          set({ fala: '' });
+          restante -= 9500;
+        }
       }
     })();
     return () => { vivo = false; };
@@ -176,11 +191,19 @@ export default function Encerramento() {
             <div key={k.titulo} className="encerra-cartao" style={estilos[est]}>
               <strong>{k.titulo}</strong>
               <span>{k.texto}</span>
+              {i === 1 && c.balanco ? (
+                <div className="encerra-balanco">
+                  <i className="corda corda-e" /><i className="corda corda-d" />
+                  <i className="assento" />
+                  <img src={`${base}pixel-weber.png`} alt="" draggable={false} />
+                </div>
+              ) : null}
+              {i === 1 && c.balanco && c.fala ? <div className="encerra-balao encerra-balao--balanco" key={c.fala}>{c.fala}</div> : null}
             </div>
           );
         })}
 
-        <div className="encerra-weber" style={{ left: `${c.wx}%`, transition: c.dur ? `left ${c.dur}ms linear` : 'none' }}>
+        <div className="encerra-weber" style={{ left: `${c.wx}%`, transition: c.dur ? `left ${c.dur}ms linear` : 'none', visibility: c.balanco ? 'hidden' : 'visible' }}>
           <div className={`encerra-corpo${c.anda ? ' is-andando' : ''}${c.reverencia ? ' is-reverencia' : ''}${c.tropeca ? ' is-tropeca' : ''}`} style={{ transform: c.flip ? 'scaleX(-1)' : undefined }}>
             <img src={`${base}pixel-weber${frame}.png`} alt="" draggable={false} />
             {c.ponta || c.coca ? (
@@ -195,8 +218,8 @@ export default function Encerramento() {
               {PAPEIS.map((p, i) => <i key={i} style={{ left: `${p.x}%`, animationDelay: `${p.atraso}s`, ['--giro' as string]: `${p.giro}deg` }} />)}
             </div>
           ) : null}
-          {c.placa ? <div className="encerra-placa">Pronto. Agora acabou!</div> : null}
         </div>
+        {c.placa ? <div className="encerra-placa">Pronto. Agora acabou!</div> : null}
       </div>
     </article>
   );
